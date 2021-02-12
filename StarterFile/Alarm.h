@@ -17,7 +17,7 @@ typedef struct alarmTaskData{
     int* HVOutOfRangeState; //0 = s1, 1 = s2, 2 = s3
     int* counter;   //counter starts = 1
     bool* alarmFlag; //true = run task false = skip task
-    bool* forceAlarm;
+    volatile bool* forceAlarm;
 }alarmData;
 
 void alarmTask (void*);

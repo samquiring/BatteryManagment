@@ -24,8 +24,8 @@ typedef struct TouchScreenTaskData{
     bool* initialize; //tells us if we need to inialize the function
     bool* nScreen;
     bool* csState;
-    bool* touchScreenFlag; //tells us whether or not to run this task, True = run false = skip
-    bool* forceAlarm;      //tells touchScreen to stay in alarm state regardless of user input
+    volatile bool* touchScreenFlag; //tells us whether or not to run this task, True = run false = skip
+    volatile bool* forceAlarm;      //tells touchScreen to stay in alarm state regardless of user input
 }touchScreenData;
 
 void touchScreenTask (void*);
