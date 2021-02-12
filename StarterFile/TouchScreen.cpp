@@ -228,8 +228,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
          *batteryOn = true;
         }
       }
-    }
-  } else if (*displayState ==  2) {
+    } else if (*displayState ==  2) {
       if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
         if ((p.y > 250) && (p.y < 250 + BOXSIZE)){
 
@@ -241,6 +240,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
   } else {
       *state = false;
     }
+   }
 }
 
 void batteryScreen(bool* nScreen, bool* csState){
