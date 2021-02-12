@@ -437,21 +437,28 @@ void touchScreenTask(void* mData){
     * Function description: on startup initializes the display. It checks the state of the touch display and
     *                       calls the function that pertains to that given state. It then calls the clicker to
     *                       check if the user clicked and update the given state.
+<<<<<<< HEAD
+=======
+                            If touchScreenFlag is true runs all above, if false does not run any threads
+>>>>>>> e747b5d542c09989ba193147915cf3edfbf5224e
     * Author(s): Sam Quiring
     *****************/
     touchScreenData* data = (touchScreenData*) mData;
-    if(*(data->initialize)){
-      displaySetup();
-      *(data->initialize) = false;
-    }
-       if(*(data->touchState) == 0){
+    //decides if you want to run the given tasks
+    if(*(data->touchScreenFlag)){
+        if(*(data->initialize)){
+        displaySetup();
+        *(data->initialize) = false;
+        }
+        if(*(data->touchState) == 0){
            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen);
         } else if(*(data->touchState) == 1){
             batteryScreen(data->nScreen, data->csState);
         } else{
           AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen);
         }
-       clicker(data->touchState, data->nScreen, data->batteryOn);
-       *(data->finishedFlag) = true;
+        clicker(data->touchState, data->nScreen, data->batteryOn);
+        *(data->finishedFlag) = true;
+    }
 
 }

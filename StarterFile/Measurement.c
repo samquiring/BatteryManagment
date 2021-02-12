@@ -17,7 +17,7 @@ void updateHVIL(bool* hvilReading, const byte* pin) {
       *hvilReading = false;
     } else {
       *hvilReading = true;
-    } 
+    }
     return;
 }
 
@@ -86,14 +86,15 @@ void measurementTask(void* mData) {
     * Function inputs: void* mData
     * Function outputs: void
     * Function description: calls all functions within the measurement file
+                            If measurementFlag is true runs all above, if false does not run any threads
     * Author(s): Anders Hunt
     *****************/
   	measurementData* data = (measurementData*) mData;
-
-  	// Update all sensors
-  	updateHVIL(data->hvilStatus, data->hvilPin);
-  	updateTemperature(data->temperature);
-  	updateHvCurrent(data->hvCurrent, data->counter);
-  	updateHvVoltage(data->hvVoltage, data->counter);
-    *(data->finishedFlag) = true;
+    if(*(data->measurementFlag)){
+        // Update all sensors
+        updateHVIL(data->hvilStatus, data->hvilPin);
+        updateTemperature(data->temperature);
+        updateHvCurrent(data->hvCurrent, data->counter);
+        updateHvVoltage(data->hvVoltage, data->counter);
+    }
 }

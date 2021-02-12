@@ -24,9 +24,11 @@ void contactorTask(void* mData) {
     * Function inputs: void* mData
     * Function outputs: void
     * Function description: calls all contactor functions
+                            If contactorFlag is true runs all above, if false does not run any threads
     * Author(s): Sam Quiring
     *****************/
   	contactorData* data = (contactorData*) mData;
-  	updateState(data->contactorState,data->batteryOn);
-    *(data->finishedFlag) = true;
+  	if(*(data->contactorFlag)){
+        updateState(data->contactorState,data->batteryOn);
+  	}
 }
