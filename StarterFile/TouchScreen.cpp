@@ -466,5 +466,6 @@ void touchScreenTask(void* mData){
         }
         clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm);
     }
+    *(data->touchScreenFlag) = true;  //skips touchScreen for one clock cycle
 
 }

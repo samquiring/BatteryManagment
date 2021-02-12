@@ -31,4 +31,5 @@ void contactorTask(void* mData) {
   	if(*(data->contactorFlag)){
         updateState(data->contactorState,data->batteryOn);
   	}
+   *(data->contactorFlag) = true;  //skips contactor for one clock cycle
 }
