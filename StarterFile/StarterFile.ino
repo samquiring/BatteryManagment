@@ -125,7 +125,7 @@ void setup() {
   touch.HVIL = &HVIL;
   touch.csState = &contactorState;
   touch.touchScreenFlag = &touchScreenFlag;
-  touch.forceAlarmFlag = &forceAlarm;
+  touch.forceAlarm = &forceAlarm;
 
   //setting TCB up so it is connected
   measurementTCB.taskDataPtr = &measure;
@@ -162,7 +162,7 @@ void loop() {
     *****************/
     while(1){
       if(timeBaseFlag){
-           timerBaseFlag = false;
+           timeBaseFlag = false;
            scheduler(taskArray);
            digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
       }
@@ -175,7 +175,7 @@ void loop() {
 }
 
 void timerISR(){          //interrupts service routine
-  timerBaseFlag = true;   //set timerISR flag
+  timeBaseFlag = true;   //set timerISR flag
 }
 void alarmISR(){
   
