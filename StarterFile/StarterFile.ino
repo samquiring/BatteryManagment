@@ -107,6 +107,7 @@ void setup() {
   alarm.HVOutOfRangeState = &HVOutOfRangeState;
   alarm.counter = &counter;
   alarm.alarmFlag = &alarmFlag;
+  alarm.forceAlarm = &forceAlarm;
 
   SOC.stateOfCharge = &stateOfCharge;
   SOC.SOCFlag = &SOCFlag;

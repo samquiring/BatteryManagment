@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include "Alarm.h"
 
-void updateHVILstate (int* HVILState){
+void updateHVILstate (int* HVILState, bool* forceAlarm){
     /****************
     * Function name: updateHVIL
     * Function inputs: a pointer to HVIL state
@@ -20,9 +20,11 @@ void updateHVILstate (int* HVILState){
     */
     if(*HVILState == 0)
       *HVILState = 1;
+    if(*HVILState == 1)
+      *forceAlarm = true;
 }
 
-void updateOvercurrentState (int* OvercurrentState, int* counter){
+void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAlarm){
     /****************
     * Function name: update OvercurrentState
     * Function inputs: a pointer to Overcurrent state and a pointer to counter
@@ -39,9 +41,11 @@ void updateOvercurrentState (int* OvercurrentState, int* counter){
         }
     }
     *OvercurrentState = 0;
+    if(*OvercurrentState == 1)
+      *forceAlarm = true;
 }
 
-void updateHVOutOfRange (int* HVOutOfRangeState, int* counter){
+void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, bool* forceAlarm){
     /****************
     * Function name: updateHVOutOfRange
     * Function inputs: a pointer to HV out of range state and a ptr to counter
@@ -58,6 +62,8 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter){
         }
     }
     *HVOutOfRangeState = 0;
+    if(*HVOutOfRangeState == 1)
+      *forceAlarm = true;
 }
 
 void alarmTask(void* mData){
@@ -72,8 +78,8 @@ void alarmTask(void* mData){
     //runs if our alarmFlag is up
     alarmData* data = (alarmData*) mData;
     if(*(data->alarmFlag)){
-        updateHVILstate (data->HVILState);
-        updateOvercurrentState (data->OvercurrentState, data->counter);
-        updateHVOutOfRange (data->HVOutOfRangeState, data->counter);
+        updateHVILstate (data->HVILState,data->forceAlarm);
+        updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarm);
+        updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarm);
     }
 }
