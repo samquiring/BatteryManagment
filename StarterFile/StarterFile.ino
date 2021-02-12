@@ -33,7 +33,10 @@ float hvCurrent     = 0.0;
 float hvVoltage     = 10.0;
 float temperature   = 0.0;
 bool HVIL           = false;
-const byte hvilPin = 20; //the current state of pin 22. false = low true = high
+const byte hvilPin = 22; //the current state of pin 22. false = low true = high
+int tempPin = 11;
+int voltagePin =12;
+int currentPin = 13;
 float chargeState = 0;
 volatile bool measurementFlag = true;
 
@@ -89,7 +92,11 @@ void setup() {
   //initializes pin for battery
   pinMode(batteryPin,OUTPUT);
 
-  attachInterrupt(digitalPinToInterrupt(hvilPin), alarmISR, RISING);  //creates an interrupt whenever hvilPin is high
+  // Anders attempt to set up pins
+
+  pinMode(tempPin, INPUT);
+  pinMode(voltagePin, INPUT);
+  pinMode(currentPin, INPUT);
   
   //setting all variables up so they are used in functions
   measure.hvilStatus = &HVIL;
@@ -98,6 +105,12 @@ void setup() {
   measure.hvCurrent = &hvCurrent;
   measure.hvVoltage = &hvVoltage;
   measure.counter = &counter;
+  
+  // Anders attempt to set up pins
+  measure.tempPin = &tempPin;
+  measure.voltagePin = &voltagePin;
+  measure.currentPin = &currentPin;
+  
   measure.measurementFlag = &measurementFlag;
 
   contactor.contactorState = &contactorState;
@@ -179,15 +192,8 @@ void loop() {
 }
 
 void timerISR(){          //interrupts service routine
-  noInterrupts();
   timeBaseFlag = true;   //set timerISR flag
-  interrupts();
 }
 void alarmISR(){
-  noInterrupts();
-  measurementFlag = false;
-  SOCFlag = false;
-  contactorFlag = false;
-  Serial.println("Alarm Flag Raised");
-  interrupts();
+  
 }

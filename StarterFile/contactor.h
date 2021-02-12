@@ -11,7 +11,7 @@ extern "C" {
 typedef struct contactorTaskData{
     bool* contactorState; //true = open, false = closed
     bool* batteryOn;
-    volatile bool* contactorFlag; //true = run task false = skip task
+    bool* contactorFlag; //true = run task false = skip task
 }contactorData;
 
 void contactorTask (void*);

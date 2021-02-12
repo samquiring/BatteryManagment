@@ -17,6 +17,9 @@ extern "C" {
 typedef struct measurementTaskData {
     bool* hvilStatus;
     const byte* hvilPin;
+    int* tempPin;
+    int* currentPin;
+    int* voltagePin;
     float* temperature;
     float* hvCurrent;
     float* hvVoltage;
