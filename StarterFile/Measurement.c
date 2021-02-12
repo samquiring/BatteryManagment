@@ -21,7 +21,7 @@ void updateHVIL(bool* hvilReading, const byte* pin) {
     return;
 }
 
-void updateTemperature(float* temperatureReading) {
+void updateTemperature(float* temperatureReading, int* aPin1) {
     /****************
     * Function name: updateTemperature
     * Function inputs: a float of the temperature
@@ -30,20 +30,12 @@ void updateTemperature(float* temperatureReading) {
     * Author(s): Anders Hunt
     *****************/
 
-  // temperatureReading = ((analogRead(A0) / 1023.0) * (11.0)) - 10.0;
+  temperatureReading = ((analogRead(*aPin1) / 1023.0) * (11.0)) - 10.0;
     
-  if (*temperatureReading == -10) {
-    *temperatureReading = 5;
-  } else if (*temperatureReading == 5) {
-    *temperatureReading = 25;
-  } else {
-    *temperatureReading = -10;
-  }
-
   	return;
 }
 
-void updateHvCurrent(float* currentReading, int* counter) {
+void updateHvCurrent(float* currentReading, int* counter, int* aPin2) {
     /****************
     * Function name: updateHvCurrent
     * Function inputs: float of the currentReading and an int of counter
@@ -53,20 +45,12 @@ void updateHvCurrent(float* currentReading, int* counter) {
     * Author(s): Anders Hunt
     *****************/
 
-     // *currentReading = (analogRead(analog pin 2) / 1023.0) * 10.0 - 25.0;
+    *currentReading = (analogRead(*aPin2) / 1023.0) * 10.0 - 25.0;
     
-    if ((*counter % 2 == 0) && (*currentReading == -20)) {
-      *currentReading = 0;
-    } else if ((*counter % 2 == 0) && (*currentReading == 0)) {
-      *currentReading = 20;
-    } else if ((*counter % 2 == 0) && (*currentReading == 20)) {
-      *currentReading = -20;
-    }
-
   	return;
 }
 
-void updateHvVoltage(float* voltageReading, int* counter) {
+void updateHvVoltage(float* voltageReading, int* counter, int* aPin3) {
     /****************
     * Function name: updateHvVoltage
     * Function inputs: float of the voltage reading and int counter
@@ -77,15 +61,8 @@ void updateHvVoltage(float* voltageReading, int* counter) {
     *****************/
 
 
-    // *voltageReading = ((analogRead(analog pin 3) / 1023.0) * 90.0);
+    *voltageReading = ((analogRead(*aPin3) / 1023.0) * 90.0);
     
-    if ((*counter % 3 == 0) && (*voltageReading == 10)) {
-      *voltageReading = 150;
-    } else if ((*counter % 3 == 0) && (*voltageReading == 150)) {
-      *voltageReading = 450;
-    } else if ((*counter % 3 == 0) && (*voltageReading == 450)) {
-      *voltageReading = 10;
-    }
   	return;
 }
 
@@ -101,8 +78,8 @@ void measurementTask(void* mData) {
 
   	// Update all sensors
   	updateHVIL(data->hvilStatus, data->hvilPin);
-  	updateTemperature(data->temperature);
-  	updateHvCurrent(data->hvCurrent, data->counter);
-  	updateHvVoltage(data->hvVoltage, data->counter);
+  	updateTemperature(data->temperature, data->tempPin);
+  	updateHvCurrent(data->hvCurrent, data->counter, data->currentPin);
+  	updateHvVoltage(data->hvVoltage, data->counter, data->voltagePin);
     *(data->finishedFlag) = true;
 }
