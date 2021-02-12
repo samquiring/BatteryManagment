@@ -179,7 +179,7 @@ void displaySetup() {
 }
 
 
-void clicker(int* displayState, bool* state, bool* batteryOn){
+void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
   /****************
     * Function name: clicker
     * Function inputs: int displayState, bool if we have changed states, bool if the battery is currently on
@@ -350,7 +350,7 @@ void measurementScreen(int* SOC, float* temp,float* HVVolt, float* HVCur, bool* 
   }
 }
 
-void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen){
+void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, bool* forceAlarm){
   /****************
     * Function name: AlarmScreen
     * Function inputs: an int that represents the HVILstate and int for the overcurrent state,
@@ -455,9 +455,9 @@ void touchScreenTask(void* mData){
         } else if(*(data->touchState) == 1){
             batteryScreen(data->nScreen, data->csState);
         } else{
-          AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen);
+          AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm);
         }
-        clicker(data->touchState, data->nScreen, data->batteryOn);
+        clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm);
         *(data->finishedFlag) = true;
     }
 
