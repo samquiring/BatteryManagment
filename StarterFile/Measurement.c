@@ -29,7 +29,6 @@ void updateTemperature(float* temperatureReading, int* aPin1) {
     * Function description: cycles through three values of temperature round robin style
     * Author(s): Anders Hunt
     *****************/
-<<<<<<< HEAD
   if (*temperatureReading == -10) {
     *temperatureReading = 5;
   } else if (*temperatureReading == 5) {
@@ -38,11 +37,7 @@ void updateTemperature(float* temperatureReading, int* aPin1) {
     *temperatureReading = -10;
   }
 
-=======
-
-  temperatureReading = ((analogRead(*aPin1) / 1023.0) * (11.0)) - 10.0;
-    
->>>>>>> 8fdd488fd78a5db96818143dcd8e6215ff13605b
+  *temperatureReading = (float)(((analogRead(*aPin1) / 1023.0) * (11.0)) - 10.0);
   	return;
 }
 
@@ -55,8 +50,6 @@ void updateHvCurrent(float* currentReading, int* counter, int* aPin2) {
                             round robin style
     * Author(s): Anders Hunt
     *****************/
-
-<<<<<<< HEAD
     if ((*counter % 2 == 0) && (*currentReading == -20)) {
       *currentReading = 0;
     } else if ((*counter % 2 == 0) && (*currentReading == 0)) {
@@ -64,11 +57,7 @@ void updateHvCurrent(float* currentReading, int* counter, int* aPin2) {
     } else if ((*counter % 2 == 0) && (*currentReading == 20)) {
       *currentReading = -20;
     }
-
-=======
     *currentReading = (analogRead(*aPin2) / 1023.0) * 10.0 - 25.0;
-    
->>>>>>> 8fdd488fd78a5db96818143dcd8e6215ff13605b
   	return;
 }
 
@@ -81,7 +70,6 @@ void updateHvVoltage(float* voltageReading, int* counter, int* aPin3) {
                             round robin style
     * Author(s): Anders Hunt
     *****************/
-<<<<<<< HEAD
     if ((*counter % 3 == 0) && (*voltageReading == 10)) {
       *voltageReading = 150;
     } else if ((*counter % 3 == 0) && (*voltageReading == 150)) {
@@ -89,12 +77,7 @@ void updateHvVoltage(float* voltageReading, int* counter, int* aPin3) {
     } else if ((*counter % 3 == 0) && (*voltageReading == 450)) {
       *voltageReading = 10;
     }
-=======
-
-
     *voltageReading = ((analogRead(*aPin3) / 1023.0) * 90.0);
-    
->>>>>>> 8fdd488fd78a5db96818143dcd8e6215ff13605b
   	return;
 }
 
@@ -110,23 +93,10 @@ void measurementTask(void* mData) {
   	measurementData* data = (measurementData*) mData;
     if(*(data->measurementFlag)){
         // Update all sensors
-        updateHVIL(data->hvilStatus, data->hvilPin);
-        updateTemperature(data->temperature);
-        updateHvCurrent(data->hvCurrent, data->counter);
-        updateHvVoltage(data->hvVoltage, data->counter);
+       updateHVIL(data->hvilStatus, data->hvilPin);
+      updateTemperature(data->temperature, data->tempPin);
+      updateHvCurrent(data->hvCurrent, data->counter, data->currentPin);
+      updateHvVoltage(data->hvVoltage, data->counter, data->voltagePin);
     }
-<<<<<<< HEAD
-    *(data->measurementFlag) = true;
-=======
     *(data->measurementFlag) = true;  //skips measurement for one clock cycle
-=======
-
-  	// Update all sensors
-  	updateHVIL(data->hvilStatus, data->hvilPin);
-  	updateTemperature(data->temperature, data->tempPin);
-  	updateHvCurrent(data->hvCurrent, data->counter, data->currentPin);
-  	updateHvVoltage(data->hvVoltage, data->counter, data->voltagePin);
-    *(data->finishedFlag) = true;
->>>>>>> 08f9e6963dc3c4804739f7e01484afd51c0869be
->>>>>>> 8fdd488fd78a5db96818143dcd8e6215ff13605b
 }
