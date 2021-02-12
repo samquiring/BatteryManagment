@@ -376,13 +376,15 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
     tft.setCursor(0,LNSPACE*6);
     tft.print("High Voltage Out of Range: ");
 
-    if (*forceAlarm) {
+    if (*forceAlarm == true) {
 
         tft.fillRect(50, 250, BOXWIDTH * 2, BOXSIZE, YELLOW);
+        tft.setCursor(50 + TEXTOFFSET, 250 + TEXTOFFSET)
+        tft.setTextColor(BLACK);
+        tft.setTEXTSIZE(2;)
         tft.print("Acknowledge Alarms");
 
     }
-
     //setting to impossible states so will update all the variables below
     HVILStateL = -1;
     OvercurrentStateL = -1;
@@ -426,6 +428,7 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
         tft.print("ACTIVE, ACKNOWLEDGED");
     }
   }
+
 }
 
 void touchScreenTask(void* mData){
