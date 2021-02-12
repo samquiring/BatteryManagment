@@ -17,7 +17,7 @@ void updateHVIL(bool* hvilReading, const byte* pin) {
       *hvilReading = false;
     } else {
       *hvilReading = true;
-    } 
+    }
     return;
 }
 
@@ -29,9 +29,6 @@ void updateTemperature(float* temperatureReading) {
     * Function description: cycles through three values of temperature round robin style
     * Author(s): Anders Hunt
     *****************/
-
-  // temperatureReading = ((analogRead(A0) / 1023.0) * (11.0)) - 10.0;
-    
   if (*temperatureReading == -10) {
     *temperatureReading = 5;
   } else if (*temperatureReading == 5) {
@@ -53,8 +50,6 @@ void updateHvCurrent(float* currentReading, int* counter) {
     * Author(s): Anders Hunt
     *****************/
 
-     // *currentReading = (analogRead(analog pin 2) / 1023.0) * 10.0 - 25.0;
-    
     if ((*counter % 2 == 0) && (*currentReading == -20)) {
       *currentReading = 0;
     } else if ((*counter % 2 == 0) && (*currentReading == 0)) {
@@ -75,10 +70,6 @@ void updateHvVoltage(float* voltageReading, int* counter) {
                             round robin style
     * Author(s): Anders Hunt
     *****************/
-
-
-    // *voltageReading = ((analogRead(analog pin 3) / 1023.0) * 90.0);
-    
     if ((*counter % 3 == 0) && (*voltageReading == 10)) {
       *voltageReading = 150;
     } else if ((*counter % 3 == 0) && (*voltageReading == 150)) {
@@ -95,10 +86,10 @@ void measurementTask(void* mData) {
     * Function inputs: void* mData
     * Function outputs: void
     * Function description: calls all functions within the measurement file
+                            If measurementFlag is true runs all above, if false does not run any threads
     * Author(s): Anders Hunt
     *****************/
   	measurementData* data = (measurementData*) mData;
-<<<<<<< HEAD
     if(*(data->measurementFlag)){
         // Update all sensors
         updateHVIL(data->hvilStatus, data->hvilPin);
@@ -106,14 +97,5 @@ void measurementTask(void* mData) {
         updateHvCurrent(data->hvCurrent, data->counter);
         updateHvVoltage(data->hvVoltage, data->counter);
     }
-    *(data->measurementFlag) = true;  //skips measurement for one clock cycle
-=======
-
-  	// Update all sensors
-  	updateHVIL(data->hvilStatus, data->hvilPin);
-  	updateTemperature(data->temperature);
-  	updateHvCurrent(data->hvCurrent, data->counter);
-  	updateHvVoltage(data->hvVoltage, data->counter);
-    *(data->finishedFlag) = true;
->>>>>>> 08f9e6963dc3c4804739f7e01484afd51c0869be
+    *(data->measurementFlag) = true;
 }
