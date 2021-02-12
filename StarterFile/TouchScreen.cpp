@@ -236,11 +236,10 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
 
         }
       }
-
-  } else {
+    }
+   } else {
       *state = false;
     }
-   }
 }
 
 void batteryScreen(bool* nScreen, bool* csState){
