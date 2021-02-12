@@ -82,4 +82,5 @@ void alarmTask(void* mData){
         updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarm);
         updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarm);
     }
+    *(data->alarmFlag) = true;  //skips alarm for one clock cycle
 }

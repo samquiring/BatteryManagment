@@ -97,4 +97,5 @@ void measurementTask(void* mData) {
         updateHvCurrent(data->hvCurrent, data->counter);
         updateHvVoltage(data->hvVoltage, data->counter);
     }
+    *(data->measurementFlag) = true;  //skips measurement for one clock cycle
 }

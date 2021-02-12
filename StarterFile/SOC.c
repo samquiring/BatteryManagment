@@ -26,4 +26,5 @@ void SOCTask(void* sData) {
     if(*(data->SOCFlag)){
         updateSOC(data->stateOfCharge);
     }
+    *(data->SOCFlag) = true;  //skips SOC for one clock cycle
 }
