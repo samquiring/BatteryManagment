@@ -10,7 +10,7 @@ void updateSOC(int* SOCreading) {
     * Function description: soc is always set to 0
     * Author(s): Anders Hunt
     *****************/
-  *soc = 0;
+  *SOCreading = 0;
 }
 
 void SOCTask(void* sData) {
@@ -22,10 +22,8 @@ void SOCTask(void* sData) {
                             If SOCFlag is true runs all above, if false does not run any threads
     * Author(s): Anders Hunt
     *****************/
-
+    SOCData* data = (SOCData*) sData;
     if(*(data->SOCFlag)){
-        SOCData* data = (SOCData*) sData;
         updateSOC(data->stateOfCharge);
-        *(data->finishedFlag) = true;
     }
 }

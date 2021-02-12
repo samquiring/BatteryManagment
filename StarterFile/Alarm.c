@@ -64,8 +64,8 @@ void alarmTask(void* mData){
     * Author(s): Sam Quiring
     *****************/
     //runs if our alarmFlag is up
-    if(*alarmFlag){
-        alarmData* data = (alarmData*) mData;
+    alarmData* data = (alarmData*) mData;
+    if(*(data->alarmFlag)){
         updateHVILstate (data->HVILState);
         updateOvercurrentState (data->OvercurrentState, data->counter);
         updateHVOutOfRange (data->HVOutOfRangeState, data->counter);
