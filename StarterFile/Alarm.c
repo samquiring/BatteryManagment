@@ -18,7 +18,8 @@ void updateHVILstate (int* HVILState){
         *HVILState = 0;
     }
     */
-    *HVILState = 0;
+    if(*HVILState == 0)
+      *HVILState = 1;
 }
 
 void updateOvercurrentState (int* OvercurrentState, int* counter){
