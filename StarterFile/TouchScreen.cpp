@@ -379,7 +379,7 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
 
     if (*forceAlarm) {
 
-        tft.filRect(50, 250, BOXWIDTH * 2, BOXSIZE, YELLOW);
+        tft.fillRect(50, 250, BOXWIDTH * 2, BOXSIZE, YELLOW);
         tft.print("Acknowledge Alarms");
 
     }
@@ -458,7 +458,6 @@ void touchScreenTask(void* mData){
           AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm);
         }
         clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm);
-        *(data->finishedFlag) = true;
     }
 
 }

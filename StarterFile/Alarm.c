@@ -11,11 +11,14 @@ void updateHVILstate (int* HVILState){
                             cycling every 1 second
     * Author(s): Sam Quiring
     *****************/
+    /*
     if(*HVILState < 2){
         *HVILState += 1;
     } else {
         *HVILState = 0;
     }
+    */
+    *HVILState = 0;
 }
 
 void updateOvercurrentState (int* OvercurrentState, int* counter){
@@ -34,6 +37,7 @@ void updateOvercurrentState (int* OvercurrentState, int* counter){
             *OvercurrentState = 0;
         }
     }
+    *OvercurrentState = 0;
 }
 
 void updateHVOutOfRange (int* HVOutOfRangeState, int* counter){
@@ -52,6 +56,7 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter){
             *HVOutOfRangeState = 0;
         }
     }
+    *HVOutOfRangeState = 0;
 }
 
 void alarmTask(void* mData){
