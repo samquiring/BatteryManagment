@@ -75,6 +75,16 @@ void measurementTask(void* mData) {
     * Author(s): Anders Hunt
     *****************/
   	measurementData* data = (measurementData*) mData;
+<<<<<<< HEAD
+    if(*(data->measurementFlag)){
+        // Update all sensors
+        updateHVIL(data->hvilStatus, data->hvilPin);
+        updateTemperature(data->temperature);
+        updateHvCurrent(data->hvCurrent, data->counter);
+        updateHvVoltage(data->hvVoltage, data->counter);
+    }
+    *(data->measurementFlag) = true;  //skips measurement for one clock cycle
+=======
 
   	// Update all sensors
   	updateHVIL(data->hvilStatus, data->hvilPin);
@@ -82,4 +92,5 @@ void measurementTask(void* mData) {
   	updateHvCurrent(data->hvCurrent, data->counter, data->currentPin);
   	updateHvVoltage(data->hvVoltage, data->counter, data->voltagePin);
     *(data->finishedFlag) = true;
+>>>>>>> 08f9e6963dc3c4804739f7e01484afd51c0869be
 }

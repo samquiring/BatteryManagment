@@ -24,7 +24,7 @@ typedef struct measurementTaskData {
     float* hvCurrent;
     float* hvVoltage;
     int* counter;
-    bool* measurementFlag; //true = run task false = skip task
+    volatile bool* measurementFlag; //true = run task false = skip task
 } measurementData;
 
 
