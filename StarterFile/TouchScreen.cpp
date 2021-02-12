@@ -229,7 +229,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn){
         }
       }
     }
-  } else if (*displayState ==  3) {
+  } else if (*displayState ==  2) {
       if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
         if ((p.y > 250) && (p.y < 250 + BOXSIZE)){
 
