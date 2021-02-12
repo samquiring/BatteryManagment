@@ -17,7 +17,7 @@ void updateHVIL(bool* hvilReading, const byte* pin) {
       *hvilReading = false;
     } else {
       *hvilReading = true;
-    } 
+    }
     return;
 }
 
@@ -29,9 +29,20 @@ void updateTemperature(float* temperatureReading, int* aPin1) {
     * Function description: cycles through three values of temperature round robin style
     * Author(s): Anders Hunt
     *****************/
+<<<<<<< HEAD
+  if (*temperatureReading == -10) {
+    *temperatureReading = 5;
+  } else if (*temperatureReading == 5) {
+    *temperatureReading = 25;
+  } else {
+    *temperatureReading = -10;
+  }
+
+=======
 
   temperatureReading = ((analogRead(*aPin1) / 1023.0) * (11.0)) - 10.0;
     
+>>>>>>> 8fdd488fd78a5db96818143dcd8e6215ff13605b
   	return;
 }
 
@@ -45,8 +56,19 @@ void updateHvCurrent(float* currentReading, int* counter, int* aPin2) {
     * Author(s): Anders Hunt
     *****************/
 
+<<<<<<< HEAD
+    if ((*counter % 2 == 0) && (*currentReading == -20)) {
+      *currentReading = 0;
+    } else if ((*counter % 2 == 0) && (*currentReading == 0)) {
+      *currentReading = 20;
+    } else if ((*counter % 2 == 0) && (*currentReading == 20)) {
+      *currentReading = -20;
+    }
+
+=======
     *currentReading = (analogRead(*aPin2) / 1023.0) * 10.0 - 25.0;
     
+>>>>>>> 8fdd488fd78a5db96818143dcd8e6215ff13605b
   	return;
 }
 
@@ -59,10 +81,20 @@ void updateHvVoltage(float* voltageReading, int* counter, int* aPin3) {
                             round robin style
     * Author(s): Anders Hunt
     *****************/
+<<<<<<< HEAD
+    if ((*counter % 3 == 0) && (*voltageReading == 10)) {
+      *voltageReading = 150;
+    } else if ((*counter % 3 == 0) && (*voltageReading == 150)) {
+      *voltageReading = 450;
+    } else if ((*counter % 3 == 0) && (*voltageReading == 450)) {
+      *voltageReading = 10;
+    }
+=======
 
 
     *voltageReading = ((analogRead(*aPin3) / 1023.0) * 90.0);
     
+>>>>>>> 8fdd488fd78a5db96818143dcd8e6215ff13605b
   	return;
 }
 
@@ -72,10 +104,10 @@ void measurementTask(void* mData) {
     * Function inputs: void* mData
     * Function outputs: void
     * Function description: calls all functions within the measurement file
+                            If measurementFlag is true runs all above, if false does not run any threads
     * Author(s): Anders Hunt
     *****************/
   	measurementData* data = (measurementData*) mData;
-<<<<<<< HEAD
     if(*(data->measurementFlag)){
         // Update all sensors
         updateHVIL(data->hvilStatus, data->hvilPin);
@@ -83,6 +115,9 @@ void measurementTask(void* mData) {
         updateHvCurrent(data->hvCurrent, data->counter);
         updateHvVoltage(data->hvVoltage, data->counter);
     }
+<<<<<<< HEAD
+    *(data->measurementFlag) = true;
+=======
     *(data->measurementFlag) = true;  //skips measurement for one clock cycle
 =======
 
@@ -93,4 +128,5 @@ void measurementTask(void* mData) {
   	updateHvVoltage(data->hvVoltage, data->counter, data->voltagePin);
     *(data->finishedFlag) = true;
 >>>>>>> 08f9e6963dc3c4804739f7e01484afd51c0869be
+>>>>>>> 8fdd488fd78a5db96818143dcd8e6215ff13605b
 }

@@ -195,9 +195,6 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
    digitalWrite(13, LOW);
    pinMode(XM, OUTPUT);
    pinMode(YP, OUTPUT);
-   if (*forceAlarm){
-    displayState = 2;
-   }
    if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
 
 
@@ -206,7 +203,6 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
     //p.x = tft.width()-map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
     p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
      //p.y = map(p.y, TS_MINY, TS_MAXY, tft.height(), 0);
-    if (*forceAlarm == false){
 
     if (p.y < BOXSIZE) {
 
@@ -232,8 +228,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
          *batteryOn = true;
         }
       }
-    }
-    } else {
+    } else if (*displayState ==  2) {
       if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
         if ((p.y > 250) && (p.y < 250 + BOXSIZE)){
 
@@ -354,7 +349,7 @@ void measurementScreen(int* SOC, float* temp,float* HVVolt, float* HVCur, bool* 
   }
 }
 
-void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, bool* forceAlarm){
+void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, volatile bool* forceAlarm){
   /****************
     * Function name: AlarmScreen
     * Function inputs: an int that represents the HVILstate and int for the overcurrent state,
@@ -381,15 +376,13 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
     tft.setCursor(0,LNSPACE*6);
     tft.print("High Voltage Out of Range: ");
 
-    if (*forceAlarm == true) {
+    if (*forceAlarm) {
 
         tft.fillRect(50, 250, BOXWIDTH * 2, BOXSIZE, YELLOW);
-        tft.setCursor(50 + TEXTOFFSET, 250 + TEXTOFFSET)
-        tft.setTextColor(BLACK);
-        tft.setTEXTSIZE(2;)
         tft.print("Acknowledge Alarms");
 
     }
+
     //setting to impossible states so will update all the variables below
     HVILStateL = -1;
     OvercurrentStateL = -1;
@@ -433,7 +426,6 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
         tft.print("ACTIVE, ACKNOWLEDGED");
     }
   }
-
 }
 
 void touchScreenTask(void* mData){
