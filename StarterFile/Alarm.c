@@ -60,6 +60,7 @@ void alarmTask(void* mData){
     * Function inputs: void* mData
     * Function outputs: void
     * Function description: calls all functions within class to update all variables
+                            If AlarmFlag is true runs all above, if false does not run any threads
     * Author(s): Sam Quiring
     *****************/
     //runs if our alarmFlag is up

@@ -99,7 +99,7 @@ void displaySetup() {
     * Function description: initializes the elegoo touch screen display
     * Author(s): Sam Quiring
     *****************/
-    
+
   //opens up the serial at address 9600
   Serial.begin(9600);
   //prints out the function below in the serial
@@ -131,12 +131,12 @@ void displaySetup() {
   } else if(identifier == 0x8357) {
     Serial.println(F("Found HX8357D LCD driver"));
   } else if(identifier==0x0101)
-  {     
+  {
       identifier=0x9341;
        Serial.println(F("Found 0x9341 LCD driver"));
   }
   else if(identifier==0x1111)
-  {     
+  {
       identifier=0x9328;
        Serial.println(F("Found 0x9328 LCD driver"));
   }
@@ -150,7 +150,7 @@ void displaySetup() {
     Serial.println(F("Also if using the breakout, double-check that all wiring"));
     Serial.println(F("matches the tutorial."));
     identifier=0x9328;
-  
+
   }
   tft.begin(identifier);
   //begins the display after all drivers and propperly running
@@ -160,8 +160,8 @@ void displaySetup() {
   tft.fillRect(BOXWIDTH * 2, 300, BOXWIDTH, BOXSIZE, MAGENTA);
   tft.drawRect(BOXWIDTH *2, 300, BOXWIDTH, BOXSIZE, WHITE);
 
-  
- 
+
+
   pinMode(13, OUTPUT);
 
 //sets up our text for the screen changing
@@ -172,7 +172,7 @@ void displaySetup() {
 
   tft.setCursor(TEXTOFFSET + BOXWIDTH, 310);
   tft.print("MEASUREMENT");
-  
+
 
   tft.setCursor(TEXTOFFSET + BOXWIDTH * 2, 310);
   tft.print("BATTERY");
@@ -206,18 +206,18 @@ void clicker(int* displayState, bool* state, bool* batteryOn){
 
     if (p.y < BOXSIZE) {
 
-       if (p.x < BOXWIDTH) { 
+       if (p.x < BOXWIDTH) {
             *displayState = 1;
             *state = true;
-         
+
        }  else if (p.x < BOXWIDTH*2) {
             *displayState = 0;
             *state = true;
-       
+
        } else if (p.x < BOXWIDTH*3) {
             *displayState = 2;
             *state = true;
-       
+
        }
     }
     if (*displayState == 1) {
@@ -227,7 +227,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn){
         } else if ((p.x > 50 + BOXWIDTH) && (p.x < 50 + BOXWIDTH * 2)){
          *batteryOn = true;
         }
-      }     
+      }
     }
   } else {
       *state = false;
@@ -244,7 +244,7 @@ void batteryScreen(bool* nScreen, bool* csState){
     *                       then the contactor is closed and if it is false the contactor is open.
     * Author(s): Sam Quiring
     *****************/
-  if (*nScreen) {   
+  if (*nScreen) {
     tft.fillRect(0,0,XMAX,YUPDATE,WHITE);
     tft.setCursor(0, 0);
     tft.setTextColor(BLACK); tft.setTextSize(2);
@@ -254,8 +254,8 @@ void batteryScreen(bool* nScreen, bool* csState){
     tft.print("ON");
     tft.setCursor(50 + BOXWIDTH + TEXTOFFSET, 100 + TEXTOFFSET);
     tft.fillRect(50 + BOXWIDTH, 100, BOXWIDTH, BOXSIZE, YELLOW);
-    tft.print("OFF");   
-     batteryOnL = !(*csState); 
+    tft.print("OFF");
+     batteryOnL = !(*csState);
   }
     if(*csState != batteryOnL){
       batteryOnL = *csState;
@@ -344,7 +344,7 @@ void measurementScreen(int* SOC, float* temp,float* HVVolt, float* HVCur, bool* 
 void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen){
   /****************
     * Function name: AlarmScreen
-    * Function inputs: an int that represents the HVILstate and int for the overcurrent state, 
+    * Function inputs: an int that represents the HVILstate and int for the overcurrent state,
     *                  an in for the HV out of range state and a bool that is true if theres a new screen
     * Function outputs: void
     * Function description: sets up the Alarm screen. Displays all the UI on the screen and updates the
@@ -420,22 +420,26 @@ void touchScreenTask(void* mData){
     * Function outputs: void
     * Function description: on startup initializes the display. It checks the state of the touch display and
     *                       calls the function that pertains to that given state. It then calls the clicker to
-    *                       check if the user clicked and update the given state. 
+    *                       check if the user clicked and update the given state.
+                            If touchScreenFlag is true runs all above, if false does not run any threads
     * Author(s): Sam Quiring
     *****************/
     touchScreenData* data = (touchScreenData*) mData;
-    if(*(data->initialize)){
-      displaySetup();
-      *(data->initialize) = false;
-    }
-       if(*(data->touchState) == 0){
+    //decides if you want to run the given tasks
+    if(*(data->touchScreenFlag)){
+        if(*(data->initialize)){
+        displaySetup();
+        *(data->initialize) = false;
+        }
+        if(*(data->touchState) == 0){
            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen);
         } else if(*(data->touchState) == 1){
             batteryScreen(data->nScreen, data->csState);
         } else{
           AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen);
         }
-       clicker(data->touchState, data->nScreen, data->batteryOn);
-       *(data->finishedFlag) = true;
+        clicker(data->touchState, data->nScreen, data->batteryOn);
+        *(data->finishedFlag) = true;
+    }
 
 }

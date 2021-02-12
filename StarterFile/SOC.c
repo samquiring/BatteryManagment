@@ -19,9 +19,13 @@ void SOCTask(void* sData) {
     * Function inputs: void* sData
     * Function outputs: void
     * Function description: calls all functions within SOC
+                            If SOCFlag is true runs all above, if false does not run any threads
     * Author(s): Anders Hunt
     *****************/
-    SOCData* data = (SOCData*) sData;
-    updateSOC(data->stateOfCharge);
-    *(data->finishedFlag) = true;
+
+    if(*(data->SOCFlag)){
+        SOCData* data = (SOCData*) sData;
+        updateSOC(data->stateOfCharge);
+        *(data->finishedFlag) = true;
+    }
 }

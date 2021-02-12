@@ -24,7 +24,7 @@ TCB alarmTCB;
 measurementData measure;    // Declare measurement data structure - defined in Measurement.h
 touchScreenData touch;      // Declare touch screen data structure - defined in TouchScreen.h
 SOCData SOC;                // Declare SOC data structure - defined in SOC.h
-contactorData contractor;   // Declare contractor data structure - defined in contactor.h
+contactorData contactor;   // Declare contractor data structure - defined in contactor.h
 alarmData alarm;            // Declare alarm data structure - defined in Alarm.h
 
 //measure global variables
@@ -35,17 +35,21 @@ float temperature   = 0.0;
 bool HVIL           = false;
 const byte hvilPin = 22; //the current state of pin 22. false = low true = high
 float chargeState = 0;
+volatile bool measurementFlag = true;
 
 //contactor global variables
 bool contactorState = true; //true = open, false = closed
+volatile bool contactorFlag = true;
 
 //Alarm global variables
 int HVILState = 0;
 int OvercurrentState = 0;
 int HVOutOfRangeState = 0;
+volatile bool alarmFlag = true;
 
 //SOC global variables
 int stateOfCharge = 0;
+volatile bool SOCFlag = true;
 
 //touchscreen global variables
 bool initialize = true; 
@@ -57,6 +61,8 @@ char threeLine[CHARSIZE];
 char fourLine[CHARSIZE];
 char fiveLine[CHARSIZE];
 bool updateStates = true;
+volatile bool touchScreenFlag = true;
+volatile bool forceAlarm = false; //sets when the touchscreen is stuck in the alarmState
 
 //multiple uses global variables
 int counter = 1;
@@ -90,16 +96,20 @@ void setup() {
   measure.hvCurrent = &hvCurrent;
   measure.hvVoltage = &hvVoltage;
   measure.counter = &counter;
+  measure.measurementFlag = &measurementFlag;
 
-  contractor.contactorState = &contactorState;
-  contractor.batteryOn = &batteryOn;
+  contactor.contactorState = &contactorState;
+  contactor.batteryOn = &batteryOn;
+  contactor.contactorFlag = &contactorFlag;
 
   alarm.HVILState = &HVILState;
   alarm.OvercurrentState = &OvercurrentState;
   alarm.HVOutOfRangeState = &HVOutOfRangeState;
   alarm.counter = &counter;
+  alarm.alarmFlag = &alarmFlag;
 
   SOC.stateOfCharge = &stateOfCharge;
+  SOC.SOCFlag = &SOCFlag;
 
   touch.touchState = &touchState;
   touch.HVILState = &HVILState;
@@ -114,12 +124,14 @@ void setup() {
   touch.initialize = &initialize;
   touch.HVIL = &HVIL;
   touch.csState = &contactorState;
+  touch.touchScreenFlag = &touchScreenFlag;
+  touch.forceAlarmFlag = &forceAlarm;
 
   //setting TCB up so it is connected
   measurementTCB.taskDataPtr = &measure;
   measurementTCB.task = &measurementTask;
 
-  contactorTCB.taskDataPtr = &contractor;
+  contactorTCB.taskDataPtr = &contactor;
   contactorTCB.task = &contactorTask;
 
   alarmTCB.taskDataPtr = &alarm;
