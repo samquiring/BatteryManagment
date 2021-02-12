@@ -234,6 +234,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
         if ((p.y > 250) && (p.y < 250 + BOXSIZE)){
 
             *forceAlarm = false;
+            *state = false;
 
         }
       }

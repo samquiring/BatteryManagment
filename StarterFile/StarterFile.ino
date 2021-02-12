@@ -165,6 +165,7 @@ void loop() {
            timeBaseFlag = false;
            scheduler(taskArray);
            digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
+           counter++;
       }
     }
    
