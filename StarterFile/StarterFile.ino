@@ -34,8 +34,12 @@ float hvVoltage     = 10.0;
 float temperature   = 0.0;
 bool HVIL           = false;
 const byte hvilPin = 20; //the current state of pin 22. false = low true = high
-
-int hvVoltagePin = 0;
+int hvVoltageVal = 0; //raw input values from our pin
+int hvCurrentVal = 0;
+int tempVal = 0;
+const byte voltagePin = A10;  //the pins that read the inputs for our voltage, current and temperature
+const byte currentPin = A12;
+const byte tempPin = A14;
 
 float chargeState = 0;
 volatile bool measurementFlag = true;
@@ -92,8 +96,11 @@ void setup() {
   //initializes pin for battery
   pinMode(batteryPin,OUTPUT);
 
-  //pullup resistor and pin for HVIL voltage
-  pinMode(A15, INPUT_PULLUP);
+  //pullup resistor and pin for HVIL voltage, current and temperature
+  pinMode(voltagePin, INPUT_PULLUP);
+  pinMode(currentPin, INPUT_PULLUP);
+  pinMode(tempPin, INPUT_PULLUP);
+  
 
   attachInterrupt(digitalPinToInterrupt(hvilPin), alarmISR, RISING);  //creates an interrupt whenever hvilPin is high
   
@@ -174,16 +181,12 @@ void loop() {
            timeBaseFlag = false;
            scheduler(taskArray);
            digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
-           digitalWrite(A15,hvVoltagePin);
-           Serial.print(hvVoltagePin);
+           hvVoltageVal =analogRead(voltagePin);
+           hvCurrentVal =analogRead(currentPin);
+           tempVal = analogRead(tempPin);
            counter++;
       }
-    }
-   
-   ///counter += 1; I don't think we need these anymore
-    //delay(930);   TODO: figure out if these matter
-
-   
+    } 
 }
 
 void timerISR(){          //interrupts service routine
