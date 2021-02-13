@@ -11,13 +11,6 @@ void updateHVILstate (int* HVILState, volatile bool* forceAlarm){
                             cycling every 1 second
     * Author(s): Sam Quiring
     *****************/
-    /*
-    if(*HVILState < 2){
-        *HVILState += 1;
-    } else {
-        *HVILState = 0;
-    }
-    */
     if(*HVILState == 0)
       *HVILState = 1;
     if(*HVILState == 1)
@@ -35,7 +28,7 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool*
     *****************/
 
     if (*OvercurrentState == 0){
-        if ((hvCurrent < -5) || (hvCurrent > 20)) {
+        if ((*hvCurrent < -5) || (*hvCurrent > 20)) {
            *OvercurrentState = 1;
            *forceAlarm = true;
         }
@@ -58,19 +51,12 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* fo
                             cycling every 3 seconds
     * Author(s): Sam Quiring
     *****************/
-    if(*counter%3 == 0){
-        if(*HVOutOfRangeState < 2){
-            *HVOutOfRangeState += 1;
-        } else {
-            *HVOutOfRangeState = 0;
-        }
-    }
-    *HVOutOfRangeState = 0;
+    
     if(*HVOutOfRangeState == 1)
       *forceAlarm = true;
 
     if (*HVOutOfRangeState == 0){
-        if ((hvVoltage < 280) || (hvVoltage > 405)) {
+        if ((*hvVoltage < 280) || (*hvVoltage > 405)) {
            *HVOutOfRangeState = 1;
            *forceAlarm = true;
         }
