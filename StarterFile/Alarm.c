@@ -41,6 +41,9 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAla
         }
     }
     *OvercurrentState = 0;
+
+
+    
     if(*OvercurrentState == 1)
       *forceAlarm = true;
 }
