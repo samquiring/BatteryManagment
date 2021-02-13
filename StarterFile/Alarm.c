@@ -35,7 +35,7 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAla
     *****************/
 
     if (*OvercurrentState == 0){
-        if ((hvCurrent < -5) || (hvCurrent > 20) {
+        if ((hvCurrent < -5) || (hvCurrent > 20)) {
            *OvercurrentState = 1;
            *forceAlarm = true;
         }
@@ -70,7 +70,7 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, bool* forceAlarm,
       *forceAlarm = true;
 
     if (*HVOutOfRangeState == 0){
-        if ((hvVoltage < 280) || (hvVoltage > 405) {
+        if ((hvVoltage < 280) || (hvVoltage > 405)) {
            *HVOutOfRange = 1;
            *forceAlarm = true;
         }
