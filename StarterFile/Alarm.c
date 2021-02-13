@@ -24,7 +24,7 @@ void updateHVILstate (int* HVILState, bool* forceAlarm){
       *forceAlarm = true;
 }
 
-void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAlarm){
+void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAlarm, float* hvCurrent){
     /****************
     * Function name: update OvercurrentState
     * Function inputs: a pointer to Overcurrent state and a pointer to counter
@@ -33,28 +33,23 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAla
                             cycling every 2 seconds
     * Author(s): Sam Quiring
     *****************/
-    if(*counter%2 == 0){
-        if(*OvercurrentState < 2){
-            *OvercurrentState += 1;
-        } else {
-            *OvercurrentState = 0;
-        }
-    }
+
     if (*OvercurrentState == 0){
         if ((hvCurrent < -5) || (hvCurrent > 20) {
-           *OvercurrentState = 1
+           *OvercurrentState = 1;
+           *forceAlarm = true;
         }
     } else if (*OvercurrentState == 1){
-          if (*forceAlarm)
+        if (*forceAlarm == false) {
+            *OvercurrentState = 2;
+        }
     }
-
-
-
-    if(*OvercurrentState == 1)
-      *forceAlarm = true;
+    if ((hvCurrent > 5) &&  (hvCurrent < 20)) {
+        *OvercurrentState = 0;
+    }
 }
 
-void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, bool* forceAlarm){
+void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, bool* forceAlarm, float* hvVoltage){
     /****************
     * Function name: updateHVOutOfRange
     * Function inputs: a pointer to HV out of range state and a ptr to counter
@@ -73,6 +68,20 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, bool* forceAlarm)
     *HVOutOfRangeState = 0;
     if(*HVOutOfRangeState == 1)
       *forceAlarm = true;
+
+    if (*HVOutOfRangeState == 0){
+        if ((hvVoltage < 280) || (hvVoltage > 405) {
+           *HVOutOfRange = 1;
+           *forceAlarm = true;
+        }
+    } else if (*HVOutOfRangeState == 1){
+        if (*forceAlarm == false) {
+            *HVOutOfRangeState = 2;
+        }
+    }
+    if ((HVOutOfRange > 280) &&  (HVOutOfRange < 405)) {
+        *HVOutOfRangeState = 0;
+    }
 }
 
 void alarmTask(void* mData){
@@ -88,8 +97,8 @@ void alarmTask(void* mData){
     alarmData* data = (alarmData*) mData;
     if(*(data->alarmFlag)){
         updateHVILstate (data->HVILState,data->forceAlarm);
-        updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarm);
-        updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarm);
+        updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarm, data->hvCurrent);
+        updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarm, data->hvVoltage);
     }
     *(data->alarmFlag) = true;  //skips alarm for one clock cycle
 }
