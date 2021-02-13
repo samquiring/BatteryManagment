@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include "Alarm.h"
 
-void updateHVILstate (int* HVILState, bool* forceAlarm){
+void updateHVILstate (int* HVILState, volatile bool* forceAlarm){
     /****************
     * Function name: updateHVIL
     * Function inputs: a pointer to HVIL state
@@ -24,7 +24,7 @@ void updateHVILstate (int* HVILState, bool* forceAlarm){
       *forceAlarm = true;
 }
 
-void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAlarm, float* hvCurrent){
+void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool* forceAlarm, float* hvCurrent){
     /****************
     * Function name: update OvercurrentState
     * Function inputs: a pointer to Overcurrent state and a pointer to counter
@@ -44,12 +44,12 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAla
             *OvercurrentState = 2;
         }
     }
-    if ((hvCurrent > 5) &&  (hvCurrent < 20)) {
+    if ((*hvCurrent > 5) &&  (*hvCurrent < 20)) {
         *OvercurrentState = 0;
     }
 }
 
-void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, bool* forceAlarm, float* hvVoltage){
+void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* forceAlarm, float* hvVoltage){
     /****************
     * Function name: updateHVOutOfRange
     * Function inputs: a pointer to HV out of range state and a ptr to counter
