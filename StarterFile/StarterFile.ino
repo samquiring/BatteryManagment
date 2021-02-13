@@ -34,9 +34,6 @@ float hvVoltage     = 10.0;
 float temperature   = 0.0;
 bool HVIL           = false;
 const byte hvilPin = 20; //the current state of pin 22. false = low true = high
-int hvVoltageVal = 0; //raw input values from our pin
-int hvCurrentVal = 0;
-int tempVal = 0;
 const byte voltagePin = A10;  //the pins that read the inputs for our voltage, current and temperature
 const byte currentPin = A12;
 const byte tempPin = A14;
@@ -112,6 +109,9 @@ void setup() {
   measure.hvVoltage = &hvVoltage;
   measure.counter = &counter;
   measure.measurementFlag = &measurementFlag;
+  measure.tempPin = &tempPin;
+  measure.currentPin = &currentPin;
+  measure.voltagePin = &voltagePin;
 
   contactor.contactorState = &contactorState;
   contactor.batteryOn = &batteryOn;
@@ -181,9 +181,6 @@ void loop() {
            timeBaseFlag = false;
            scheduler(taskArray);
            digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
-           hvVoltageVal =analogRead(voltagePin);
-           hvCurrentVal =analogRead(currentPin);
-           tempVal = analogRead(tempPin);
            counter++;
       }
     } 
