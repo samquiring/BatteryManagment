@@ -40,10 +40,16 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, bool* forceAla
             *OvercurrentState = 0;
         }
     }
-    *OvercurrentState = 0;
+    if (*OvercurrentState == 0){
+        if ((hvCurrent < -5) || (hvCurrent > 20) {
+           *OvercurrentState = 1
+        }
+    } else if (*OvercurrentState == 1){
+          if (*forceAlarm)
+    }
 
 
-    
+
     if(*OvercurrentState == 1)
       *forceAlarm = true;
 }
