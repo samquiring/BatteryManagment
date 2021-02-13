@@ -16,7 +16,7 @@ typedef struct alarmTaskData{
     int* OvercurrentState;  //0 = s1, 1 = s2, 2 = s3
     int* HVOutOfRangeState; //0 = s1, 1 = s2, 2 = s3
     int* counter;   //counter starts = 1
-    bool* alarmFlag; //true = run task false = skip task
+    volatile bool* alarmFlag; //true = run task false = skip task
     volatile bool* forceAlarm;
     float* hvVoltage; // voltage measurement
     float* hvCurrent; // current measurement
