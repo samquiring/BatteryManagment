@@ -71,7 +71,7 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, bool* forceAlarm,
 
     if (*HVOutOfRangeState == 0){
         if ((hvVoltage < 280) || (hvVoltage > 405)) {
-           *HVOutOfRange = 1;
+           *HVOutOfRangeState = 1;
            *forceAlarm = true;
         }
     } else if (*HVOutOfRangeState == 1){
@@ -79,7 +79,7 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, bool* forceAlarm,
             *HVOutOfRangeState = 2;
         }
     }
-    if ((HVOutOfRange > 280) &&  (HVOutOfRange < 405)) {
+    if ((*hvVoltage > 280) &&  (*hvVoltage < 405)) {
         *HVOutOfRangeState = 0;
     }
 }
