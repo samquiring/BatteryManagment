@@ -2,6 +2,13 @@
 #include <stdbool.h>
 #include "Measurement.h"
 #include <Arduino.h>
+#define pinOffset 13.0 //This is the min value of the analog pin because resistance can't be 0hm on the potentionmeter
+#define pinMax 970.0   //This is the max value of the analog pin because resistance can't be infinity on the potentionmeter
+#define voltageMax 450.0 //the max value of our voltage
+#define currentOffset -25.0 //the amount we need to offset our current output by
+#define currentSize 50.0 //-25 to 25 spans 50
+#define tempOffset -10.0 //the amount we need to offset our temperature output by
+#define tempSize 55.0 //-10 to 45 spans 55
 
 void updateHVIL(bool* hvilReading, const byte* pin) {
      /****************
@@ -21,7 +28,7 @@ void updateHVIL(bool* hvilReading, const byte* pin) {
     return;
 }
 
-void updateTemperature(float* temperatureReading, int* aPin1) {
+void updateTemperature(float* temperatureReading, const byte* aPin1) {
     /****************
     * Function name: updateTemperature
     * Function inputs: a float of the temperature
@@ -37,11 +44,11 @@ void updateTemperature(float* temperatureReading, int* aPin1) {
     *temperatureReading = -10;
   }
 
-  *temperatureReading = (float)(((analogRead(*aPin1) / 1023.0) * (11.0)) - 10.0);
+  *temperatureReading = (float)((((analogRead(*aPin1)-pinOffset) / pinMax) * tempSize) + tempOffset);
   	return;
 }
 
-void updateHvCurrent(float* currentReading, int* counter, int* aPin2) {
+void updateHvCurrent(float* currentReading, int* counter, const byte* aPin2) {
     /****************
     * Function name: updateHvCurrent
     * Function inputs: float of the currentReading and an int of counter
@@ -57,11 +64,11 @@ void updateHvCurrent(float* currentReading, int* counter, int* aPin2) {
     } else if ((*counter % 2 == 0) && (*currentReading == 20)) {
       *currentReading = -20;
     }
-    *currentReading = (analogRead(*aPin2) / 1023.0) * 10.0 - 25.0;
+    *currentReading = ((analogRead(*aPin2)-pinOffset) / pinMax) * currentSize + currentOffset;
   	return;
 }
 
-void updateHvVoltage(float* voltageReading, int* counter, int* aPin3) {
+void updateHvVoltage(float* voltageReading, int* counter, const byte* aPin3) {
     /****************
     * Function name: updateHvVoltage
     * Function inputs: float of the voltage reading and int counter
@@ -77,7 +84,7 @@ void updateHvVoltage(float* voltageReading, int* counter, int* aPin3) {
     } else if ((*counter % 3 == 0) && (*voltageReading == 450)) {
       *voltageReading = 10;
     }
-    *voltageReading = ((analogRead(*aPin3) / 1023.0) * 90.0);
+    *voltageReading = ((analogRead(*aPin3)-pinOffset) / pinMax) * voltageMax;
   	return;
 }
 
