@@ -222,7 +222,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
     p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
      //p.y = map(p.y, TS_MINY, TS_MAXY, tft.height(), 0);
 
-    if (p.y < BOXSIZE) {
+    if (p.y < BOXSIZE / 2) {
 
        if (p.x < BOXWIDTH) {
             *displayState = 1;
@@ -248,7 +248,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
       }
     } else if (*displayState ==  2) {
       if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
-        if ((p.y > 250) && (p.y < 250 + BOXSIZE)){
+        if ((p.y < 480 - 250) && (p.y > 480 - (250 + BOXSIZE))){
 
             *forceAlarm = false;
         }
@@ -397,7 +397,7 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
 
         tft.fillRect(50, 250, BOXWIDTH * 2, BOXSIZE, YELLOW);
         tft.setCursor(50 + TEXTOFFSET, 250 + TEXTOFFSET);
-        tft.print("Acknowledge Alarms");
+        tft.print("Acknowledge");
 
     }
 
