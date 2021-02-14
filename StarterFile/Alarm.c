@@ -17,12 +17,14 @@ void updateHVILstate (int* HVILState, volatile bool* forceAlarm, bool* hvilReadi
       *forceAlarm = true;
     } else if(!*hvilReading){
       if(*forceAlarm){
-        *HVILState = 1; 
+        *HVILState = 1;
       } else {
         *HVILState = 2;
       }
-    }else
+    }else {
       *HVILState = 0;
+      *forceAlarm = false;
+    }
    interrupts();
 }
 
@@ -48,6 +50,7 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool*
     }
     if ((*hvCurrent > 5) &&  (*hvCurrent < 20)) {
         *OvercurrentState = 0;
+        *forceAlarm = false;
     }
     interrupts();
 }
@@ -77,6 +80,7 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* fo
     }
     if ((*hvVoltage > 280) &&  (*hvVoltage < 405)) {
         *HVOutOfRangeState = 0;
+        *forceAlarm = flase;
     }
     interrupts();
 }
