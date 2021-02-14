@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include "Alarm.h"
 
-void updateHVILstate (int* HVILState, volatile bool* forceAlarm){
+void updateHVILstate (int* HVILState, volatile bool* forceAlarm, bool* hvilReading){
     /****************
     * Function name: updateHVIL
     * Function inputs: a pointer to HVIL state
@@ -11,10 +11,17 @@ void updateHVILstate (int* HVILState, volatile bool* forceAlarm){
                             cycling every 1 second
     * Author(s): Sam Quiring
     *****************/
-    if(*HVILState == 0)
+    if(!*hvilReading && *HVILState == 0){
       *HVILState = 1;
-    if(*HVILState == 1)
       *forceAlarm = true;
+    } else if(!*hvilReading){
+      if(*forceAlarm){
+        *HVILState = 1; 
+      } else {
+        *HVILState = 2;
+      }
+    }else
+      *HVILState = 0;
 }
 
 void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool* forceAlarm, float* hvCurrent){
@@ -82,7 +89,7 @@ void alarmTask(void* mData){
     //runs if our alarmFlag is up
     alarmData* data = (alarmData*) mData;
     if(*(data->alarmFlag)){
-        updateHVILstate (data->HVILState,data->forceAlarm);
+        updateHVILstate (data->HVILState,data->forceAlarm, data->hvilReading);
         updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarm, data->hvCurrent);
         updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarm, data->hvVoltage);
     }
