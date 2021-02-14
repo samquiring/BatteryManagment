@@ -18,6 +18,9 @@ typedef struct alarmTaskData{
     int* counter;   //counter starts = 1
     volatile bool* alarmFlag; //true = run task false = skip task
     volatile bool* forceAlarm;
+    volatile bool* forceAlarmHVIL;
+    volatile bool* forceAlarmCurrent;
+    volatile bool* forceAlarmVoltage;
     float* hvVoltage; // voltage measurement
     float* hvCurrent; // current measurement
     bool* hvilReading;

@@ -23,6 +23,7 @@ void updateHVILstate (int* HVILState, volatile bool* forceAlarm, bool* hvilReadi
       }
     }else {
       *HVILState = 0;
+      *forceAlarm = false;
     }
 }
 
@@ -47,6 +48,7 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool*
     }
     if ((*hvCurrent > 5) &&  (*hvCurrent < 20)) {
         *OvercurrentState = 0;
+        *forceAlarm = false;
     }
 }
 
@@ -74,6 +76,7 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* fo
     }
     if ((*hvVoltage > 280) &&  (*hvVoltage < 405)) {
         *HVOutOfRangeState = 0;
+        *forceAlarm = false;
     }
 }
 
@@ -89,9 +92,10 @@ void alarmTask(void* mData){
     //runs if our alarmFlag is up
     alarmData* data = (alarmData*) mData;
     if(*(data->alarmFlag)){
-        updateHVILstate (data->HVILState,data->forceAlarm, data->hvilReading);
-        updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarm, data->hvCurrent);
-        updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarm, data->hvVoltage);
+        updateHVILstate (data->HVILState,data->forceAlarmHVIL, data->hvilReading);
+        updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarmCurrent, data->hvCurrent);
+        updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarmVoltage, data->hvVoltage);
+        *(data->forceAlarm) = *(data->forceAlarmVoltage) || *(data->forceAlarmCurrent) || *(data->forceAlarmHVIL);
     }
     *(data->alarmFlag) = true;  //skips alarm for one clock cycle
 }

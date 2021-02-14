@@ -50,6 +50,9 @@ int HVILState = 0;
 int OvercurrentState = 0;
 int HVOutOfRangeState = 0;
 volatile bool alarmFlag = true;
+volatile bool alarmHVIL = false;
+volatile bool alarmCurrent = false;
+volatile bool alarmVoltage = false;
 
 //SOC global variables
 int stateOfCharge = 0;
@@ -126,6 +129,9 @@ void setup() {
   alarm.hvVoltage = &hvVoltage;
   alarm.hvCurrent = &hvCurrent;
   alarm.hvilReading = &HVIL;
+  alarm.forceAlarmHVIL = &alarmHVIL;
+  alarm.forceAlarmCurrent = &alarmCurrent;
+  alarm.forceAlarmVoltage = &alarmVoltage;
 
   SOC.stateOfCharge = &stateOfCharge;
   SOC.SOCFlag = &SOCFlag;
