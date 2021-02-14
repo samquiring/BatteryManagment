@@ -36,14 +36,6 @@ void updateTemperature(float* temperatureReading, const byte* aPin1) {
     * Function description: cycles through three values of temperature round robin style
     * Author(s): Anders Hunt
     *****************/
-  if (*temperatureReading == -10) {
-    *temperatureReading = 5;
-  } else if (*temperatureReading == 5) {
-    *temperatureReading = 25;
-  } else {
-    *temperatureReading = -10;
-  }
-
   *temperatureReading = (float)((((analogRead(*aPin1)-pinOffset) / pinMax) * tempSize) + tempOffset);
   	return;
 }
@@ -57,13 +49,6 @@ void updateHvCurrent(float* currentReading, int* counter, const byte* aPin2) {
                             round robin style
     * Author(s): Anders Hunt
     *****************/
-    if ((*counter % 2 == 0) && (*currentReading == -20)) {
-      *currentReading = 0;
-    } else if ((*counter % 2 == 0) && (*currentReading == 0)) {
-      *currentReading = 20;
-    } else if ((*counter % 2 == 0) && (*currentReading == 20)) {
-      *currentReading = -20;
-    }
     *currentReading = ((analogRead(*aPin2)-pinOffset) / pinMax) * currentSize + currentOffset;
   	return;
 }
@@ -77,13 +62,6 @@ void updateHvVoltage(float* voltageReading, int* counter, const byte* aPin3) {
                             round robin style
     * Author(s): Anders Hunt
     *****************/
-    if ((*counter % 3 == 0) && (*voltageReading == 10)) {
-      *voltageReading = 150;
-    } else if ((*counter % 3 == 0) && (*voltageReading == 150)) {
-      *voltageReading = 450;
-    } else if ((*counter % 3 == 0) && (*voltageReading == 450)) {
-      *voltageReading = 10;
-    }
     *voltageReading = ((analogRead(*aPin3)-pinOffset) / pinMax) * voltageMax;
   	return;
 }

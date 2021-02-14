@@ -20,6 +20,7 @@ typedef struct alarmTaskData{
     volatile bool* forceAlarm;
     float* hvVoltage; // voltage measurement
     float* hvCurrent; // current measurement
+    bool* hvilReading;
 
 }alarmData;
 

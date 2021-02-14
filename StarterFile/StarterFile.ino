@@ -123,6 +123,9 @@ void setup() {
   alarm.counter = &counter;
   alarm.alarmFlag = &alarmFlag;
   alarm.forceAlarm = &forceAlarm;
+  alarm.hvVoltage = &hvVoltage;
+  alarm.hvCurrent = &hvCurrent;
+  alarm.hvilReading = &HVIL;
 
   SOC.stateOfCharge = &stateOfCharge;
   SOC.SOCFlag = &SOCFlag;
