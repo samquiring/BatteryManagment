@@ -10,7 +10,9 @@ void updateSOC(int* SOCreading) {
     * Function description: soc is always set to 0
     * Author(s): Anders Hunt
     *****************/
+  noInterrupts();
   *SOCreading = 0;
+  interrupts();
 }
 
 void SOCTask(void* sData) {
