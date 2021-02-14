@@ -195,7 +195,25 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
    digitalWrite(13, LOW);
    pinMode(XM, OUTPUT);
    pinMode(YP, OUTPUT);
-   if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
+
+   if (*forceAlarm) {
+        displayState = 2;
+        if (p.z > MINPRESSURE && p.z < MAXPRESSURE){
+
+            // scale from 0->1023 to tft.width
+            p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+            //p.x = tft.width()-map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+            p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
+            //p.y = map(p.y, TS_MINY, TS_MAXY, tft.height(), 0);
+
+            if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
+                if ((p.y > 250) && (p.y < 250 + BOXSIZE)){
+
+                    *forceAlarm = false;
+                }
+            }
+        }
+   } else if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
 
 
     // scale from 0->1023 to tft.width
@@ -233,7 +251,6 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
         if ((p.y > 250) && (p.y < 250 + BOXSIZE)){
 
             *forceAlarm = false;
-
         }
       }
     }
