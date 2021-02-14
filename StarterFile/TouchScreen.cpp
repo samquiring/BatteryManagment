@@ -60,6 +60,7 @@ float tempL = -1;
 float HVVoltL = -1;
 float HVCurL = -1;
 bool HVILL = true;   //Change this according to startup condition of HVIL
+bool forceAlarmL = false;
 
 bool batteryOnL = false; //Change this according to startup condition of contactor
 
@@ -197,7 +198,13 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
    pinMode(YP, OUTPUT);
 
    if (*forceAlarm) {
-        displayState = 2;
+        *displayState = 2;
+        if(!forceAlarmL){
+          *state = true;
+          forceAlarmL = true;
+        } else {
+          *state = false;
+        }
         if (p.z > MINPRESSURE && p.z < MAXPRESSURE){
 
             // scale from 0->1023 to tft.width
@@ -256,6 +263,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
     }
    } else {
       *state = false;
+      forceAlarmL = false;
     }
 }
 
@@ -392,7 +400,6 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
     tft.print("Overcurrent: ");
     tft.setCursor(0,LNSPACE*6);
     tft.print("High Voltage Out of Range: ");
-
     if (*forceAlarm) {
 
         tft.fillRect(50, 250, BOXWIDTH * 2, BOXSIZE, YELLOW);

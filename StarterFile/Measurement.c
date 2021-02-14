@@ -19,13 +19,11 @@ void updateHVIL(bool* hvilReading, const byte* pin) {
                             pin is true and true if pin is false
     * Author(s): Anders Hunt
     *****************/
-    noInterrupts()
     if (digitalRead(*pin) == HIGH) {
       *hvilReading = false;
     } else {
       *hvilReading = true;
     }
-    interrupts();
 }
 
 void updateTemperature(float* temperatureReading, const byte* aPin1) {
@@ -36,9 +34,7 @@ void updateTemperature(float* temperatureReading, const byte* aPin1) {
     * Function description: cycles through three values of temperature round robin style
     * Author(s): Anders Hunt
     *****************/
-  noInterrupts();
   *temperatureReading = (float)((((analogRead(*aPin1)-pinOffset) / pinMax) * tempSize) + tempOffset);
-  interrupts();
 }
 
 void updateHvCurrent(float* currentReading, int* counter, const byte* aPin2) {
@@ -50,9 +46,7 @@ void updateHvCurrent(float* currentReading, int* counter, const byte* aPin2) {
                             round robin style
     * Author(s): Anders Hunt
     *****************/
-    noInterrupts();
     *currentReading = ((analogRead(*aPin2)-pinOffset) / pinMax) * currentSize + currentOffset;
-  	interrupts();
 }
 
 void updateHvVoltage(float* voltageReading, int* counter, const byte* aPin3) {
@@ -64,9 +58,7 @@ void updateHvVoltage(float* voltageReading, int* counter, const byte* aPin3) {
                             round robin style
     * Author(s): Anders Hunt
     *****************/
-    noInterrupts();
     *voltageReading = ((analogRead(*aPin3)-pinOffset) / pinMax) * voltageMax;
-  	interrupts();
 }
 
 void measurementTask(void* mData) {
