@@ -379,7 +379,7 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
     if (*forceAlarm) {
 
         tft.fillRect(50, 250, BOXWIDTH * 2, BOXSIZE, YELLOW);
-        tft.setCursor(50 + TEXTOFFSET, 250 + TEXTOFFSET)
+        tft.setCursor(50 + TEXTOFFSET, 250 + TEXTOFFSET);
         tft.print("Acknowledge Alarms");
 
     }
