@@ -199,6 +199,7 @@ void alarmISR(){
   measurementFlag = false;
   SOCFlag = false;
   contactorFlag = false;
+  forceAlarm = true;
   Serial.println("Alarm Flag Raised");
   interrupts();
 }

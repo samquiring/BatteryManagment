@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "Alarm.h"
+#include <Arduino.h>
 
 void updateHVILstate (int* HVILState, volatile bool* forceAlarm, bool* hvilReading){
     /****************
@@ -11,7 +12,6 @@ void updateHVILstate (int* HVILState, volatile bool* forceAlarm, bool* hvilReadi
                             cycling every 1 second
     * Author(s): Sam Quiring
     *****************/
-    noInterrupts();
     if(!*hvilReading && *HVILState == 0){
       *HVILState = 1;
       *forceAlarm = true;
@@ -23,7 +23,6 @@ void updateHVILstate (int* HVILState, volatile bool* forceAlarm, bool* hvilReadi
       }
     }else
       *HVILState = 0;
-   interrupts();
 }
 
 void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool* forceAlarm, float* hvCurrent){
@@ -35,7 +34,6 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool*
                             cycling every 2 seconds
     * Author(s): Sam Quiring
     *****************/
-    noInterrupts();
     if (*OvercurrentState == 0){
         if ((*hvCurrent < -5) || (*hvCurrent > 20)) {
            *OvercurrentState = 1;
@@ -49,7 +47,6 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool*
     if ((*hvCurrent > 5) &&  (*hvCurrent < 20)) {
         *OvercurrentState = 0;
     }
-    interrupts();
 }
 
 void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* forceAlarm, float* hvVoltage){
@@ -61,7 +58,6 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* fo
                             cycling every 3 seconds
     * Author(s): Sam Quiring
     *****************/
-    noInterrupts();
     if(*HVOutOfRangeState == 1)
       *forceAlarm = true;
 
@@ -78,7 +74,6 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* fo
     if ((*hvVoltage > 280) &&  (*hvVoltage < 405)) {
         *HVOutOfRangeState = 0;
     }
-    interrupts();
 }
 
 void alarmTask(void* mData){
