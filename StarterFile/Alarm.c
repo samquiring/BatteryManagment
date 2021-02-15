@@ -80,6 +80,16 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* fo
     }
 }
 
+void updateAlarms(volatile bool* voltage, volatile bool* current, volatile bool* HVIL, volatile bool* forceAlarm, volatile bool* alarmReset){
+  if(*alarmReset){
+    *voltage = false;
+    *current = false;
+    *HVIL = false;
+    *alarmReset = false;
+  }
+  *forceAlarm = *voltage || *current || *HVIL;
+}
+
 void alarmTask(void* mData){
     /****************
     * Function name: alarmTask
@@ -95,7 +105,7 @@ void alarmTask(void* mData){
         updateHVILstate (data->HVILState,data->forceAlarmHVIL, data->hvilReading);
         updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarmCurrent, data->hvCurrent);
         updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarmVoltage, data->hvVoltage);
-        *(data->forceAlarm) = *(data->forceAlarmVoltage) || *(data->forceAlarmCurrent) || *(data->forceAlarmHVIL);
+        updateAlarms(data->forceAlarmVoltage,data->forceAlarmCurrent,data->forceAlarmHVIL,data->forceAlarm,data->alarmReset);
     }
     *(data->alarmFlag) = true;  //skips alarm for one clock cycle
 }

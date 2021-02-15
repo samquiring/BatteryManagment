@@ -76,6 +76,7 @@ int counter = 1;
 bool batteryOn = false; //true = ON false = OFF
 const byte batteryPin = 40;
 volatile bool timeBaseFlag = false;
+volatile bool alarmReset = false; //this is the check to turn all alarm flags off 
 
 void setup() { 
   /****************
@@ -132,6 +133,7 @@ void setup() {
   alarm.forceAlarmHVIL = &alarmHVIL;
   alarm.forceAlarmCurrent = &alarmCurrent;
   alarm.forceAlarmVoltage = &alarmVoltage;
+  alarm.alarmReset = &alarmReset;
 
   SOC.stateOfCharge = &stateOfCharge;
   SOC.SOCFlag = &SOCFlag;
@@ -151,6 +153,7 @@ void setup() {
   touch.csState = &contactorState;
   touch.touchScreenFlag = &touchScreenFlag;
   touch.forceAlarm = &forceAlarm;
+  touch.alarmReset = &alarmReset;
 
   //setting TCB up so it is connected
   measurementTCB.taskDataPtr = &measure;
