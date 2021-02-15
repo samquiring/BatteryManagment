@@ -229,7 +229,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
     p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
      //p.y = map(p.y, TS_MINY, TS_MAXY, tft.height(), 0);
 
-    if (p.y < BOXSIZE / 2) {
+      if (p.y < BOXSIZE / 2) {
 
        if (p.x < BOXWIDTH) {
             *displayState = 1;
@@ -244,28 +244,28 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
             *state = true;
 
        }
-    }
-    if (*displayState == 1) {
-      if ((p.y > 170) && (p.y < 170 + BOXSIZE)) {
-        if ((p.x > 50) && (p.x < 50 + BOXWIDTH)) {
-          *batteryOn = false;
-        } else if ((p.x > 50 + BOXWIDTH) && (p.x < 50 + BOXWIDTH * 2)){
-         *batteryOn = true;
+      }
+      if (*displayState == 1) {
+        if ((p.y > 170) && (p.y < 170 + BOXSIZE)) {
+          if ((p.x > 50) && (p.x < 50 + BOXWIDTH)) {
+            *batteryOn = false;
+          } else if ((p.x > 50 + BOXWIDTH) && (p.x < 50 + BOXWIDTH * 2)){
+          *batteryOn = true;
+          }
+        }
+      } else if (*displayState ==  2) {
+        if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
+          if ((p.y > BOXSIZE) && (p.y < BOXSIZE + BOXSIZE)){
+            if ((p.y < BOXSIZE) && (p.y > BOXSIZE + BOXSIZE)){
+              *forceAlarm = false;
+            }
+          }
         }
       }
-    } else if (*displayState ==  2) {
-      if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
-        if ((p.y > BOXSIZE) && (p.y < BOXSIZE + BOXSIZE)){
-        if ((p.y < BOXSIZE) && (p.y > BOXSIZE + BOXSIZE)){
-            *forceAlarm = false;
-        }
-      }
-    }
-   } else {
+   }else {
       *state = false;
       forceAlarmL = false;
     }
-  }
 }
 
 void batteryScreen(bool* nScreen, bool* csState){
