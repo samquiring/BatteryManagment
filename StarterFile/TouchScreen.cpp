@@ -214,7 +214,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
             //p.y = map(p.y, TS_MINY, TS_MAXY, tft.height(), 0);
 
             if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
-                if ((p.y > 250) && (p.y < 250 + BOXSIZE)){
+                if ((p.y > BOXSIZE) && (p.y < BOXSIZE + BOXSIZE)){
 
                     *forceAlarm = false;
                 }
@@ -255,7 +255,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
       }
     } else if (*displayState ==  2) {
       if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
-        if ((p.y < BOXSIZE) && (p.y > BOXSIZE + BOXSIZE))){
+        if ((p.y > BOXSIZE) && (p.y < BOXSIZE + BOXSIZE)){
 
             *forceAlarm = false;
         }
