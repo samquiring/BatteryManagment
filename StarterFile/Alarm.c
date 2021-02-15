@@ -60,9 +60,7 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* fo
     * Function description: cycles through three different states for HVOutOfRange
                             cycling every 3 seconds
     * Author(s): Sam Quiring
-    *****************/
-    if(*HVOutOfRangeState == 1)
-      *forceAlarm = true;
+    *****************//
 
     if (*HVOutOfRangeState == 0){
         if ((*hvVoltage < 280) || (*hvVoltage > 405)) {
