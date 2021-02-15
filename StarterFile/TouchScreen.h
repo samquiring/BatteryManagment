@@ -26,6 +26,7 @@ typedef struct TouchScreenTaskData{
     bool* csState;
     volatile bool* touchScreenFlag; //tells us whether or not to run this task, True = run false = skip
     volatile bool* forceAlarm;      //tells touchScreen to stay in alarm state regardless of user input
+    volatile bool* alarmReset;
 }touchScreenData;
 
 void touchScreenTask (void*);
