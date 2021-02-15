@@ -180,7 +180,7 @@ void displaySetup() {
 }
 
 
-void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
+void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* forceAlarm, volatile bool* alarmReset){
   /****************
     * Function name: clicker
     * Function inputs: int displayState, bool if we have changed states, bool if the battery is currently on
@@ -216,56 +216,47 @@ void clicker(int* displayState, bool* state, bool* batteryOn, bool* forceAlarm){
             if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
                 if ((p.y > BOXSIZE) && (p.y < BOXSIZE + BOXSIZE)){
 
-                    *forceAlarm = false;
+                    *alarmReset = false;
                 }
             }
         }
    } else if (p.z > MINPRESSURE && p.z < MAXPRESSURE) {
 
 
-    // scale from 0->1023 to tft.width
-    p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
-    //p.x = tft.width()-map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
-    p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
-     //p.y = map(p.y, TS_MINY, TS_MAXY, tft.height(), 0);
+        // scale from 0->1023 to tft.width
+        p.x = map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+        //p.x = tft.width()-map(p.x, TS_MINX, TS_MAXX, tft.width(), 0);
+        p.y = (tft.height()-map(p.y, TS_MINY, TS_MAXY, tft.height(), 0));
+        //p.y = map(p.y, TS_MINY, TS_MAXY, tft.height(), 0);
 
-    if (p.y < BOXSIZE / 2) {
+        if (p.y < BOXSIZE / 2) {
 
-       if (p.x < BOXWIDTH) {
-            *displayState = 1;
-            *state = true;
+            if (p.x < BOXWIDTH) {
+                *displayState = 1;
+                *state = true;
 
-       }  else if (p.x < BOXWIDTH*2) {
-            *displayState = 0;
-            *state = true;
+            }  else if (p.x < BOXWIDTH*2) {
+                *displayState = 0;
+                *state = true;
 
-       } else if (p.x < BOXWIDTH*3) {
-            *displayState = 2;
-            *state = true;
+            } else if (p.x < BOXWIDTH*3) {
+                *displayState = 2;
+                *state = true;
 
-       }
-    }
-    if (*displayState == 1) {
-      if ((p.y > 170) && (p.y < 170 + BOXSIZE)) {
-        if ((p.x > 50) && (p.x < 50 + BOXWIDTH)) {
-          *batteryOn = false;
-        } else if ((p.x > 50 + BOXWIDTH) && (p.x < 50 + BOXWIDTH * 2)){
-         *batteryOn = true;
+            }
         }
-      }
-    } else if (*displayState ==  2) {
-      if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
+        if (*displayState == 1) {
+            if ((p.y > 170) && (p.y < 170 + BOXSIZE)) {
+                if ((p.x > 50) && (p.x < 50 + BOXWIDTH)) {
+                    *batteryOn = false;
+                } else if ((p.x > 50 + BOXWIDTH) && (p.x < 50 + BOXWIDTH * 2)){
+                    *batteryOn = true;
+                }
+            }
+        } else if (*displayState ==  2) {
 
-        if ((p.y > BOXSIZE) && (p.y < BOXSIZE + BOXSIZE)){
-
-        if ((p.y < BOXSIZE) && (p.y > BOXSIZE + BOXSIZE)){
-
-
-            *forceAlarm = false;
         }
-      }
-    }
-   } else {
+    } else {
       *state = false;
       forceAlarmL = false;
     }
@@ -485,7 +476,7 @@ void touchScreenTask(void* mData){
         } else{
           AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm);
         }
-        clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm);
+        clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset);
     }
     *(data->touchScreenFlag) = true;  //skips touchScreen for one clock cycle
 
