@@ -3,7 +3,7 @@
 #define NUM_TASKS 5
 
 //TODO: ADD UPDATE COUNTER AFTER EVERY CYCLE
-void scheduler(TCB* taskArray[]){
+void scheduler(TCB* curTask){
      /****************
     * Function name: scheduler
     * Function inputs: TCB* curTask
@@ -11,14 +11,13 @@ void scheduler(TCB* taskArray[]){
     * Function description: calls all tasks in given linked list
     * Author(s): Sam Quiring
     *****************/
-    /*
-    while(*curTask != null){
-      *curTask.task((*curTask).taskDataPtr)
-      *curTask = *curTask.next;
+    while(curTask){
+      curTask->task((curTask->taskDataPtr));
+      curTask = curTask->next;
     }
-    */
-    int i;
+    /*int i;
     for(i = 0; i < NUM_TASKS; i++){
       (*taskArray[i]).task((*taskArray[i]).taskDataPtr);
     }
+    */
 }
