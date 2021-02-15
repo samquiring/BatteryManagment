@@ -168,6 +168,16 @@ void setup() {
   touchScreenTCB.taskDataPtr = &touch;
   touchScreenTCB.task = &touchScreenTask;
 
+  //creating the doubly linked list
+  touchScreenTCB.next = &measurementTCB;
+  measurementTCB.prev = &touchScreenTCB;
+  measurementTCB.next = &SOCTCB;
+  SOCTCB.prev = &measurementTCB;
+  SOCTCB.next = &contactorTCB;
+  contactorTCB.prev = &SOCTCB;
+  contactorTCB.next = &alarmTCB;
+  alarmTCB.prev = &contactorTCB;
+
   //Initialize serial communication
     Serial.begin(9600);
     Serial1.begin(9600);
@@ -188,7 +198,7 @@ void loop() {
     while(1){
       if(timeBaseFlag){
            timeBaseFlag = false;
-           scheduler(taskArray);
+           scheduler(&touchScreenTCB);
            digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
            counter++;
       }
