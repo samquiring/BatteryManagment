@@ -216,7 +216,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
             if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
                 if ((p.y > BOXSIZE) && (p.y < BOXSIZE + BOXSIZE)){
 
-                    *alarmReset = false;
+                    *alarmReset = true;
                 }
             }
         }
