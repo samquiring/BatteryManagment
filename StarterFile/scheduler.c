@@ -15,9 +15,4 @@ void scheduler(TCB* curTask){
       curTask->task((curTask->taskDataPtr));
       curTask = curTask->next;
     }
-    /*int i;
-    for(i = 0; i < NUM_TASKS; i++){
-      (*taskArray[i]).task((*taskArray[i]).taskDataPtr);
-    }
-    */
 }

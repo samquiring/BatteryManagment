@@ -184,12 +184,15 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
   /****************
     * Function name: clicker
     * Function inputs: int displayState, bool if we have changed states, bool if the battery is currently on
+    *                 bool alarm that is true when an alarm has been triggered and a bool alarmReset that turns
+    *                 off all alarms when set to true
     * Function outputs: void
     * Function description: is the touch display part. Sets up bounds for the Alarm, Measurement, and battery
     *                       and senses user pressure. If the pressure is within one of those bounds it
     *                       changes the display state to that area and updates state so the display knows to change states
     *                       When in the battery state it also sets up for the on off touch and changes batteryOn accordingly
-    * Author(s): Sam Quiring
+    *                       It also sets the touch for the alarm state and does the same touch as above accept on an acknowledge button
+    * Author(s): Sam Quiring, Anders Hunt
     *****************/
    digitalWrite(13, HIGH);
    TSPoint p = ts.getPoint();
@@ -258,6 +261,9 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
         }
     } else {
       *state = false;
+      if(forceAlarmL){
+        *state = true;
+      }
       forceAlarmL = false;
     }
 }
@@ -376,12 +382,14 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
     * Function name: AlarmScreen
     * Function inputs: an int that represents the HVILstate and int for the overcurrent state,
     *                  an in for the HV out of range state and a bool that is true if theres a new screen
+    *                  and a bool forceAlarm that tells us if an alarm has been triggered
     * Function outputs: void
-    * Function description: sets up the Alarm screen. Displays all the UI on the screen and updates the
+    * Function description: sets up the Alarm screen. Displays all the UI on the screen and if force alarm is true draws
+    *                       an Acknowledge button. It also updates the
     *                       state description according to the state it is in
     *                       if we are in state 0 then it outputs NOT ACTIVE, state 1 outputs ACTIVE, NOT ACKNOWLEDGED
     *                       and State 2 outputs ACTIVE, ACKNOWLEDGED
-    * Author(s): Sam Quiring
+    * Author(s): Sam Quiring, Anders Hunt
     *****************/
   //fills the touch screen black
   if(*nScreen){
@@ -458,10 +466,7 @@ void touchScreenTask(void* mData){
     * Function description: on startup initializes the display. It checks the state of the touch display and
     *                       calls the function that pertains to that given state. It then calls the clicker to
     *                       check if the user clicked and update the given state.
-<<<<<<< HEAD
-=======
                             If touchScreenFlag is true runs all above, if false does not run any threads
->>>>>>> e747b5d542c09989ba193147915cf3edfbf5224e
     * Author(s): Sam Quiring
     *****************/
     touchScreenData* data = (touchScreenData*) mData;

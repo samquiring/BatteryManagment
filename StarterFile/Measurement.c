@@ -29,33 +29,37 @@ void updateHVIL(bool* hvilReading, const byte* pin) {
 void updateTemperature(float* temperatureReading, const byte* aPin1) {
     /****************
     * Function name: updateTemperature
-    * Function inputs: a float of the temperature
+    * Function inputs: a float of the temperature, and 
+    *                  a pointer to the temperature reading pin
     * Function outputs: void
-    * Function description: cycles through three values of temperature round robin style
+    * Function description: updates the value of the temperature output
+    *                       in terms of degrees from the voltage input values from the given pin
     * Author(s): Anders Hunt
     *****************/
   *temperatureReading = (float)((((analogRead(*aPin1)-pinOffset) / pinMax) * tempSize) + tempOffset);
 }
 
-void updateHvCurrent(float* currentReading, int* counter, const byte* aPin2) {
+void updateHvCurrent(float* currentReading, const byte* aPin2) {
     /****************
     * Function name: updateHvCurrent
-    * Function inputs: float of the currentReading and an int of counter
+    * Function inputs: float of the currentReading and
+    *                  a pointer to the current reading pin
     * Function outputs: void
-    * Function description: updates currentReading to 1 of three values every two cycles
-                            round robin style
+    * Function description: updates the value of the current output
+    *                       in terms of Amps from the voltage input values from the given pin
     * Author(s): Anders Hunt
     *****************/
     *currentReading = ((analogRead(*aPin2)-pinOffset) / pinMax) * currentSize + currentOffset;
 }
 
-void updateHvVoltage(float* voltageReading, int* counter, const byte* aPin3) {
+void updateHvVoltage(float* voltageReading, const byte* aPin3) {
     /****************
     * Function name: updateHvVoltage
-    * Function inputs: float of the voltage reading and int counter
+    * Function inputs: float of the voltageReading and
+    *                  a pointer to the voltage reading pin
     * Function outputs: void
-    * Function description: updates the voltage to 1 of three values every three cycles
-                            round robin style
+    * Function description: updates the value of the voltage output
+    *                       in terms of Volts from the voltage input values from the given pin
     * Author(s): Anders Hunt
     *****************/
     *voltageReading = ((analogRead(*aPin3)-pinOffset) / pinMax) * voltageMax;
@@ -75,8 +79,8 @@ void measurementTask(void* mData) {
         // Update all sensors
        updateHVIL(data->hvilStatus, data->hvilPin);
       updateTemperature(data->temperature, data->tempPin);
-      updateHvCurrent(data->hvCurrent, data->counter, data->currentPin);
-      updateHvVoltage(data->hvVoltage, data->counter, data->voltagePin);
+      updateHvCurrent(data->hvCurrent, data->currentPin);
+      updateHvVoltage(data->hvVoltage, data->voltagePin);
     }
     *(data->measurementFlag) = true;  //skips measurement for one clock cycle
 }

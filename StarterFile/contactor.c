@@ -1,8 +1,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "contactor.h"
+#include <Arduino.h>
 
-void updateState(bool* contactorState, bool* batteryOn){
+void updateState(bool* contactorState, bool* batteryOn, bool* HVIL){
     /****************
     * Function name: updateState
     * Function inputs: A bool of the current contactor state and a bool
@@ -12,11 +13,18 @@ void updateState(bool* contactorState, bool* batteryOn){
                             the contactor state accordingly
     * Author(s): Sam Quiring
     *****************/
-    if(*batteryOn){
-        *contactorState = false;
+    noInterrupts();
+    if(*HVIL){
+      if(*batteryOn){
+          *contactorState = false;
+      } else {
+          *contactorState = true;
+      }
     } else {
-        *contactorState = true;
+      *contactorState = true;
+      *batteryOn = false;
     }
+    interrupts();
 }
 void contactorTask(void* mData) {
     /****************
@@ -29,7 +37,7 @@ void contactorTask(void* mData) {
     *****************/
   	contactorData* data = (contactorData*) mData;
   	if(*(data->contactorFlag)){
-        updateState(data->contactorState,data->batteryOn);
+        updateState(data->contactorState,data->batteryOn, data->HVILState);
   	}
    *(data->contactorFlag) = true;  //skips contactor for one clock cycle
 }

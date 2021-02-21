@@ -6,10 +6,11 @@
 void updateHVILstate (int* HVILState, volatile bool* forceAlarm, bool* hvilReading){
     /****************
     * Function name: updateHVIL
-    * Function inputs: a pointer to HVIL state
+    * Function inputs: a pointer to HVIL state, a pointer to an alarm for HVIL, and a pointer to
+    *                 our current HVIL reading
     * Function outputs: void
-    * Function description: cycles through three different states for updateHVIL
-                            cycling every 1 second
+    * Function description: Updates the state of the HVIL depending on if our HVIL reading is
+    *                       false and if we have acknowledged the alarm 
     * Author(s): Sam Quiring
     *****************/
     if(!*hvilReading && *HVILState == 0){
@@ -27,13 +28,15 @@ void updateHVILstate (int* HVILState, volatile bool* forceAlarm, bool* hvilReadi
     }
 }
 
-void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool* forceAlarm, float* hvCurrent){
+void updateOvercurrentState (int* OvercurrentState, volatile bool* forceAlarm, float* hvCurrent){
     /****************
     * Function name: update OvercurrentState
-    * Function inputs: a pointer to Overcurrent state and a pointer to counter
+    * Function inputs: a pointer to Overcurrent state, a pointer to an alarm for overcurrent, and a pointer to
+    *                   our current reading
     * Function outputs: void
-    * Function description: cycles through three different states for Overcurrent
-                            cycling every 2 seconds
+    * Function description: Updates the state of the current alarm depending on if our current is within our 
+    *                       specified range and in the event it is outside the range updates states depending on if
+    *                       we have acknowledged the alarm 
     * Author(s): Sam Quiring
     *****************/
     if (*OvercurrentState == 0){
@@ -52,13 +55,15 @@ void updateOvercurrentState (int* OvercurrentState, int* counter, volatile bool*
     }
 }
 
-void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* forceAlarm, float* hvVoltage){
+void updateHVOutOfRange (int* HVOutOfRangeState, volatile bool* forceAlarm, float* hvVoltage){
     /****************
     * Function name: updateHVOutOfRange
-    * Function inputs: a pointer to HV out of range state and a ptr to counter
+    * Function inputs: a pointer to voltage state, a pointer to an alarm for voltage, and a pointer to
+    *                   our voltage reading
     * Function outputs: void
-    * Function description: cycles through three different states for HVOutOfRange
-                            cycling every 3 seconds
+    * Function description: Updates the state of the voltage alarm depending on if our voltage is within our 
+    *                       specified range and in the event it is outside the range updates states depending on if
+    *                       we have acknowledged the alarm 
     * Author(s): Sam Quiring
     *****************/
 
@@ -79,6 +84,14 @@ void updateHVOutOfRange (int* HVOutOfRangeState, int* counter, volatile bool* fo
 }
 
 void updateAlarms(volatile bool* voltage, volatile bool* current, volatile bool* HVIL, volatile bool* forceAlarm, volatile bool* alarmReset){
+  /****************
+    * Function name: updateAlarms
+    * Function inputs: a pointer to the voltageAlarm, currentAlarm, HVILAlarm, forceAlarm, and AlarmReset
+    * Function outputs: void
+    * Function description: sets the value of our forceAlarm depending on if any of the other alarms are turned on
+    *                       it also will turn off all alarms if alarm reset is called/true
+    * Author(s): Sam Quiring
+    *****************/
   if(*alarmReset){
     *voltage = false;
     *current = false;
@@ -101,8 +114,8 @@ void alarmTask(void* mData){
     alarmData* data = (alarmData*) mData;
     if(*(data->alarmFlag)){
         updateHVILstate (data->HVILState,data->forceAlarmHVIL, data->hvilReading);
-        updateOvercurrentState (data->OvercurrentState, data->counter, data->forceAlarmCurrent, data->hvCurrent);
-        updateHVOutOfRange (data->HVOutOfRangeState, data->counter,data->forceAlarmVoltage, data->hvVoltage);
+        updateOvercurrentState (data->OvercurrentState, data->forceAlarmCurrent, data->hvCurrent);
+        updateHVOutOfRange (data->HVOutOfRangeState, data->forceAlarmVoltage, data->hvVoltage);
         updateAlarms(data->forceAlarmVoltage,data->forceAlarmCurrent,data->forceAlarmHVIL,data->forceAlarm,data->alarmReset);
     }
     *(data->alarmFlag) = true;  //skips alarm for one clock cycle
