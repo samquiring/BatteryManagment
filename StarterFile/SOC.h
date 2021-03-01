@@ -16,6 +16,9 @@ extern "C" {
 
 typedef struct SOCTaskData {
   int* stateOfCharge;
+  float* hvCurrent;
+  float* hvVoltage;
+  float* temperature;
   volatile bool* SOCFlag; //true = run task false = skip task
 } SOCData;
 
