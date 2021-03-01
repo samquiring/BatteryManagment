@@ -16,10 +16,10 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
     * Function description: soc is always set to 0
     * Author(s): Anders Hunt
     *****************/
-    *SOCreading = (float) *hvVoltage;
+
+  
     
-    /* *SOCreading = (float) (*hvVoltage + 0.5 * *hvCurrent); */
-/*
+
 
   float socArr[ROWS_NUMBER][COLUMNS_NUMBER] = {
     {-10, 200, 250, 300, 350, 400},
@@ -29,8 +29,7 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
     {45, 0, 0, 0, 50, 100}
   };
 
-  float VOC = *hvVoltage + 0.5 * *hvCurrent;
-
+  float VOC = (float) *hvVoltage + 0.5 * *hvCurrent;
   float* soc = &socArr[0][0];
   int xRangeHigh;
   int xRangeLow;
@@ -40,22 +39,28 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
   int voltageHigh;
   int tempLow;
   int tempHigh;
-
+  bool passed = false;
+  
   for (int i = 0; i < COLUMNS_NUMBER; i++) {
-    if (VOC < *(soc + i)){
+    if ((VOC < *(soc + i)) && (!(passed))){
         xRangeHigh = i;
         xRangeLow = i - 1;
         voltageLow = *(soc + xRangeLow);
         voltageHigh = *(soc + xRangeHigh);
+        passed = true;
     }
+
   }
 
+  passed = false;
+
   for (int j = 0; j < ROWS_NUMBER; j++) {
-    if (VOC < *(soc + COLUMNS_NUMBER * j)){
+    if ((VOC < *(soc + COLUMNS_NUMBER * j)) && (!(passed))){
         yRangeHigh = j;
         yRangeLow = j - 1;
         tempLow = *(soc + COLUMNS_NUMBER * yRangeLow);
         tempHigh = *(soc + COLUMNS_NUMBER * yRangeHigh);
+        passed = true;
     }
   }
 
@@ -73,7 +78,7 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
 
 
     *SOCreading = socMidP13 + x_offset * (socMidP24 - socMidP13);
-*/
+
 }
 
 void SOCTask(void* sData) {
