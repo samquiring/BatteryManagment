@@ -72,10 +72,10 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
     }
     passed = false;
     
-    float SOCp1 = *(soc + (xRangeLow * COLUMNS_NUMBER + yRangeLow));
-    float SOCp2 = *(soc + (xRangeHigh * COLUMNS_NUMBER + yRangeLow));
-    float SOCp3 = *(soc + (xRangeLow * COLUMNS_NUMBER + yRangeHigh));
-    float SOCp4 = *(soc + (xRangeHigh * COLUMNS_NUMBER + yRangeHigh));
+    float SOCp1 = *(soc + (yRangeLow * COLUMNS_NUMBER + xRangeLow));
+    float SOCp2 = *(soc + (yRangeHigh * COLUMNS_NUMBER + xRangeLow));
+    float SOCp3 = *(soc + (yRangeLow * COLUMNS_NUMBER + xRangeHigh));
+    float SOCp4 = *(soc + (yRangeHigh * COLUMNS_NUMBER + xRangeHigh));
 
     float y_offset = (*temperature - tempLow) / (tempHigh - tempLow);
     float x_offset = (VOC - voltageLow) / (voltageHigh - voltageLow);
@@ -83,8 +83,7 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
     float socMidP13 = SOCp1 + y_offset * (SOCp3 - SOCp1);
     float socMidP24 = SOCp2 + y_offset * (SOCp4 - SOCp2);
 
-
-
+    
     *SOCreading = socMidP13 + x_offset * (socMidP24 - socMidP13);
   }
 }
