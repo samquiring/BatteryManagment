@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "SOC.h"
-// #include <Arduino.h>
+#include <Arduino.h>
 
 #define COLUMNS_NUMBER 6
 #define ROWS_NUMBER 5
 
-// VO= hvVOltage + 0.5 * hvCurrent
+
 
 void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* temperature) {
   /****************
@@ -60,7 +60,7 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
     passed = false;
 
     for (int j = 0; j < ROWS_NUMBER; j++) {
-      if ((VOC < *(soc + COLUMNS_NUMBER * j)) && (!(passed))){
+      if ((*temperature < *(soc + COLUMNS_NUMBER * j)) && (!(passed))){
         yRangeHigh = j;
         yRangeLow = j - 1;
         tempLow = *(soc + COLUMNS_NUMBER * yRangeLow);
