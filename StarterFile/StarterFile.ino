@@ -106,6 +106,7 @@ bool batteryOn = false; //true = ON false = OFF
 const byte batteryPin = 40;
 volatile bool timeBaseFlag = false;
 volatile bool alarmReset = false; //this is the check to turn all alarm flags off 
+volatile bool resetEEPROM = false; 
 
 
 void setup() { 
@@ -209,6 +210,13 @@ void setup() {
 
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;
+  remoteTerminal.currentMin = &currentMin;
+  remoteTerminal.currentMax = &currentMax;
+  remoteTerminal.voltageMin = &voltageMin;
+  remoteTerminal.voltageMax = &voltageMax;
+  remoteTerminal.temperatureMin = &temperatureMin;
+  remoteTerminal.temperatureMax = &temperatureMax;
+  remoteTerminal.resetFlag = &resetEEPROM;
 
   dataLogging.tempChangeMin = &tempChangeMin;
   dataLogging.tempChangeMax = &tempChangeMax;

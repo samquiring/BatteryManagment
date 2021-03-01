@@ -23,8 +23,6 @@ void userInput(){
   incomingByte = Serial.read();
 }
 
-void 
-
 void remoteTerminalTask(void* mData) {
     /****************
     * Function name: remoteTerminalTask

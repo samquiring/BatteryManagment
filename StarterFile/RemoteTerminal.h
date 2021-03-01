@@ -6,12 +6,12 @@ extern "C" {
 typedef struct remoteTerminalTaskData {
     float* temperatureMin;
     float* temperatureMax;
-    float* hvCurrentMin;
-    float* hvCurrentMax;
-    float* hvVoltageMin;
-    float* hvVoltageMax;
+    float* currentMin;
+    float* currentMax;
+    float* voltageMin;
+    float* voltageMax;
     volatile bool* remoteTerminalFlag; //true = run task false = skip task
-    bool* resetFlag;
+    volatile bool* resetFlag;
     bool* runStartFunct; //true if we need to re print the startup values
 } remoteTerminalData;
 
