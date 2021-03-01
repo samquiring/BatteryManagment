@@ -191,9 +191,6 @@ void setup() {
 
   SOC.stateOfCharge = &stateOfCharge;
   SOC.SOCFlag = &SOCFlag;
-  SOC.hvVoltage = &hvVoltage;
-  SOC.hvCurrent = &hvCurrent;
-  SOC.temperature = &temperature;
 
   touch.touchState = &touchState;
   touch.HVILState = &HVILState;

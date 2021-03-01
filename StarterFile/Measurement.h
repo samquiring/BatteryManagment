@@ -37,6 +37,7 @@ typedef struct measurementTaskData {
     bool* tempChangeMax;
     int* counter;
     volatile bool* measurementFlag; //true = run task false = skip task
+    volatile bool* resetEEPROM;
 } measurementData;
 
 

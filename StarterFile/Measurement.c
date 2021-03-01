@@ -10,6 +10,10 @@
 #define tempOffset -10.0 //the amount we need to offset our temperature output by
 #define tempSize 55.0 //-10 to 45 spans 55
 
+#define VOLTAGE_RST -1 //the value to reset our voltage to upon reset flag thrown
+#define TEMP_RST 0 //the value to reset our temperature to upon reset flag thrown
+#define CURRENT_RST 0 //the value to reset our current to upon reset flag thrown
+
 void updateHVIL(bool* hvilReading, const byte* pin) {
      /****************
     * Function name: updateHVIL1
@@ -65,7 +69,7 @@ void updateHvVoltage(float* voltageReading, const byte* aPin3) {
     *voltageReading = ((analogRead(*aPin3)-pinOffset) / pinMax) * VOLTAGEMAX;
 }
 
-void checkExtremes(float* reading, float* readingMax, float* readingMin, bool* newMax, bool* newMin){
+void checkExtremes(float* reading, float* readingMax, float* readingMin, bool* newMax, bool* newMin, volatile bool* resetEEPROM){
  /****************
     * Function name: checkExtremes
     * Function inputs: float* reading, float* readingMax, float* readingMin, bool* newMax, bool* newMin
@@ -74,13 +78,16 @@ void checkExtremes(float* reading, float* readingMax, float* readingMin, bool* n
     *                       or max if true
     * Author(s): Sam Quiring
     *****************/
-    
-    if(*reading < *readingMin){
-      *readingMin = *reading;
-      *newMin = true;
-    } else if(*reading > *readingMax){
-      *readingMax = *reading;
-      *newMax = true;
+    if(*resetEEPROM){
+      
+    }else {
+      if(*reading < *readingMin){
+        *readingMin = *reading;
+        *newMin = true;
+      } else if(*reading > *readingMax){
+        *readingMax = *reading;
+        *newMax = true;
+      }
     }
   
 }
@@ -101,9 +108,9 @@ void measurementTask(void* mData) {
       updateTemperature(data->temperature, data->tempPin);
       updateHvCurrent(data->hvCurrent, data->currentPin);
       updateHvVoltage(data->hvVoltage, data->voltagePin);
-      checkExtremes(data->temperature, data->temperatureMax, data->temperatureMin, data->tempChangeMax, data->tempChangeMin);
-      checkExtremes(data->hvVoltage, data->voltageMax, data->voltageMin, data->voltageChangeMax, data->voltageChangeMin);
-      checkExtremes(data->hvCurrent, data->currentMax, data->currentMin, data->currentChangeMax, data->currentChangeMin);
+      checkExtremes(data->temperature, data->temperatureMax, data->temperatureMin, data->tempChangeMax, data->tempChangeMin, data->resetEEPROM);
+      checkExtremes(data->hvVoltage, data->voltageMax, data->voltageMin, data->voltageChangeMax, data->voltageChangeMin, data->resetEEPROM);
+      checkExtremes(data->hvCurrent, data->currentMax, data->currentMin, data->currentChangeMax, data->currentChangeMin, data->resetEEPROM);
     }
     *(data->measurementFlag) = true;  //skips measurement for one clock cycle
 }
