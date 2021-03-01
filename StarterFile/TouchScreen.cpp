@@ -55,7 +55,7 @@ int OvercurrentStateL = -1;
 int HVOutOfRangeStateL = -1;
 
 //local holders of current value of measure to check if we should update their values on the screen
-int SOCL = -1;
+float SOCL = -1;
 float tempL = -1;
 float HVVoltL = -1;
 float HVCurL = -1;
@@ -321,7 +321,7 @@ void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool
     tft.setTextColor(BLACK); tft.setTextSize(2);
     tft.print("Measurement Screen");
     tft.setCursor(0,LNSPACE*2);
-    // tft.print("SOC: ");
+    tft.print("SOC: ");
     tft.setTextSize(2);
     tft.setCursor(0,LNSPACE*3);
     tft.print("Temperature: ");
@@ -333,7 +333,7 @@ void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool
     tft.print("HVIL: ");
    //makes sure HVIL is displayed if new cycle
     HVILL = !(*HVIL);
-    //SOCL = -1;
+    SOCL = -1;
     tempL = -1;
     HVCurL = -1;
     HVVoltL = -1;
