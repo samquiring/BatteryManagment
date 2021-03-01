@@ -84,6 +84,7 @@ volatile bool forceAlarm = false; //sets when the touchscreen is stuck in the al
 //remoteTerminal global variables
 bool remoteTerminalFlag = true;
 bool runStartFunc = true;
+int incomingByte = -1; // the user inputted value
 
 //dataLogging global variables
 bool tempChangeMin = false;
@@ -217,6 +218,7 @@ void setup() {
   remoteTerminal.temperatureMin = &temperatureMin;
   remoteTerminal.temperatureMax = &temperatureMax;
   remoteTerminal.resetFlag = &resetEEPROM;
+  remoteTerminal.incomingByte = &incomingByte;
 
   dataLogging.tempChangeMin = &tempChangeMin;
   dataLogging.tempChangeMax = &tempChangeMax;
@@ -258,6 +260,9 @@ void setup() {
   remoteTerminalTCB.taskDataPtr = &remoteTerminal;
   remoteTerminalTCB.task = &remoteTerminalTask;
 
+  dataLoggingTCB.taskDataPtr = &dataLogging;
+  dataLoggingTCB.task = &dataLoggingTask;
+
   //creating the doubly linked list
   touchScreenTCB.next = &measurementTCB;
   measurementTCB.prev = &touchScreenTCB;
@@ -270,6 +275,9 @@ void setup() {
 
   //temperary
   alarmTCB.next = &remoteTerminalTCB;
+  remoteTerminalTCB.prev = &alarmTCB;
+  remoteTerminalTCB.next = &dataLoggingTCB;
+  dataLoggingTCB.prev = &remoteTerminalTCB;
 
   //Initialize serial communication
     Serial.begin(9600);
@@ -321,6 +329,8 @@ void alarmISR(){
   SOCFlag = false;
   contactorFlag = false;
   touchScreenFlag = false;
+  remoteTerminalFlag = false;
+  dataLoggingFlag = false;
   forceAlarm = true;
   Serial.println("Alarm Flag Raised");
   interrupts();

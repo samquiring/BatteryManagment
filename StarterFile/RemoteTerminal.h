@@ -13,6 +13,7 @@ typedef struct remoteTerminalTaskData {
     volatile bool* remoteTerminalFlag; //true = run task false = skip task
     volatile bool* resetFlag;
     bool* runStartFunct; //true if we need to re print the startup values
+    int* incomingByte;
 } remoteTerminalData;
 
 

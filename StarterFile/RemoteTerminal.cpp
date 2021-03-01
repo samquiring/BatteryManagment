@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include "RemoteTerminal.h"
 
-int incomingByte;
-
 void printOptions(){
     /****************
     * Function name: printOptions
@@ -19,8 +17,28 @@ void printOptions(){
     Serial.print("Enter your menu choice [1-4]: ");
 }
 
-void userInput(){
-  incomingByte = Serial.read();
+void userInput(int* incomingByte){
+  *incomingByte = Serial.read();
+}
+
+void resetEEPROM(volatile bool* resetFlag){
+  Serial.println("resetting all stored high and low values in EEPROM");
+  *resetFlag = true;
+}
+
+void printRange(float* minVal, float* maxVal, String type, bool* runStartFunc){
+  Serial.println();
+  Serial.print("Your max recorded ");
+  Serial.print(type);
+  Serial.print(" is : ");
+  Serial.println(*maxVal);
+  Serial.print("Your min recorded ");
+  Serial.print(type);
+  Serial.print(" is : ");
+  Serial.println(*minVal);
+  Serial.println();
+  *runStartFunc = true;
+  
 }
 
 void remoteTerminalTask(void* mData) {
@@ -38,7 +56,17 @@ void remoteTerminalTask(void* mData) {
         printOptions();
         *(data->runStartFunct) = false;
       }
-      userInput();
+      userInput(data->incomingByte);
+      //all of the possible user inputs
+      if(*data->incomingByte == 49){
+        resetEEPROM(data->resetFlag);
+      } else if(*data->incomingByte == 50){
+        printRange(data->currentMin,data->currentMax,"current",data->runStartFunct);
+      } else if(*data->incomingByte == 51){
+        printRange(data->voltageMin,data->voltageMax,"voltage",data->runStartFunct);
+      } else if(*data->incomingByte == 52) {
+        printRange(data->temperatureMin,data->temperatureMax,"temperature",data->runStartFunct);
+      }
     }
     *(data->remoteTerminalFlag) = true;  //skips measurement for one clock cycle
 }
