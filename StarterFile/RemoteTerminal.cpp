@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "RemoteTerminal.h"
 
-int incomingByte = -1;
+int incomingByte;
 
 void printOptions(){
     /****************
@@ -21,8 +21,9 @@ void printOptions(){
 
 void userInput(){
   incomingByte = Serial.read();
-  Serial.println(incomingByte);
 }
+
+void 
 
 void remoteTerminalTask(void* mData) {
     /****************
@@ -37,6 +38,7 @@ void remoteTerminalTask(void* mData) {
     if(*(data->remoteTerminalFlag)){
       if(*(data->runStartFunct)){
         printOptions();
+        *(data->runStartFunct) = false;
       }
       userInput();
     }

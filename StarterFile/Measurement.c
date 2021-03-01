@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #define pinOffset 13.0 //This is the min value of the analog pin because resistance can't be 0hm on the potentionmeter
 #define pinMax 970.0   //This is the max value of the analog pin because resistance can't be infinity on the potentionmeter
-#define voltageMax 450.0 //the max value of our voltage
+#define VOLTAGEMAX 450.0 //the max value of our voltage
 #define currentOffset -25.0 //the amount we need to offset our current output by
 #define currentSize 50.0 //-25 to 25 spans 50
 #define tempOffset -10.0 //the amount we need to offset our temperature output by
@@ -62,7 +62,7 @@ void updateHvVoltage(float* voltageReading, const byte* aPin3) {
     *                       in terms of Volts from the voltage input values from the given pin
     * Author(s): Anders Hunt
     *****************/
-    *voltageReading = ((analogRead(*aPin3)-pinOffset) / pinMax) * voltageMax;
+    *voltageReading = ((analogRead(*aPin3)-pinOffset) / pinMax) * VOLTAGEMAX;
 }
 
 void checkExtremes(float* reading, float* readingMax, float* readingMin, bool* newMax, bool* newMin){

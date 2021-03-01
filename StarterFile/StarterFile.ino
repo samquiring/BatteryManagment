@@ -83,6 +83,7 @@ volatile bool forceAlarm = false; //sets when the touchscreen is stuck in the al
 
 //remoteTerminal global variables
 bool remoteTerminalFlag = true;
+bool runStartFunc = true;
 
 //dataLogging global variables
 bool tempChangeMin = false;
@@ -130,6 +131,15 @@ void setup() {
   pinMode(voltagePin, INPUT_PULLUP);
   pinMode(currentPin, INPUT_PULLUP);
   pinMode(tempPin, INPUT_PULLUP);
+
+  //sets all the values of min and max to the values in the EEPROM
+  EEPROM.get(tempAddressMin,temperatureMin);
+  EEPROM.get(tempAddressMax,temperatureMax);
+  EEPROM.get(voltageAddressMin,voltageMin);
+  EEPROM.get(voltageAddressMax,voltageMax);
+  EEPROM.get(currentAddressMin,currentMin);
+  EEPROM.get(currentAddressMax,currentMax);
+  
   
 
   attachInterrupt(digitalPinToInterrupt(hvilPin), alarmISR, RISING);  //creates an interrupt whenever hvilPin is high
@@ -145,6 +155,18 @@ void setup() {
   measure.tempPin = &tempPin;
   measure.currentPin = &currentPin;
   measure.voltagePin = &voltagePin;
+  measure.tempChangeMin = &tempChangeMin;
+  measure.tempChangeMax = &tempChangeMax;
+  measure.currentChangeMin = &currentChangeMin;
+  measure.currentChangeMax = &currentChangeMax;
+  measure.voltageChangeMin = &voltageChangeMin;
+  measure.voltageChangeMax = &voltageChangeMax;
+  measure.currentMin = &currentMin;
+  measure.currentMax = &currentMax;
+  measure.voltageMin = &voltageMin;
+  measure.voltageMax = &voltageMax;
+  measure.temperatureMin = &temperatureMin;
+  measure.temperatureMax = &temperatureMax;
 
   contactor.contactorState = &contactorState;
   contactor.batteryOn = &batteryOn;
@@ -167,9 +189,7 @@ void setup() {
 
   SOC.stateOfCharge = &stateOfCharge;
   SOC.SOCFlag = &SOCFlag;
-  SOC.hvVoltage = &hvVoltage;
-  SOC.hvCurrent = &hvCurrent;
-  SOC.temperature = &temperature;
+
   touch.touchState = &touchState;
   touch.HVILState = &HVILState;
   touch.OvercurrentState = &OvercurrentState;
@@ -188,6 +208,7 @@ void setup() {
   touch.alarmReset = &alarmReset;
 
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
+  remoteTerminal.runStartFunct = &runStartFunc;
 
   dataLogging.tempChangeMin = &tempChangeMin;
   dataLogging.tempChangeMax = &tempChangeMax;
