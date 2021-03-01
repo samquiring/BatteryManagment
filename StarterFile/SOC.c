@@ -29,10 +29,10 @@ void updateSOC(int* SOCreading, float* hvVoltage, float* hvCurrent, float* tempe
   float VOC = *hvVoltage + 0.5 * *hvCurrent;
 
   float* soc = &socArr[0][0];
-  int xRangeHigh = 0;
-  int xRangeLow = 0;
-  int yRangeHigh = 0;
-  int yRangeLow = 0;
+  int xRangeHigh;
+  int xRangeLow;
+  int yRangeHigh;
+  int yRangeLow;
   int voltageLow;
   int voltageHigh;
   int tempLow;
@@ -44,7 +44,6 @@ void updateSOC(int* SOCreading, float* hvVoltage, float* hvCurrent, float* tempe
         xRangeLow = i - 1;
         voltageLow = *(soc + xRangeLow);
         voltageHigh = *(soc + xRangeHigh);
-
     }
   }
 
