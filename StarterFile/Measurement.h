@@ -23,6 +23,18 @@ typedef struct measurementTaskData {
     float* temperature;
     float* hvCurrent;
     float* hvVoltage;
+    float* currentMin;
+    float* currentMax;
+    float* voltageMin;
+    float* voltageMax;
+    float* temperatureMin;
+    float* temperatureMax;
+    bool* voltageChangeMin;
+    bool* voltageChangeMax;
+    bool* currentChangeMin;
+    bool* currentChangeMax;
+    bool* tempChangeMin;
+    bool* tempChangeMax;
     int* counter;
     volatile bool* measurementFlag; //true = run task false = skip task
 } measurementData;

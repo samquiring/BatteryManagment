@@ -65,6 +65,26 @@ void updateHvVoltage(float* voltageReading, const byte* aPin3) {
     *voltageReading = ((analogRead(*aPin3)-pinOffset) / pinMax) * voltageMax;
 }
 
+void checkExtremes(float* reading, float* readingMax, float* readingMin, bool* newMax, bool* newMin){
+ /****************
+    * Function name: checkExtremes
+    * Function inputs: float* reading, float* readingMax, float* readingMin, bool* newMax, bool* newMin
+    * Function outputs: void
+    * Function description: checks the current reading to see if it is a new min or max and updates to that min
+    *                       or max if true
+    * Author(s): Sam Quiring
+    *****************/
+    
+    if(*reading < *readingMin){
+      *readingMin = *reading;
+      *newMin = true;
+    } else if(*reading > *readingMax){
+      *readingMax = *reading;
+      *newMax = true;
+    }
+  
+}
+
 void measurementTask(void* mData) {
     /****************
     * Function name: measurementTask
@@ -81,6 +101,9 @@ void measurementTask(void* mData) {
       updateTemperature(data->temperature, data->tempPin);
       updateHvCurrent(data->hvCurrent, data->currentPin);
       updateHvVoltage(data->hvVoltage, data->voltagePin);
+      checkExtremes(data->temperature, data->temperatureMax, data->temperatureMin, data->tempChangeMax, data->tempChangeMin);
+      checkExtremes(data->hvVoltage, data->voltageMax, data->voltageMin, data->voltageChangeMax, data->voltageChangeMin);
+      checkExtremes(data->hvCurrent, data->currentMax, data->currentMin, data->currentChangeMax, data->currentChangeMin);
     }
     *(data->measurementFlag) = true;  //skips measurement for one clock cycle
 }

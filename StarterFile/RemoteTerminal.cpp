@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "RemoteTerminal.h"
 
+int incomingByte = -1;
+
 void printOptions(){
     /****************
     * Function name: printOptions
@@ -17,6 +19,10 @@ void printOptions(){
     Serial.print("Enter your menu choice [1-4]: ");
 }
 
+void userInput(){
+  incomingByte = Serial.read();
+  Serial.println(incomingByte);
+}
 
 void remoteTerminalTask(void* mData) {
     /****************
@@ -29,7 +35,10 @@ void remoteTerminalTask(void* mData) {
     *****************/
   	remoteTerminalData* data = (remoteTerminalData*) mData;
     if(*(data->remoteTerminalFlag)){
+      if(*(data->runStartFunct)){
         printOptions();
+      }
+      userInput();
     }
     *(data->remoteTerminalFlag) = true;  //skips measurement for one clock cycle
 }
