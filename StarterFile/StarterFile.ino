@@ -277,9 +277,9 @@ void setup() {
 
   //temperary
   alarmTCB.next = &dataLoggingTCB;
-  remoteTerminalTCB.prev = &dataLoggingTCB;
   dataLoggingTCB.next = &remoteTerminalTCB;
   dataLoggingTCB.prev = &alarmTCB;
+  remoteTerminalTCB.prev = &dataLoggingTCB;
 
   //Initialize serial communication
     Serial.begin(9600);
