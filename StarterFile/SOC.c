@@ -80,11 +80,11 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
     float yOffset = ((*temperature - tempLow) / (tempHigh - tempLow));
     float xOffset = ((VOC - voltageLow) / (voltageHigh - voltageLow));
 
-    float socMidP13 = SOCp1 + yOffset * (SOCp3 - SOCp1);
-    float socMidP24 = SOCp2 + yOffset * (SOCp4 - SOCp2);
+    float socMidP13 = SOCp1 + xOffset * (SOCp3 - SOCp1);
+    float socMidP24 = SOCp2 + xOffset * (SOCp4 - SOCp2);
 
 
-    *SOCreading = socMidP13 + xOffset * (socMidP24 - socMidP13);
+    *SOCreading = socMidP13 + yOffset * (socMidP24 - socMidP13);
   }
 }
 
