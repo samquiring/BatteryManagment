@@ -22,11 +22,11 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
 
 
   float socArr[ROWS_NUMBER][COLUMNS_NUMBER] = {
-    {-10, 200, 250, 300, 350, 400},
-    {-10, 0, 10, 35, 100, 100},
-    {0, 0, 0, 20, 80, 100},
-    {25, 0, 0, 10, 60, 100},
-    {45, 0, 0, 0, 50, 100}
+    {-10.0, 200.0, 250.0, 300.0, 350.0, 400.0},
+    {-10.0, 0.0, 10.0, 35.0, 100.0, 100.0},
+    {0.0, 0.0, 0.0, 20.0, 80.0, 100.0},
+    {25.0, 0.0, 0.0, 10.0, 60.0, 100.0},
+    {45.0, 0.0, 0.0, 0.0, 50.0, 100.0}
   };
 
   float VOC = (float) *hvVoltage + 0.5 * *hvCurrent;
@@ -35,11 +35,12 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
   int xRangeLow;
   int yRangeHigh;
   int yRangeLow;
-  int voltageLow;
-  int voltageHigh;
-  int tempLow;
-  int tempHigh;
+  float voltageLow;
+  float voltageHigh;
+  float tempLow;
+  float tempHigh;
   bool passed = false;
+ // *SOCreading = VOC;
 
   if (VOC > 400.0) {
     *SOCreading = 100.0;
@@ -47,6 +48,7 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
     *SOCreading = 0.0;
   } else {
   
+
     for (int i = 0; i < COLUMNS_NUMBER; i++) {
       if ((VOC < *(soc + i)) && (!(passed))){
         xRangeHigh = i;
