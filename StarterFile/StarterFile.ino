@@ -8,6 +8,8 @@
 #include "SOC.h"
 #include "TouchScreen.h"
 #include "scheduler.c"
+#include "RemoteTerminal.h"
+#include "DataLogging.h"
 #include <TimerOne.h>
 
 #define CHARSIZE 60 //size of the lines below
@@ -17,6 +19,7 @@ TCB touchScreenTCB;
 TCB SOCTCB;
 TCB contactorTCB;
 TCB alarmTCB;
+TCB remoteTerminalTCB;
 
 
 
@@ -26,6 +29,7 @@ touchScreenData touch;      // Declare touch screen data structure - defined in 
 SOCData SOC;                // Declare SOC data structure - defined in SOC.h
 contactorData contactor;   // Declare contractor data structure - defined in contactor.h
 alarmData alarm;            // Declare alarm data structure - defined in Alarm.h
+remoteTerminalData remoteTerminal; //Declare remote terminal data structure - defined in remoteTerminal.h
 
 //measure global variables
 //start with the number that was in their first state
@@ -62,11 +66,6 @@ volatile bool SOCFlag = true;
 bool initialize = true; 
 int touchState = 0; //0 = measurement, 1 = battery, 2 = Alarm | Battery screen is seperate
 bool thingsChanged = true;
-char oneLine[CHARSIZE];
-char twoLine[CHARSIZE];
-char threeLine[CHARSIZE];
-char fourLine[CHARSIZE];
-char fiveLine[CHARSIZE];
 bool updateStates = true;
 volatile bool touchScreenFlag = true;
 volatile bool forceAlarm = false; //sets when the touchscreen is stuck in the alarmState

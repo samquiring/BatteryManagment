@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <EEPROM.h>
 #include "DataLogging.h"
 
 void updateEEPROM(float* measurement, int* address){
@@ -36,5 +37,5 @@ void dataLoggingTask(void* mData) {
         *(data->voltageChange) = false;
        }
     }
-    *(data->measurementFlag) = true;  //skips measurement for one clock cycle
+    *(data->dataLoggingFlag) = true;  //skips measurement for one clock cycle
 }

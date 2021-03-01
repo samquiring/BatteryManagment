@@ -1,6 +1,8 @@
 #ifndef DATALOGGING_H_INCLUDED
 #define DATALOGGING_H_INCLUDED
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct dataLoggingTaskData {
     float* temperature;
     bool* tempChange;
@@ -23,6 +25,3 @@ void dataLoggingTask (void*);
 #ifdef __cplusplus
 }
 #endif
-
-
-#endif // DATALOGGING_H_INCLUDED

@@ -1,6 +1,8 @@
 #ifndef REMOTETERMINAL_H_INCLUDED
 #define REMOTETERMINAL_H_INCLUDED
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 typedef struct remoteTerminalTaskData {
     float* temperature;
     float* hvCurrent;
@@ -19,7 +21,3 @@ void dataLoggingTask (void*);
 #ifdef __cplusplus
 }
 #endif
-
-
-#endif // REMOTETERMINAL_H_INCLUDED
-

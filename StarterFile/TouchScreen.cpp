@@ -303,7 +303,7 @@ void batteryScreen(bool* nScreen, bool* csState){
     }
 }
 
-void measurementScreen(int* SOC, float* temp,float* HVVolt, float* HVCur, bool* HVIL, bool* nScreen){
+void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool* HVIL, bool* nScreen){
   /****************
     * Function name: measurementScreen
     * Function inputs: an int SOC, a float for the tempurature, a float for the voltage, a float for the current
