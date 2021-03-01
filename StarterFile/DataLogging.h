@@ -23,6 +23,7 @@ typedef struct dataLoggingTaskData {
     float* temperatureMin;
     float* temperatureMax;
     volatile bool* dataLoggingFlag; //true = run task false = skip task
+    volatile bool* resetEEPROM;
 } dataLoggingData;
 
 

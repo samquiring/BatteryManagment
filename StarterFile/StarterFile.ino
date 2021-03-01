@@ -169,6 +169,7 @@ void setup() {
   measure.voltageMax = &voltageMax;
   measure.temperatureMin = &temperatureMin;
   measure.temperatureMax = &temperatureMax;
+  measure.resetEEPROM = &resetEEPROM;
 
   contactor.contactorState = &contactorState;
   contactor.batteryOn = &batteryOn;
@@ -239,6 +240,7 @@ void setup() {
   dataLogging.temperatureMin = &temperatureMin;
   dataLogging.temperatureMax = &temperatureMax;
   dataLogging.dataLoggingFlag = &dataLoggingFlag;
+  dataLogging.resetEEPROM = &resetEEPROM;
 
 
   //setting TCB up so it is connected
@@ -274,10 +276,10 @@ void setup() {
   alarmTCB.prev = &contactorTCB;
 
   //temperary
-  alarmTCB.next = &remoteTerminalTCB;
-  remoteTerminalTCB.prev = &alarmTCB;
-  remoteTerminalTCB.next = &dataLoggingTCB;
-  dataLoggingTCB.prev = &remoteTerminalTCB;
+  alarmTCB.next = &dataLoggingTCB;
+  remoteTerminalTCB.prev = &dataLoggingTCB;
+  dataLoggingTCB.next = &remoteTerminalTCB;
+  dataLoggingTCB.prev = &alarmTCB;
 
   //Initialize serial communication
     Serial.begin(9600);

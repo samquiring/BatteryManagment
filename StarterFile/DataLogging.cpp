@@ -2,7 +2,7 @@
 #include <EEPROM.h>
 #include "DataLogging.h"
 
-void updateMeasurement(float* Min, int* MinAddress, bool* MinChanged, float* Max, int* MaxAddress, bool* MaxChanged){
+void updateMeasurement(float* Min, int* MinAddress, bool* MinChanged, float* Max, int* MaxAddress, bool* MaxChanged, volatile bool* resetEEPROM){
     /****************
     * Function name: updateMeasurement
     * Function inputs: float* Min, int* MinAddress, bool* MinChanged, float* Max, int* MaxAddress, bool* MaxChanged
@@ -17,6 +17,12 @@ void updateMeasurement(float* Min, int* MinAddress, bool* MinChanged, float* Max
     if(*MaxChanged){
       EEPROM.put(*MaxAddress,*Max);
       *MaxChanged = false;
+    }
+
+    //min and max should be set to the reset values because measurement will be before this
+    if(*resetEEPROM){
+      EEPROM.put(*MinAddress,*Min);
+      EEPROM.put(*MaxAddress,*Max);
     }
 }
 
@@ -35,9 +41,10 @@ void dataLoggingTask(void* mData) {
     *****************/
   	dataLoggingData* data = (dataLoggingData*) mData;
     if(*(data->dataLoggingFlag)){
-      updateMeasurement(data->temperatureMin,data->tempAddressMin,data->tempChangeMin,data->temperatureMax,data->tempAddressMax,data->tempChangeMax);
-      updateMeasurement(data->currentMin,data->currentAddressMin,data->currentChangeMin,data->currentMax,data->currentAddressMax,data->currentChangeMax);
-      updateMeasurement(data->voltageMin,data->voltageAddressMin,data->voltageChangeMin,data->voltageMax,data->voltageAddressMax,data->voltageChangeMax);
+      updateMeasurement(data->temperatureMin,data->tempAddressMin,data->tempChangeMin,data->temperatureMax,data->tempAddressMax,data->tempChangeMax, data->resetEEPROM);
+      updateMeasurement(data->currentMin,data->currentAddressMin,data->currentChangeMin,data->currentMax,data->currentAddressMax,data->currentChangeMax, data->resetEEPROM);
+      updateMeasurement(data->voltageMin,data->voltageAddressMin,data->voltageChangeMin,data->voltageMax,data->voltageAddressMax,data->voltageChangeMax, data->resetEEPROM);
+      *(data->resetEEPROM) = false;
       
     }
     *(data->dataLoggingFlag) = true;  //skips measurement for one clock cycle

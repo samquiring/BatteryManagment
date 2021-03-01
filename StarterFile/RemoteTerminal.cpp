@@ -19,11 +19,17 @@ void printOptions(){
 
 void userInput(int* incomingByte){
   *incomingByte = Serial.read();
+  if(*incomingByte == (49 || 50 || 51 || 52)){
+    Serial.println(*incomingByte);
+  }
 }
 
-void resetEEPROM(volatile bool* resetFlag){
+void resetEEPROM(volatile bool* resetFlag, bool* runStartFunc){
+  Serial.println();
   Serial.println("resetting all stored high and low values in EEPROM");
+  Serial.println();
   *resetFlag = true;
+  *runStartFunc = true;
 }
 
 void printRange(float* minVal, float* maxVal, String type, bool* runStartFunc){
@@ -59,7 +65,7 @@ void remoteTerminalTask(void* mData) {
       userInput(data->incomingByte);
       //all of the possible user inputs
       if(*data->incomingByte == 49){
-        resetEEPROM(data->resetFlag);
+        resetEEPROM(data->resetFlag, data->runStartFunct);
       } else if(*data->incomingByte == 50){
         printRange(data->currentMin,data->currentMax,"current",data->runStartFunct);
       } else if(*data->incomingByte == 51){
