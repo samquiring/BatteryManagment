@@ -4,16 +4,19 @@
 extern "C" {
 #endif
 typedef struct remoteTerminalTaskData {
-    float* temperature;
-    float* hvCurrent;
-    float* hvVoltage;
+    float* temperatureMin;
+    float* temperatureMax;
+    float* hvCurrentMin;
+    float* hvCurrentMax;
+    float* hvVoltageMin;
+    float* hvVoltageMax;
     volatile bool* remoteTerminalFlag; //true = run task false = skip task
     bool* resetFlag;
     bool* runStartFunct; //true if we need to re print the startup values
 } remoteTerminalData;
 
 
-void dataLoggingTask (void*);
+void remoteTerminalTask (void*);
 
 
 #endif

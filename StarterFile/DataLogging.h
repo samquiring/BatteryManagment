@@ -4,15 +4,24 @@
 extern "C" {
 #endif
 typedef struct dataLoggingTaskData {
-    float* temperature;
-    bool* tempChange;
-    int* tempAdress;
-    float* hvCurrent;
-    bool* currentChange;
-    int* currentAddress;
-    float* hvVoltage;
-    bool* voltageChange;
-    int* voltageAddress;
+    bool* tempChangeMin;
+    bool* tempChangeMax;
+    int* tempAddressMin;
+    int* tempAddressMax;
+    bool* currentChangeMin;
+    bool* currentChangeMax;
+    int* currentAddressMin;
+    int* currentAddressMax;
+    bool* voltageChangeMin;
+    bool* voltageChangeMax;
+    int* voltageAddressMin;
+    int* voltageAddressMax;
+    float* currentMin;
+    float* currentMax;
+    float* voltageMin;
+    float* voltageMax;
+    float* temperatureMin;
+    float* temperatureMax;
     volatile bool* dataLoggingFlag; //true = run task false = skip task
 } dataLoggingData;
 

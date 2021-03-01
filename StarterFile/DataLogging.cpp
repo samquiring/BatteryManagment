@@ -23,19 +23,5 @@ void dataLoggingTask(void* mData) {
     * Author(s): Sam Quiring
     *****************/
   	dataLoggingData* data = (dataLoggingData*) mData;
-    if(*(data->dataLoggingFlag)){
-       if(*(data->tempChange)){
-        updateEEPROM(data->temperature,data->tempAdress);
-        *(data->tempChange) = false;
-       }
-       if(*(data->currentChange)){
-        updateEEPROM(data->hvCurrent,data->currentAddress);
-        *(data->currentChange) = false;
-       }
-       if(*(data->voltageChange)){
-        updateEEPROM(data->hvVoltage,data->voltageAddress);
-        *(data->voltageChange) = false;
-       }
-    }
     *(data->dataLoggingFlag) = true;  //skips measurement for one clock cycle
 }

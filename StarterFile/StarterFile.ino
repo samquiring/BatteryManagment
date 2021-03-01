@@ -11,8 +11,10 @@
 #include "RemoteTerminal.h"
 #include "DataLogging.h"
 #include <TimerOne.h>
+#include <EEPROM.h>
 
 #define CHARSIZE 60 //size of the lines below
+#define addressChange sizeof(float) //the distance between addresses for our eeprom
 //Task Control Blocks
 TCB measurementTCB;         // Declare all TCBs
 TCB touchScreenTCB;
@@ -20,6 +22,7 @@ TCB SOCTCB;
 TCB contactorTCB;
 TCB alarmTCB;
 TCB remoteTerminalTCB;
+TCB dataLoggingTCB;
 
 
 
@@ -29,7 +32,8 @@ touchScreenData touch;      // Declare touch screen data structure - defined in 
 SOCData SOC;                // Declare SOC data structure - defined in SOC.h
 contactorData contactor;   // Declare contractor data structure - defined in contactor.h
 alarmData alarm;            // Declare alarm data structure - defined in Alarm.h
-remoteTerminalData remoteTerminal; //Declare remote terminal data structure - defined in remoteTerminal.h
+remoteTerminalData remoteTerminal; //Declare remote terminal data structure - defined in RemoteTerminal.h
+dataLoggingData dataLogging; //Declare data logging data structure - defined in DataLogging.h
 
 //measure global variables
 //start with the number that was in their first state
@@ -41,6 +45,13 @@ const byte hvilPin = 20; //the current state of pin 22. false = low true = high
 const byte voltagePin = A10;  //the pins that read the inputs for our voltage, current and temperature
 const byte currentPin = A12;
 const byte tempPin = A14;
+
+float currentMin = 0.0;
+float currentMax = 0.0;
+float voltageMin = -1;
+float voltageMax = -1;
+float temperatureMin = 0.0;
+float temperatureMax = 0.0;
 
 float chargeState = 0;
 volatile bool measurementFlag = true;
@@ -70,12 +81,31 @@ bool updateStates = true;
 volatile bool touchScreenFlag = true;
 volatile bool forceAlarm = false; //sets when the touchscreen is stuck in the alarmState
 
+//remoteTerminal global variables
+bool remoteTerminalFlag = true;
+
+//dataLogging global variables
+bool tempChangeMin = false;
+bool tempChangeMax = false;
+int tempAddressMin = 0;
+int tempAddressMax = addressChange;
+bool currentChangeMin = false;
+bool currentChangeMax = false;
+int currentAddressMin = addressChange*2;
+int currentAddressMax = addressChange*3;
+bool voltageChangeMin = false;
+bool voltageChangeMax = false;
+int voltageAddressMin = addressChange*4;
+int voltageAddressMax = addressChange*5;
+volatile bool dataLoggingFlag = true; //true = run task false = skip task
+
 //multiple uses global variables
 int counter = 1;
 bool batteryOn = false; //true = ON false = OFF
 const byte batteryPin = 40;
 volatile bool timeBaseFlag = false;
 volatile bool alarmReset = false; //this is the check to turn all alarm flags off 
+
 
 void setup() { 
   /****************
@@ -155,6 +185,29 @@ void setup() {
   touch.forceAlarm = &forceAlarm;
   touch.alarmReset = &alarmReset;
 
+  remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
+
+  dataLogging.tempChangeMin = &tempChangeMin;
+  dataLogging.tempChangeMax = &tempChangeMax;
+  dataLogging.currentChangeMin = &currentChangeMin;
+  dataLogging.currentChangeMax = &currentChangeMax;
+  dataLogging.voltageChangeMin = &voltageChangeMin;
+  dataLogging.voltageChangeMax = &voltageChangeMax;
+  dataLogging.tempAddressMin = &tempAddressMin;
+  dataLogging.tempAddressMax = &tempAddressMax;
+  dataLogging.currentAddressMin = &currentAddressMin;
+  dataLogging.currentAddressMax = &currentAddressMax;
+  dataLogging.voltageAddressMin = &voltageAddressMin;
+  dataLogging.voltageAddressMax = &voltageAddressMax;
+  dataLogging.currentMin = &currentMin;
+  dataLogging.currentMax = &currentMax;
+  dataLogging.voltageMin = &voltageMin;
+  dataLogging.voltageMax = &voltageMax;
+  dataLogging.temperatureMin = &temperatureMin;
+  dataLogging.temperatureMax = &temperatureMax;
+  dataLogging.dataLoggingFlag = &dataLoggingFlag;
+
+
   //setting TCB up so it is connected
   measurementTCB.taskDataPtr = &measure;
   measurementTCB.task = &measurementTask;
@@ -171,6 +224,9 @@ void setup() {
   touchScreenTCB.taskDataPtr = &touch;
   touchScreenTCB.task = &touchScreenTask;
 
+  remoteTerminalTCB.taskDataPtr = &remoteTerminal;
+  remoteTerminalTCB.task = &remoteTerminalTask;
+
   //creating the doubly linked list
   touchScreenTCB.next = &measurementTCB;
   measurementTCB.prev = &touchScreenTCB;
@@ -180,6 +236,9 @@ void setup() {
   contactorTCB.prev = &SOCTCB;
   contactorTCB.next = &alarmTCB;
   alarmTCB.prev = &contactorTCB;
+
+  //temperary
+  alarmTCB.next = &remoteTerminalTCB;
 
   //Initialize serial communication
     Serial.begin(9600);
