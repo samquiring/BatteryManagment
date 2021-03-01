@@ -338,14 +338,14 @@ void measurementScreen(int* SOC, float* temp,float* HVVolt, float* HVCur, bool* 
     HVCurL = -1;
     HVVoltL = -1;
   }
-/*  
+  
   if(SOCL != *SOC){
     SOCL = *SOC;
     tft.fillRect(DATAOFFSET,LNSPACE*2,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
     tft.setCursor(DATAOFFSET,LNSPACE*2);
     tft.print(*SOC);
   }
-*/
+
   if(*temp != tempL){
     tempL = *temp;
     tft.fillRect(DATAOFFSET,LNSPACE*3,XMAX-DATAOFFSET,LNSPACE-5,WHITE);

@@ -8,7 +8,7 @@
 
 // VO= hvVOltage + 0.5 * hvCurrent
 
-void updateSOC(int* SOCreading, float* hvVoltage, float* hvCurrent, float* temperature) {
+void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* temperature) {
   /****************
     * Function name: updateSOC
     * Function inputs: int Soc reading

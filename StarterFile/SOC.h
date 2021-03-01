@@ -15,7 +15,7 @@ extern "C" {
 
 
 typedef struct SOCTaskData {
-  int* stateOfCharge;
+  float* stateOfCharge;
   float* hvCurrent;
   float* hvVoltage;
   float* temperature;

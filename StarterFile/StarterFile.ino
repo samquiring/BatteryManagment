@@ -55,7 +55,7 @@ volatile bool alarmCurrent = false;
 volatile bool alarmVoltage = false;
 
 //SOC global variables
-int stateOfCharge = 0;
+float stateOfCharge = 0.0;
 volatile bool SOCFlag = true;
 
 //touchscreen global variables

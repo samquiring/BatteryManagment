@@ -19,7 +19,7 @@ typedef struct TouchScreenTaskData{
     float* temperature;
   	float* hvCurrent;
     float* hvVoltage;
-    int* SOCreading;
+    float* SOCreading;
     bool* HVIL;
     bool* initialize; //tells us if we need to inialize the function
     bool* nScreen;
