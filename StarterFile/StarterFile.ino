@@ -42,7 +42,7 @@ float chargeState = 0;
 volatile bool measurementFlag = true;
 
 //contactor global variables
-bool contactorState = true; //true = open, false = closed
+bool contactorState = false; //true = open, false = closed
 volatile bool contactorFlag = true;
 
 //Alarm global variables
@@ -120,6 +120,7 @@ void setup() {
   contactor.contactorState = &contactorState;
   contactor.batteryOn = &batteryOn;
   contactor.contactorFlag = &contactorFlag;
+  contactor.HVILState = &HVIL;
 
   alarm.HVILState = &HVILState;
   alarm.OvercurrentState = &OvercurrentState;
@@ -187,14 +188,12 @@ void setup() {
     Serial1.setTimeout(1000);
 
 }
-//creating an array of all TCBs so that scheduler can parse through them
-TCB* taskArray[] = {&touchScreenTCB,&measurementTCB,&SOCTCB,&contactorTCB,&alarmTCB};
 void loop() {
   /****************
     * Function name:    loop
     * Function inputs:  Sensor data, touch input
     * Function outputs: Display data and lights indicating alarm status, contactor status, sensor data, & state of charge
-    * Function description: This is a round robin scheduler to run a series of tasks
+    * Function description: This is a doubly linked list scheduler to run a series of tasks
     *                       that create a user interface to a battery management system
     * Author(s): Sam Quiring
     *****************/
@@ -209,15 +208,30 @@ void loop() {
 }
 
 void timerISR(){          //interrupts service routine
+   /****************
+    * Function name:    timerISR
+    * Function inputs:  none
+    * Function outputs: void
+    * Function description: sets the timeBaseFlag to true when executed
+    * Author(s): Sam Quiring
+    *****************/
   noInterrupts();
   timeBaseFlag = true;   //set timerISR flag
   interrupts();
 }
 void alarmISR(){
+  /****************
+    * Function name:    AlarmISR
+    * Function inputs:  none
+    * Function outputs: void
+    * Function description: when triggered sets all flags accept alarm to false so that we immediately enter the alarm state
+    * Author(s): Sam Quiring
+    *****************/
   noInterrupts();
   measurementFlag = false;
   SOCFlag = false;
   contactorFlag = false;
+  touchScreenFlag = false;
   forceAlarm = true;
   Serial.println("Alarm Flag Raised");
   interrupts();
