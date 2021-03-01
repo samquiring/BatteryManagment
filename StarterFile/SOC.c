@@ -40,31 +40,36 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
   int tempLow;
   int tempHigh;
   bool passed = false;
+
+  if (VOC > 400.0) {
+    *SOCreading = 100.0;
+  } else if (VOC < 200.0) {
+    *SOCreading = 0.0;
+  } else {
   
-  for (int i = 0; i < COLUMNS_NUMBER; i++) {
-    if ((VOC < *(soc + i)) && (!(passed))){
+    for (int i = 0; i < COLUMNS_NUMBER; i++) {
+      if ((VOC < *(soc + i)) && (!(passed))){
         xRangeHigh = i;
         xRangeLow = i - 1;
         voltageLow = *(soc + xRangeLow);
         voltageHigh = *(soc + xRangeHigh);
         passed = true;
+      }
     }
+    
+    passed = false;
 
-  }
-
-  passed = false;
-
-  for (int j = 0; j < ROWS_NUMBER; j++) {
-    if ((VOC < *(soc + COLUMNS_NUMBER * j)) && (!(passed))){
+    for (int j = 0; j < ROWS_NUMBER; j++) {
+      if ((VOC < *(soc + COLUMNS_NUMBER * j)) && (!(passed))){
         yRangeHigh = j;
         yRangeLow = j - 1;
         tempLow = *(soc + COLUMNS_NUMBER * yRangeLow);
         tempHigh = *(soc + COLUMNS_NUMBER * yRangeHigh);
-        passed = true;
+        passed = true;     
+       }
     }
-  }
-
-
+    passed = false;
+    
     float SOCp1 = *(soc + (xRangeLow * COLUMNS_NUMBER + yRangeLow));
     float SOCp2 = *(soc + (xRangeHigh * COLUMNS_NUMBER + yRangeLow));
     float SOCp3 = *(soc + (xRangeLow * COLUMNS_NUMBER + yRangeHigh));
@@ -77,8 +82,9 @@ void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* tem
     float socMidP24 = SOCp2 + y_offset * (SOCp4 - SOCp2);
 
 
-    *SOCreading = socMidP13 + x_offset * (socMidP24 - socMidP13);
 
+    *SOCreading = socMidP13 + x_offset * (socMidP24 - socMidP13);
+  }
 }
 
 void SOCTask(void* sData) {
