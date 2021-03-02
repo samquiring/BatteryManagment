@@ -87,7 +87,7 @@ void checkExtremes(float* reading, float* readingMax, float* readingMin, bool* n
       }
     }else {
       //when voltage is reset it must be updated to the current value instead of stuck at -1
-      if(*reading < *readingMin || isVoltage && *readingMin == -1){
+      if(*reading < *readingMin || isVoltage && *readingMin == -1 || *readingMin == 0){
         *readingMin = *reading;
         *newMin = true;
       } else if(*reading > *readingMax){
