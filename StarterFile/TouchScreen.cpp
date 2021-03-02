@@ -180,7 +180,7 @@ void displaySetup() {
 }
 
 
-void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* forceAlarm, volatile bool* alarmReset){
+void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* forceAlarm, volatile bool* alarmReset, bool* diffRate, int* counter){
   /****************
     * Function name: clicker
     * Function inputs: int displayState, bool if we have changed states, bool if the battery is currently on
@@ -268,7 +268,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
     }
 }
 
-void batteryScreen(bool* nScreen, bool* csState){
+void batteryScreen(bool* nScreen, bool* csState, bool* diffRate){
   /****************
     * Function name: batteryScreen
     * Function inputs: a bool that is true if theres a new screen and a bool of the state of the contactors
@@ -303,7 +303,7 @@ void batteryScreen(bool* nScreen, bool* csState){
     }
 }
 
-void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool* HVIL, bool* nScreen){
+void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool* HVIL, bool* nScreen, bool* diffRate){
   /****************
     * Function name: measurementScreen
     * Function inputs: an int SOC, a float for the tempurature, a float for the voltage, a float for the current
@@ -377,7 +377,7 @@ void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool
   }
 }
 
-void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, volatile bool* forceAlarm){
+void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, volatile bool* forceAlarm, bool* diffRate){
   /****************
     * Function name: AlarmScreen
     * Function inputs: an int that represents the HVILstate and int for the overcurrent state,
@@ -477,13 +477,13 @@ void touchScreenTask(void* mData){
         *(data->initialize) = false;
         }
         if(*(data->touchState) == 0){
-           measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen);
+           measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen, data->diffRate);
         } else if(*(data->touchState) == 1){
-            batteryScreen(data->nScreen, data->csState);
+            batteryScreen(data->nScreen, data->csState, data->diffRate);
         } else{
-          AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm);
+          AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm, data->diffRate);
         }
-        clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset);
+        clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset, data->diffRate);
     }
     *(data->touchScreenFlag) = true;  //skips touchScreen for one clock cycle
 

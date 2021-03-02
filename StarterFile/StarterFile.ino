@@ -80,6 +80,7 @@ bool thingsChanged = true;
 bool updateStates = true;
 volatile bool touchScreenFlag = true;
 volatile bool forceAlarm = false; //sets when the touchscreen is stuck in the alarmState
+bool diffRate = false;
 
 //remoteTerminal global variables
 bool remoteTerminalFlag = true;
@@ -212,6 +213,8 @@ void setup() {
   touch.touchScreenFlag = &touchScreenFlag;
   touch.forceAlarm = &forceAlarm;
   touch.alarmReset = &alarmReset;
+  touch.diffRate = &diffRate;
+  touch.counter = &counter;
 
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;
