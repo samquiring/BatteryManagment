@@ -11,16 +11,12 @@
 void updateSOC(float* SOCreading, float* hvVoltage, float* hvCurrent, float* temperature) {
   /****************
     * Function name: updateSOC
-    * Function inputs: int Soc reading
+    * Function inputs: float Soc reading, float hvVoltage, float hvCurrent, float temperature
     * Function outputs: void
-    * Function description: soc is always set to 0
+    * Function description: Soc is calculated using interpolation with the provided SOC values table. 
     * Author(s): Anders Hunt
     *****************/
-
-  
     
-
-
   float socArr[ROWS_NUMBER][COLUMNS_NUMBER] = {
     {-10.0, 200.0, 250.0, 300.0, 350.0, 400.0},
     {-10.0, 0.0, 10.0, 35.0, 100.0, 100.0},
