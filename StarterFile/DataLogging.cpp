@@ -2,6 +2,22 @@
 #include <EEPROM.h>
 #include "DataLogging.h"
 
+byte* floatToByte(float fl){
+   /****************
+    * Function name: floatToByte
+    * Function inputs: float fl
+    * Function outputs: byte*
+    * Function description: converts a float to a byte array
+    * Author(s): Sam Quiring
+    *****************/
+    unsigned int changed = (*(int*)&fl); //converts bit for bit the float to an int
+    byte list[4];
+    for(int i = 0; i < 4; i++){
+      list[i] = (changed >> 8 * i) & 0xFF; //bitmask to take a single byte of data
+    }
+    return list;
+}
+
 void updateMeasurement(float* Min, int* MinAddress, bool* MinChanged, float* Max, int* MaxAddress, bool* MaxChanged, volatile bool* resetEEPROM){
     /****************
     * Function name: updateMeasurement
@@ -10,24 +26,14 @@ void updateMeasurement(float* Min, int* MinAddress, bool* MinChanged, float* Max
     * Function description: checks if measurement max or min has changed and updates it if it has
     * Author(s): Sam Quiring
     *****************/
-    if(*MinChanged){
-       EEPROM.put(*MinAddress,*Min);
+    if(*MinChanged || *resetEEPROM){
+      EEPROM.put(*MinAddress,*Min);
        *MinChanged = false;
     }
-    if(*MaxChanged){
+    if(*MaxChanged || *resetEEPROM){
       EEPROM.put(*MaxAddress,*Max);
       *MaxChanged = false;
     }
-
-    //min and max should be set to the reset values because measurement will be before this
-    if(*resetEEPROM){
-      EEPROM.put(*MinAddress,*Min);
-      EEPROM.put(*MaxAddress,*Max);
-    }
-}
-
-void checkUpdates(){
-  
 }
 
 void dataLoggingTask(void* mData) {

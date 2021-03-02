@@ -14,7 +14,7 @@
 #include <EEPROM.h>
 
 #define CHARSIZE 60 //size of the lines below
-#define addressChange sizeof(float) //the distance between addresses for our eeprom
+#define addressChange 8 //the distance between addresses for our eeprom
 //Task Control Blocks
 TCB measurementTCB;         // Declare all TCBs
 TCB touchScreenTCB;
@@ -110,6 +110,25 @@ volatile bool timeBaseFlag = false;
 volatile bool alarmReset = false; //this is the check to turn all alarm flags off 
 volatile bool resetEEPROM = false; 
 
+int AddressToFloat(int address){
+  /****************
+    * Function name: AddressToFloat
+    * Function inputs: int address
+    * Function outputs: float
+    * Function description: converts an address in EEPROM to a float
+    * Author(s): Sam Quiring
+    *****************/
+    byte holder[4];
+    byte tester;
+    for(int i = 0; i < 4; i++){
+      tester = EEPROM.read(address+i);
+      holder[i] = tester;
+    }
+    float f;
+    memcpy(&f, &holder, sizeof(f));
+    return f;
+    
+}
 
 void setup() { 
   /****************
@@ -142,6 +161,14 @@ void setup() {
   EEPROM.get(voltageAddressMax,voltageMax);
   EEPROM.get(currentAddressMin,currentMin);
   EEPROM.get(currentAddressMax,currentMax);
+
+  //temperatureMin = AddressToFloat(tempAddressMin);
+  //temperatureMax = AddressToFloat(tempAddressMax);
+  //voltageMin = AddressToFloat(voltageAddressMin);
+  //voltageMax = AddressToFloat(voltageAddressMax);
+ //currentMin = AddressToFloat(currentAddressMin);
+  //currentMax = AddressToFloat(currentAddressMax);
+  
   
   
 
