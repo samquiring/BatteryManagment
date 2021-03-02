@@ -473,10 +473,10 @@ void touchScreenTask(void* mData){
     //decides if you want to run the given tasks
     if(*(data->touchScreenFlag)){
         if(*(data->initialize)){
-        displaySetup();
-        *(data->initialize) = false;
+          displaySetup();
+          *(data->initialize) = false;
         }
-        if(*(data->touchState) == 0)){
+        if(*(data->touchState) == 0){
            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen, data->diffRate);
         } else if(*(data->touchState) == 1){
             batteryScreen(data->nScreen, data->csState, data->diffRate);
