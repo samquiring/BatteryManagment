@@ -192,9 +192,6 @@ void setup() {
 
   SOC.stateOfCharge = &stateOfCharge;
   SOC.SOCFlag = &SOCFlag;
-  SOC.hvVoltage = &hvVoltage;
-  SOC.hvCurrent = &hvCurrent;
-  SOC.temperature = &temperature;
 
   touch.touchState = &touchState;
   touch.HVILState = &HVILState;
@@ -249,28 +246,34 @@ void setup() {
   //setting TCB up so it is connected
   measurementTCB.taskDataPtr = &measure;
   measurementTCB.task = &measurementTask;
+  measurementTCB.named = 7;
 
   contactorTCB.taskDataPtr = &contactor;
   contactorTCB.task = &contactorTask;
+  contactorTCB.named = 2;
 
   alarmTCB.taskDataPtr = &alarm;
   alarmTCB.task = &alarmTask;
+  alarmTCB.named = 3;
 
   SOCTCB.taskDataPtr = &SOC;
   SOCTCB.task = &SOCTask;
+  SOCTCB.named = 1;
 
   touchScreenTCB.taskDataPtr = &touch;
   touchScreenTCB.task = &touchScreenTask;
+  touchScreenTCB.named = 4;
 
   remoteTerminalTCB.taskDataPtr = &remoteTerminal;
   remoteTerminalTCB.task = &remoteTerminalTask;
+  remoteTerminalTCB.named = 6;
 
   dataLoggingTCB.taskDataPtr = &dataLogging;
   dataLoggingTCB.task = &dataLoggingTask;
+  dataLoggingTCB.named = 5;
 
   //creating the doubly linked list
-  touchScreenTCB.next = &measurementTCB;
-  measurementTCB.prev = &touchScreenTCB;
+  measurementTCB.prev = NULL;
   measurementTCB.next = &SOCTCB;
   SOCTCB.prev = &measurementTCB;
   SOCTCB.next = &contactorTCB;
@@ -279,10 +282,13 @@ void setup() {
   alarmTCB.prev = &contactorTCB;
 
   //temperary
-  alarmTCB.next = &dataLoggingTCB;
+  alarmTCB.next = &touchScreenTCB;
+  touchScreenTCB.prev = &alarmTCB;
+  touchScreenTCB.next = &dataLoggingTCB;
   dataLoggingTCB.next = &remoteTerminalTCB;
-  dataLoggingTCB.prev = &alarmTCB;
+  dataLoggingTCB.prev = &touchScreenTCB;
   remoteTerminalTCB.prev = &dataLoggingTCB;
+  remoteTerminalTCB.next = NULL;
 
   //Initialize serial communication
     Serial.begin(9600);
@@ -290,6 +296,9 @@ void setup() {
     Serial1.setTimeout(1000);
 
 }
+
+TCB* taskArray[] = {&touchScreenTCB,&remoteTerminalTCB,&dataLoggingTCB,&measurementTCB,&SOCTCB,&contactorTCB,&alarmTCB};
+
 void loop() {
   /****************
     * Function name:    loop
@@ -301,10 +310,19 @@ void loop() {
     *****************/
     while(1){
       if(timeBaseFlag){
-           timeBaseFlag = false;
-           scheduler(&touchScreenTCB);
-           digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
            counter++;
+           timeBaseFlag = false;
+           int runthrough[20];
+           scheduler(&measurementTCB,taskArray, &counter, runthrough);
+           for(int x : runthrough){
+            if(x < 8 && x > -1){
+              Serial.println(x);
+            }
+           }
+           Serial.println();
+           Serial.println(counter);
+           Serial.println();
+           digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
       }
     } 
 }

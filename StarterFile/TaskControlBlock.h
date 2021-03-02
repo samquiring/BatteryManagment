@@ -10,6 +10,7 @@ typedef struct taskControlBlock {
   void* taskDataPtr;
   struct taskControlBlock* next;
   struct taskControlBlock* prev;
+  int named;
 } TCB;
 
 #endif  // _TASKCONTROLBLOCK_H
