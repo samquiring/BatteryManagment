@@ -310,19 +310,10 @@ void loop() {
     *****************/
     while(1){
       if(timeBaseFlag){
-           counter++;
            timeBaseFlag = false;
-           int runthrough[20];
-           scheduler(&measurementTCB,taskArray, &counter, runthrough);
-           for(int x : runthrough){
-            if(x < 8 && x > -1){
-              Serial.println(x);
-            }
-           }
-           Serial.println();
-           Serial.println(counter);
-           Serial.println();
+           scheduler(&measurementTCB,taskArray, &counter);
            digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
+           counter++;
       }
     } 
 }

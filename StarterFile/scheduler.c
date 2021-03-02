@@ -2,11 +2,16 @@
 #include "TaskControlBlock.h"
 #define NUM_TASKS 5
 
-void insert(TCB* curTask, TCB* taskArray[], int ArrayIndex){
-  curTask->next = taskArray[ArrayIndex];
-  taskArray[ArrayIndex]->next = NULL;
-  taskArray[ArrayIndex]->prev = curTask;
+void insert(TCB* curTask, TCB* taskArray[], int index){
+  while(curTask->next != NULL){
+    curTask = curTask->next;
+  }
+  curTask->next = taskArray[index];
+  taskArray[index]->next = NULL;
+  taskArray[index]->prev = curTask;
+
 }
+
 
 void Delete(TCB* curTask, TCB* taskArray[], int ArrayIndex){
   if(curTask){
@@ -19,17 +24,18 @@ void Delete(TCB* curTask, TCB* taskArray[], int ArrayIndex){
       }
       if(curTask->next->named == taskArray[ArrayIndex]->named){
         curTask->next = curTask->next->next;
-        curTask->next->prev = curTask;
+        if(curTask->next){
+            curTask->next->prev = curTask;
+        }
         taskArray[ArrayIndex]->next = NULL;
         taskArray[ArrayIndex]->prev = NULL;
-        
       }
     }
   }
 }
 
 
-void scheduler(TCB* curTask, TCB* taskArray[], int* counter, int runthrough[]){
+void scheduler(TCB* curTask, TCB* taskArray[], int* counter){
      /****************
     * Function name: scheduler
     * Function inputs: TCB* curTask
@@ -37,25 +43,23 @@ void scheduler(TCB* curTask, TCB* taskArray[], int* counter, int runthrough[]){
     * Function description: calls all tasks in given linked list
     * Author(s): Sam Quiring
     *****************/
-    int x = 0;
     if(*counter % 10 == 1){
       //Delete(curTask, taskArray, 0);
-     // Delete(curTask, taskArray, 1);
+      Delete(curTask, taskArray, 1);
       if(*counter % 50 == 1){
-        //Delete(curTask, taskArray, 2);
+        Delete(curTask, taskArray, 2);
       }
     }
+
+    if(*counter % 10 == 0){
+      if(*counter % 50 == 0){
+          insert(curTask, taskArray,2);
+        }
+    //insert(curTask, taskArray,0);
+      insert(curTask, taskArray,1);
+      }
     while(curTask){
-      runthrough[x] = curTask->named;
-      x++;
       curTask->task((curTask->taskDataPtr));
       curTask = curTask->next;
-      if(*counter % 10 == 0 && !curTask->next){
-        //insert(curTask, taskArray,0);
-        //insert(curTask, taskArray,1);
-        if(*counter % 50 == 0){
-          //insert(curTask, taskArray,2);
-        }
-      }
     }
 }
