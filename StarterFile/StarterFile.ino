@@ -175,7 +175,9 @@ void setup() {
   contactor.contactorState = &contactorState;
   contactor.batteryOn = &batteryOn;
   contactor.contactorFlag = &contactorFlag;
-  contactor.hvilAlarm = &forceAlarm;
+  contactor.hvilAlarm = &HVIL;
+  contactor.overCurrentAlarm = &alarmCurrent;
+  contactor.voltageAlarm = &alarmVoltage;
 
   alarm.HVILState = &HVILState;
   alarm.OvercurrentState = &OvercurrentState;

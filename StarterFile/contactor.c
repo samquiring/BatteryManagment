@@ -14,7 +14,7 @@ void updateState(bool* contactorState, bool* batteryOn, volatile bool* hvilAlarm
     * Author(s): Sam Quiring
     *****************/
     noInterrupts();
-    if(!(*hvilAlarm || *overCurrent || *voltage)){
+    if((*hvilAlarm && *overCurrent && *voltage)){
       if(*batteryOn){
           *contactorState = false;
       } else {

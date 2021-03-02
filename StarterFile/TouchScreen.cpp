@@ -476,14 +476,14 @@ void touchScreenTask(void* mData){
         displaySetup();
         *(data->initialize) = false;
         }
-        if(*(data->touchState) == 0 && (*counter % 10 == 0)){
+        if(*(data->touchState) == 0 && (*(data->counter) % 10 == 0)){
            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen, data->diffRate);
-        } else if(*(data->touchState) == 1 && (*counter % 10 == 0)){
+        } else if(*(data->touchState) == 1 && (*(data->counter) % 10 == 0)){
             batteryScreen(data->nScreen, data->csState, data->diffRate);
-        } else if ((*counter % 10 == 0)){
+        } else if ((*(data->counter) % 10 == 0)){
           AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm, data->diffRate);
         }
-        clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset, data->diffRate);
+        clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset, data->diffRate, data->counter);
     }
     *(data->touchScreenFlag) = true;  //skips touchScreen for one clock cycle
 
