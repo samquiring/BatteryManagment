@@ -176,8 +176,8 @@ void setup() {
   contactor.batteryOn = &batteryOn;
   contactor.contactorFlag = &contactorFlag;
   contactor.hvilAlarm = &HVIL;
-  contactor.overCurrentAlarm = &alarmCurrent;
-  contactor.voltageAlarm = &alarmVoltage;
+  contactor.overCurrentAlarm = &OvercurrentState;
+  contactor.voltageAlarm = &HVOutOfRangeState;
 
   alarm.HVILState = &HVILState;
   alarm.OvercurrentState = &OvercurrentState;
@@ -318,7 +318,7 @@ void loop() {
       if(timeBaseFlag){
            timeBaseFlag = false;
            scheduler(&measurementTCB,taskArray, &counter);
-           digitalWrite(batteryPin,batteryOn);  //might need to put this inside of battery function
+           digitalWrite(batteryPin,!contactorState);
            counter++;
       }
     } 
