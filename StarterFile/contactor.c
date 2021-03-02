@@ -3,7 +3,7 @@
 #include "contactor.h"
 #include <Arduino.h>
 
-void updateState(bool* contactorState, bool* batteryOn, bool* HVIL){
+void updateState(bool* contactorState, bool* batteryOn, volatile bool* hvilAlarm, volatile bool* overCurrent, volatile bool* voltage){
     /****************
     * Function name: updateState
     * Function inputs: A bool of the current contactor state and a bool
@@ -14,7 +14,7 @@ void updateState(bool* contactorState, bool* batteryOn, bool* HVIL){
     * Author(s): Sam Quiring
     *****************/
     noInterrupts();
-    if(*HVIL){
+    if(!(*hvilAlarm || *overCurrent || *voltage)){
       if(*batteryOn){
           *contactorState = false;
       } else {
@@ -37,7 +37,7 @@ void contactorTask(void* mData) {
     *****************/
   	contactorData* data = (contactorData*) mData;
   	if(*(data->contactorFlag)){
-        updateState(data->contactorState,data->batteryOn, data->HVILState);
+        updateState(data->contactorState,data->batteryOn, data->hvilAlarm, data->overCurrentAlarm, data->voltageAlarm);
   	}
    *(data->contactorFlag) = true;  //skips contactor for one clock cycle
 }
