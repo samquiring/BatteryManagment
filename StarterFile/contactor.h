@@ -11,7 +11,9 @@ extern "C" {
 typedef struct contactorTaskData{
     bool* contactorState; //true = open, false = closed
     bool* batteryOn;
-    bool* HVILState;
+    volatile bool* hvilAlarm;
+    volatile bool* overCurrentAlarm;
+    volatile bool* voltageAlarm;
     volatile bool* contactorFlag; //true = run task false = skip task
 }contactorData;
 

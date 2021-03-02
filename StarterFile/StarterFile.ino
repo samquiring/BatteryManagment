@@ -175,7 +175,7 @@ void setup() {
   contactor.contactorState = &contactorState;
   contactor.batteryOn = &batteryOn;
   contactor.contactorFlag = &contactorFlag;
-  contactor.HVILState = &HVIL;
+  contactor.hvilAlarm = &forceAlarm;
 
   alarm.HVILState = &HVILState;
   alarm.OvercurrentState = &OvercurrentState;
@@ -193,9 +193,6 @@ void setup() {
 
   SOC.stateOfCharge = &stateOfCharge;
   SOC.SOCFlag = &SOCFlag;
-  SOC.hvVoltage = &hvVoltage;
-  SOC.hvCurrent = &hvCurrent;
-  SOC.temperature = &temperature;
 
   touch.touchState = &touchState;
   touch.HVILState = &HVILState;
@@ -286,8 +283,6 @@ void setup() {
   contactorTCB.prev = &SOCTCB;
   contactorTCB.next = &alarmTCB;
   alarmTCB.prev = &contactorTCB;
-
-  //temperary
   alarmTCB.next = &touchScreenTCB;
   touchScreenTCB.prev = &alarmTCB;
   touchScreenTCB.next = &dataLoggingTCB;
