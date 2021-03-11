@@ -27,6 +27,7 @@ typedef struct AccelerometerTaskData{
     float* zDistance;
     float* zDisplacement;
 
+    float* totalDistance;
 
 }AccelerometerData;
 
