@@ -131,9 +131,9 @@ float zAngle = 0.0;
 float xAccBuff = 0.0;
 float yAccBuff = 0.0;
 float zAccBuff = 0.0;
-float* xBuffer = malloc(sizeof(float)*BUFFER_SIZE);
-float* yBuffer = malloc(sizeof(float)*BUFFER_SIZE);
-float* zBuffer = malloc(sizeof(float)*BUFFER_SIZE);
+float* xBuffer = (float*)calloc(BUFFER_SIZE,sizeof(float));
+float* yBuffer = (float*)calloc(BUFFER_SIZE,sizeof(float));
+float* zBuffer = (float*)calloc(BUFFER_SIZE,sizeof(float));
 int xPtr = 0;
 int yPtr = 0;
 int zPtr = 0;
@@ -183,9 +183,14 @@ void setup() {
     * Author(s): Sam Quiring and Anders Hunt
     *****************/
 
-  memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
-  memset(yBuffer,0,sizeof(yBuffer));
-  memset(zBuffer,0,sizeof(zBuffer));
+  //memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
+  //memset(yBuffer,0,sizeof(yBuffer));
+  //memset(zBuffer,0,sizeof(zBuffer));
+  for(int i = 0; i < BUFFER_SIZE; i++){
+    xBuffer[i] = 0;
+    yBuffer[i] = 0;
+    zBuffer[i] = 0;
+  }
   for(int i = 0; i < OffsetSample; i++){
       xOffset += analogRead(xPin);
       delay(100);
@@ -224,7 +229,7 @@ void setup() {
   
   
 
-  attachInterrupt(digitalPinToInterrupt(hvilPin), alarmISR, RISING);  //creates an interrupt whenever hvilPin is high
+  //attachInterrupt(digitalPinToInterrupt(hvilPin), alarmISR, RISING);  //creates an interrupt whenever hvilPin is high
   
   //setting all variables up so they are used in functions
   measure.hvilStatus = &HVIL;
@@ -360,9 +365,9 @@ void setup() {
   accelerometer.xAccBuff = &xAccBuff;
   accelerometer.yAccBuff = &yAccBuff;
   accelerometer.zAccBuff = &zAccBuff;
-  accelerometer.xBuffer = &xBuffer;
-  accelerometer.yBuffer = &yBuffer;
-  accelerometer.zBuffer = &zBuffer;
+  accelerometer.xBuffer = xBuffer;
+  accelerometer.yBuffer = yBuffer;
+  accelerometer.zBuffer = zBuffer;
   accelerometer.xPtr = &xPtr;
   accelerometer.yPtr = &yPtr;
   accelerometer.zPtr = &zPtr;
@@ -463,6 +468,12 @@ void loop() {
            scheduler(&measurementTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
+           Serial.print("X buffer: ");
+           Serial.println(xAccBuff);
+           Serial.print("X unbuffered: ");
+           Serial.println(xAcc);
+           Serial.print("X buffer subtracting");
+           Serial.println(xBuffer[xPtr]);
       }
     } 
 }
