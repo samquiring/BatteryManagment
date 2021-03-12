@@ -17,6 +17,7 @@
 #define CHARSIZE 60 //size of the lines below
 #define addressChange 8 //the distance between addresses for our eeprom
 #define BUFFER_SIZE 10 //the amount of denoicing we want to do
+#define OffsetSample 10
 //Task Control Blocks
 TCB measurementTCB;         // Declare all TCBs
 TCB touchScreenTCB;
@@ -107,6 +108,7 @@ int voltageAddressMax = addressChange*5;
 volatile bool dataLoggingFlag = true; //true = run task false = skip task
 
 // Accelerometer global variables
+volatile bool accelerometerFlag = true;
 int xRawAcc = 0.0;
 int yRawAcc = 0.0;
 int zRawAcc = 0.0;
@@ -139,6 +141,9 @@ bool xBufferFull = false;
 bool yBufferFull = false;
 bool zBufferFull = false;
 int bufferSize = BUFFER_SIZE;
+int xOffset = 0;
+int yOffset = 0;
+int zOffset = 0;
 
 //multiple uses global variables
 int counter = 1;
@@ -181,6 +186,18 @@ void setup() {
   memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
   memset(yBuffer,0,sizeof(yBuffer));
   memset(zBuffer,0,sizeof(zBuffer));
+
+  delay(1000);
+  for(int i = 0; i < OffsetSample; i++){
+    xOffset += analogRead(xPin);
+    zOffset += analogRead(zPin);
+    yOffset += analogRead(yPin);
+    delay(100);
+  }
+  xOffset = xOffset / OffsetSample;
+  yOffset = yOffset / OffsetSample;
+  zOffset = zOffset / OffsetSample;
+  
   //initializes timerOne flag
   Timer1.initialize(100E+3);        //set the timer period to 100ms
   Timer1.attachInterrupt(timerISR); //Attach the interrupt service routine (ISR)
@@ -326,6 +343,7 @@ void setup() {
   dataLogging.dataLoggingFlag = &dataLoggingFlag;
   dataLogging.resetEEPROM = &resetEEPROM;
 
+  accelerometer.accelerometerFlag  = &accelerometerFlag;
   accelerometer.xRawAcc = &xRawAcc;
   accelerometer.yRawAcc = &yRawAcc;
   accelerometer.zRawAcc = &zRawAcc;
@@ -359,6 +377,9 @@ void setup() {
   accelerometer.yBufferFull = &yBufferFull;
   accelerometer.zBufferFull = &zBufferFull;
   accelerometer.bufferSize = &bufferSize;
+  accelerometer.xOffset = &xOffset;
+  accelerometer.yOffset = &yOffset;
+  accelerometer.zOffset = &zOffset;
   
 
   //setting TCB up so it is connected
@@ -417,6 +438,7 @@ void setup() {
     Serial1.begin(9600);
     Serial1.setTimeout(1000);
 
+
 }
 unsigned long tester = 0;
 TCB* taskArray[] = {&touchScreenTCB,&remoteTerminalTCB,&dataLoggingTCB,&measurementTCB,&SOCTCB,&contactorTCB,&alarmTCB};
@@ -432,13 +454,12 @@ void loop() {
     *****************/
     while(1){
       if(timeBaseFlag){
-           tester = millis();
            timeBaseFlag = false;
            scheduler(&measurementTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
-           Serial.println(millis()-tester);
-           
+           Serial.println(yOffset);
+           Serial.println(analogRead(yPin));
       }
     } 
 }
@@ -464,6 +485,7 @@ void alarmISR(){
     * Author(s): Sam Quiring
     *****************/
   noInterrupts();
+  accelerometerFlag = false;
   measurementFlag = false;
   SOCFlag = false;
   contactorFlag = false;

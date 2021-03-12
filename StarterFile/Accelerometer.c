@@ -3,9 +3,6 @@
 #include <stdbool.h>
 #include "Accelerometer.h"
 #include <Arduino.h>
-#define xOffset 0
-#define yOffset 0
-#define zOffset 0
 #define zeroPoint 300
 #define movementErrorMargin 0
 #define gEquivalent
@@ -66,11 +63,11 @@
         }
     }
 
-    void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin){
+    void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin, int* xOffset, int* yOffset, int* zOffset){
 
-      *xRaw = analogRead(*xPin);
-      *yRaw = analogRead(*yPin);
-      *zRaw = analogRead(*zPin);
+      *xRaw = analogRead(*xPin) - *xOffset;
+      *yRaw = analogRead(*yPin) - *yOffset;
+      *zRaw = analogRead(*zPin) - *zOffset;
     }
     
     void updateBuffer(float** Buffer, float* Raw, int* bufferPtr, float* denoiced, float* bufferFull, int* bufferSize){
@@ -91,14 +88,15 @@
 
         if(*(data->accelerometerFlag)){
 
-            getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin);
+            getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin, data->xOffset, data->yOffset, data->zOffset);
             convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc);
-            updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
-            updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
-            updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
+            //updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
+            //updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
+            //updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
             updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
             updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);
             updateAngles(data->xAccBuff, data->yAccBuff, data->zAccBuff, data->xAng, data->yAng, data->zAng);
 
         }
+        *(data->accelerometerFlag) = true;
     }
