@@ -1,5 +1,6 @@
 #include "Measurement.h"
 #include "TaskControlBlock.h"
+#include <Arduino.h>
 #define NUM_TASKS 5
 
 void insert(TCB* curTask, TCB* taskArray[], int index){
@@ -35,7 +36,7 @@ void Delete(TCB* curTask, TCB* taskArray[], int ArrayIndex){
 }
 
 
-void scheduler(TCB* curTask, TCB* taskArray[], int* counter){
+long scheduler(TCB* curTask, TCB* taskArray[], int* counter){
      /****************
     * Function name: scheduler
     * Function inputs: TCB* curTask
@@ -43,6 +44,7 @@ void scheduler(TCB* curTask, TCB* taskArray[], int* counter){
     * Function description: calls all tasks in given linked list
     * Author(s): Sam Quiring
     *****************/
+    unsigned long holderTime = 0;
     if(*counter % 10 == 1){
       //Delete(curTask, taskArray, 0);
       Delete(curTask, taskArray, 1);
@@ -58,8 +60,11 @@ void scheduler(TCB* curTask, TCB* taskArray[], int* counter){
     //insert(curTask, taskArray,0);
       insert(curTask, taskArray,1);
       }
+     holderTime = millis();
     while(curTask){
       curTask->task((curTask->taskDataPtr));
       curTask = curTask->next;
+      
     }
+    return(millis()-holderTime);
 }

@@ -29,6 +29,13 @@ typedef struct TouchScreenTaskData{
     volatile bool* alarmReset;
     bool* diffRate;
     int* counter;
+    float* xPosition;
+    float* yPosition;
+    float* zPosition;
+    float* totalDistance;
+    float* xAngle;
+    float* yAngle;
+    float* zAngle;
 }touchScreenData;
 
 void touchScreenTask (void*);

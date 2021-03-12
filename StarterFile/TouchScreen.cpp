@@ -33,13 +33,15 @@
 #define TS_MINX 120
 #define TS_MAXX 900
 
+#define DATASIZE 10
+
 #define TS_MINY 70
 #define TS_MAXY 920
 
 #define XMAX 240
-#define YUPDATE 290
+#define YUPDATE 270
 #define LNSPACE 20
-#define DATAOFFSET 140
+#define DATAOFFSET 150
 
 
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
@@ -63,6 +65,15 @@ bool HVILL = true;   //Change this according to startup condition of HVIL
 bool forceAlarmL = false;
 
 bool batteryOnL = false; //Change this according to startup condition of contactor
+
+//local holders of current value of accelerometer so we can check if we should update their values on the screen
+float xPos = -1.0;
+float yPos = -1.0;
+float zPos = -1.0;
+float distance = -1.0;
+float xAng = -1.0;
+float yAng = -1.0;
+float zAng = -1.0;
 
 // When using the BREAKOUT BOARD only, use these 8 data lines to the LCD:
 // For the Arduino Uno, Duemilanove, Diecimila, etc.:
@@ -160,6 +171,7 @@ void displaySetup() {
   tft.fillRect(BOXWIDTH, 300, BOXWIDTH, BOXSIZE, GREEN);
   tft.fillRect(BOXWIDTH * 2, 300, BOXWIDTH, BOXSIZE, MAGENTA);
   tft.drawRect(BOXWIDTH *2, 300, BOXWIDTH, BOXSIZE, WHITE);
+  tft.fillRect(BOXWIDTH * 2, 280, BOXWIDTH, BOXSIZE/2, BLACK);
 
 
 
@@ -177,6 +189,10 @@ void displaySetup() {
 
   tft.setCursor(TEXTOFFSET + BOXWIDTH * 2, 310);
   tft.print("BATTERY");
+
+  tft.setTextColor(YELLOW);
+  tft.setCursor(TEXTOFFSET + BOXWIDTH * 2 - 10, 285);
+  tft.print("ACCELEROMETER");
 }
 
 
@@ -217,7 +233,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
             //p.y = map(p.y, TS_MINY, TS_MAXY, tft.height(), 0);
 
             if ((p.x > 50) && (p.x < 50 + BOXWIDTH * 2)) {
-                if ((p.y > BOXSIZE) && (p.y < BOXSIZE + BOXSIZE)){
+                if ((p.y > BOXSIZE*2) && (p.y < BOXSIZE*3)){
 
                     *alarmReset = true;
                 }
@@ -247,7 +263,13 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
                 *state = true;
 
             }
+        } else if(p.y < BOXSIZE) {
+            if (p.x < BOXWIDTH*3) {
+                *displayState = 3;
+                *state = true;
+            }
         }
+        
         if (*displayState == 1) {
             if ((p.y > 170) && (p.y < 170 + BOXSIZE)) {
                 if ((p.x > 50) && (p.x < 50 + BOXWIDTH)) {
@@ -407,8 +429,8 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
     tft.print("High Voltage Out of Range: ");
     if (*forceAlarm) {
 
-        tft.fillRect(50, 250, BOXWIDTH * 2, BOXSIZE, YELLOW);
-        tft.setCursor(50 + TEXTOFFSET, 250 + TEXTOFFSET);
+        tft.fillRect(50, 210, BOXWIDTH * 2, BOXSIZE, YELLOW);
+        tft.setCursor(50 + TEXTOFFSET, 210 + TEXTOFFSET);
         tft.print("Acknowledge");
 
     }
@@ -458,6 +480,90 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
   }
 }
 
+void accelerometerScreen(float* xPosition, float* yPosition, float* zPosition, float* totalDistance, float* xAngle, float* yAngle, float* zAngle, bool* nScreen, volatile bool* forceAlarm, bool* diffRate){
+  if(*nScreen){
+    tft.fillRect(0,0,XMAX,YUPDATE,WHITE);
+    unsigned long start = micros();
+    //sets the cursor on the screen to the point 0,0
+    tft.setCursor(0, 0);
+    tft.setTextColor(BLACK); tft.setTextSize(2);
+    tft.print("Accelerometer Screen");
+    tft.setCursor(0,LNSPACE*2);
+    tft.print("X position: ");
+    tft.setCursor(0,LNSPACE*3);
+    tft.print("Y position: ");
+    tft.setCursor(0,LNSPACE*4);
+    tft.print("Z position: ");
+    tft.setCursor(0,LNSPACE*5);
+    tft.print("Distance: ");
+    tft.setCursor(0,LNSPACE*6);
+    tft.print("X angle: ");
+    tft.setCursor(0,LNSPACE*7);
+    tft.print("Y angle: ");
+    tft.setCursor(0,LNSPACE*8);
+    tft.print("Z angle: ");
+    xPos = -1.0;
+    yPos = -1.0;
+    zPos = -1.0;
+    distance = -1.0;
+    xAng = -1.0;
+    yAng = -1.0;
+    zAng = -1.0;
+  }
+
+  if(*xPosition != xPos){
+    xPos = *xPosition;
+    tft.fillRect(DATAOFFSET,LNSPACE*2,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
+    tft.setCursor(DATAOFFSET,LNSPACE*2);
+    tft.print(*xPosition);
+    
+  }
+  if(*yPosition != yPos){
+    yPos = *yPosition;
+    tft.fillRect(DATAOFFSET,LNSPACE*3,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
+    tft.setCursor(DATAOFFSET,LNSPACE*3);
+    tft.print(*yPosition);
+    
+  }
+  if(*zPosition != zPos){
+    zPos = *zPosition;
+    tft.fillRect(DATAOFFSET,LNSPACE*4,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
+    tft.setCursor(DATAOFFSET,LNSPACE*4);
+    tft.print(*zPosition);
+    
+  }
+
+  if(*totalDistance != distance){
+    distance = *totalDistance;
+    tft.fillRect(DATAOFFSET,LNSPACE*5,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
+    tft.setCursor(DATAOFFSET,LNSPACE*5);
+    tft.print(*totalDistance);
+    
+  }
+  
+  if(*xAngle != xAng){
+    xAng = *xAngle;
+    tft.fillRect(DATAOFFSET,LNSPACE*6,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
+    tft.setCursor(DATAOFFSET,LNSPACE*6);
+    tft.print(*xAngle);
+    
+  }
+  if(*yAngle != yAng){
+    yAng = *yAngle;
+    tft.fillRect(DATAOFFSET,LNSPACE*7,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
+    tft.setCursor(DATAOFFSET,LNSPACE*7);
+    tft.print(*yAngle);
+    
+  }
+  if(*zAngle != zAng){
+    zAng = *zAngle;
+    tft.fillRect(DATAOFFSET,LNSPACE*8,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
+    tft.setCursor(DATAOFFSET,LNSPACE*8);
+    tft.print(*zAngle);
+  }
+  
+}
+
 void touchScreenTask(void* mData){
     /****************
     * Function name: touchScreenTask
@@ -480,8 +586,10 @@ void touchScreenTask(void* mData){
            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen, data->diffRate);
         } else if(*(data->touchState) == 1){
             batteryScreen(data->nScreen, data->csState, data->diffRate);
-        } else {
+        } else if(*(data->touchState) == 2){
           AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm, data->diffRate);
+        } else {
+          accelerometerScreen(data->xPosition,data->yPosition,data->zPosition,data->totalDistance,data->xAngle,data->yAngle,data->zAngle,data->nScreen,data->forceAlarm,data->diffRate);
         }
         clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset, data->diffRate, data->counter);
     }
