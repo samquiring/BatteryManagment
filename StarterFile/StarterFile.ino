@@ -106,9 +106,9 @@ int voltageAddressMax = addressChange*5;
 volatile bool dataLoggingFlag = true; //true = run task false = skip task
 
 // Accelerometer global variables
-float xRawAcc;
-float yRawAcc;
-float zRawAcc;
+int xRawAcc;
+int yRawAcc;
+int zRawAcc;
 float xAcc;
 float yAcc;
 float zAcc;
