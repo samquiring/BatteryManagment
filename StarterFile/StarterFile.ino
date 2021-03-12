@@ -269,7 +269,14 @@ void setup() {
   touch.alarmReset = &alarmReset;
   touch.diffRate = &diffRate;
   touch.counter = &counter;
-
+  touch.xPosition = &xDisplacement;
+  touch.yPosition = &yDisplacement;
+  touch.zPosition = &zDisplacement;
+  touch.totalDistance = &totalDistance;
+  touch.xAngle = &xAngle;
+  touch.yAngle = &yAngle;
+  touch.zAngle = &zAngle;
+  
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;
   remoteTerminal.currentMin = &currentMin;
