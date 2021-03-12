@@ -3,8 +3,8 @@
 #include <stdbool.h>
 #include "Accelerometer.h"
 #include <Arduino.h>
-#define zeroPoint 300
-#define movementErrorMargin 0
+#define zeroPoint 0
+#define movementErrorMargin 100
 #define gEquivalent
 
 // converts the x, y, and z accelerations into cm / s^2
@@ -57,9 +57,9 @@
 
         if ((*zAcc > 980.0 - movementErrorMargin) || (*zAcc < 980.0 + movementErrorMargin)) {
         
-          *xAng = acos(*yAcc);
-          *yAng = acos(*xAcc);
-          *zAng = acos(*zAcc);
+          *xAng = acos(*yAcc/980);
+          *yAng = acos(*xAcc/980);
+          *zAng = acos(*zAcc/980);
         }
     }
 
@@ -87,16 +87,16 @@
         accelerometerData* data = (accelerometerData*) mData;
 
         if(*(data->accelerometerFlag)){
-
+            noInterrupts();
             getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin, data->xOffset, data->yOffset, data->zOffset);
             convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc);
-            //updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
-            //updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
-            //updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
-            updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
-            updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);
-            updateAngles(data->xAccBuff, data->yAccBuff, data->zAccBuff, data->xAng, data->yAng, data->zAng);
-
+            updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
+            updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
+            updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
+            updateDisplacement(data->xDisplacement, data->xAcc, data->xVel, data->yDisplacement, data->yAcc, data->yVel, data->zDisplacement, data->zAcc, data->zVel, data->timeBase);
+            updateDistance(data->totalDistance, data->xAcc, data->xVel, data->yAcc, data->yVel, data->zAcc, data->zVel, data->timeBase);
+            updateAngles(data->xAcc, data->yAcc, data->zAcc, data->xAng, data->yAng, data->zAng);
+            interrupts();
         }
         *(data->accelerometerFlag) = true;
     }

@@ -17,7 +17,7 @@
 #define CHARSIZE 60 //size of the lines below
 #define addressChange 8 //the distance between addresses for our eeprom
 #define BUFFER_SIZE 10 //the amount of denoicing we want to do
-#define OffsetSample 10
+#define OffsetSample 20
 //Task Control Blocks
 TCB measurementTCB;         // Declare all TCBs
 TCB touchScreenTCB;
@@ -131,9 +131,9 @@ float zAngle = 0.0;
 float xAccBuff = 0.0;
 float yAccBuff = 0.0;
 float zAccBuff = 0.0;
-float* xBuffer = malloc(BUFFER_SIZE);
-float* yBuffer = malloc(BUFFER_SIZE);
-float* zBuffer = malloc(BUFFER_SIZE);
+float* xBuffer = malloc(sizeof(float)*BUFFER_SIZE);
+float* yBuffer = malloc(sizeof(float)*BUFFER_SIZE);
+float* zBuffer = malloc(sizeof(float)*BUFFER_SIZE);
 int xPtr = 0;
 int yPtr = 0;
 int zPtr = 0;
@@ -183,9 +183,13 @@ void setup() {
     * Author(s): Sam Quiring and Anders Hunt
     *****************/
 
-  //memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
-  //memset(yBuffer,0,sizeof(yBuffer));
-  //memset(zBuffer,0,sizeof(zBuffer));
+  memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
+  memset(yBuffer,0,sizeof(yBuffer));
+  memset(zBuffer,0,sizeof(zBuffer));
+  for(int i = 0; i < OffsetSample; i++){
+      xOffset += analogRead(xPin);
+      delay(100);
+  }
 
   //initializes timerOne flag
   Timer1.initialize(100E+3);        //set the timer period to 100ms
@@ -296,9 +300,9 @@ void setup() {
   touch.yPosition = &yDisplacement;
   touch.zPosition = &zDisplacement;
   touch.totalDistance = &totalDistance;
-  touch.xAngle = &xRawAcc;
-  touch.yAngle = &yRawAcc;
-  touch.zAngle = &zRawAcc;
+  touch.xAngle = &xAngle;
+  touch.yAngle = &yAngle;
+  touch.zAngle = &zAngle;
   
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;
@@ -442,16 +446,15 @@ void loop() {
     * Author(s): Sam Quiring
     *****************/
     noInterrupts();
-    delay(1000);
+    delay(2000);
     for(int i = 0; i < OffsetSample; i++){
-      xOffset += analogRead(xPin);
       zOffset += analogRead(zPin);
       yOffset += analogRead(yPin);
     delay(100);
     }
     xOffset = xOffset / OffsetSample;
     yOffset = yOffset / OffsetSample;
-    zOffset = zOffset / OffsetSample;
+    zOffset = (zOffset / OffsetSample) + 165;
     
     interrupts();
     while(1){
