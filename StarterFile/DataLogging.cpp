@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include <Arduino.h>
 #include <EEPROM.h>
 #include "DataLogging.h"
@@ -56,7 +55,6 @@ void dataLoggingTask(void* mData) {
     }
     *(data->dataLoggingFlag) = true;  //skips measurement for one clock cycle
 }
-=======
 #include <Arduino.h>
 #include <EEPROM.h>
 #include "DataLogging.h"
@@ -114,4 +112,3 @@ void dataLoggingTask(void* mData) {
     }
     *(data->dataLoggingFlag) = true;  //skips measurement for one clock cycle
 }
->>>>>>> 94e5f6321c4c59c30ebdb369a63e491f23bb98f9
