@@ -7,6 +7,8 @@
 #define yOffset 0
 #define zOffset 0
 #define zeroPoint 300
+#define movementErrorMargin 0
+#define gEquivalent
 
 // converts the x, y, and z accelerations into cm / s^2
 
@@ -24,27 +26,32 @@
 
     void updateDisplacement(float* xDisplacement, float* xAcc, float* xVel, float* yDisplacement, float* yAcc, float* yVel, float* zDisplacement, float* zAcc, float* zVel, float* timeBase) {
 
-        *xDisplacement = *xDisplacement + (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
-        *yDisplacement = *yDisplacement + (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
+        totalG = sqrt((*xAcc * *xAcc) + (*yAcc * *yAcc) + (*zAcc * *zAcc))
 
-            // probably gonna have to account for the z acceleration.
-        *zDisplacement = *zDisplacement + (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
+        if ((*zAcc > 980.0 - movementErrorMargin) && (*zAcc < 980.0 - movementErrorMargin) {
+            *xDisplacement = *xDisplacement + (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
+            *yDisplacement = *yDisplacement + (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
+            *zDisplacement = *zDisplacement + (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
+        }
     }
 
     void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* zAcc, float* zVel, float* timeBase){
 
-        float xChange = (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
-        float yChange = (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
-        float zChange = (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
+        if ((*zAcc > 980.0 - movementErrorMargin) && (*zAcc < 980.0 - movementErrorMargin) {
+            float xChange = (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
+            float yChange = (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
+            float zChange = (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
 
 
-        float distanceChange = sqrt((xChange * xChange) + (yChange * yChange) + (zChange * zChange));
+            float distanceChange = sqrt((xChange * xChange) + (yChange * yChange) + (zChange * zChange));
 
-        *totalDistance = *totalDistance + distanceChange;
+            *totalDistance = *totalDistance + distanceChange;
+        }
 
     }
 
     void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
+
 
         *xAng = acos(*yAcc);
         *yAng = acos(*xAcc);
