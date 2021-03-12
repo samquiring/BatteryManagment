@@ -183,21 +183,10 @@ void setup() {
     * Author(s): Sam Quiring and Anders Hunt
     *****************/
 
-  memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
-  memset(yBuffer,0,sizeof(yBuffer));
-  memset(zBuffer,0,sizeof(zBuffer));
+  //memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
+  //memset(yBuffer,0,sizeof(yBuffer));
+  //memset(zBuffer,0,sizeof(zBuffer));
 
-  delay(1000);
-  for(int i = 0; i < OffsetSample; i++){
-    xOffset += analogRead(xPin);
-    zOffset += analogRead(zPin);
-    yOffset += analogRead(yPin);
-    delay(100);
-  }
-  xOffset = xOffset / OffsetSample;
-  yOffset = yOffset / OffsetSample;
-  zOffset = zOffset / OffsetSample;
-  
   //initializes timerOne flag
   Timer1.initialize(100E+3);        //set the timer period to 100ms
   Timer1.attachInterrupt(timerISR); //Attach the interrupt service routine (ISR)
@@ -452,14 +441,25 @@ void loop() {
     *                       that create a user interface to a battery management system
     * Author(s): Sam Quiring
     *****************/
+    noInterrupts();
+    delay(1000);
+    for(int i = 0; i < OffsetSample; i++){
+      xOffset += analogRead(xPin);
+      zOffset += analogRead(zPin);
+      yOffset += analogRead(yPin);
+    delay(100);
+    }
+    xOffset = xOffset / OffsetSample;
+    yOffset = yOffset / OffsetSample;
+    zOffset = zOffset / OffsetSample;
+    
+    interrupts();
     while(1){
       if(timeBaseFlag){
            timeBaseFlag = false;
            scheduler(&measurementTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
-           Serial.println(yOffset);
-           Serial.println(analogRead(yPin));
       }
     } 
 }
