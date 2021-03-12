@@ -7,25 +7,61 @@
 #define yOffset 0;
 #define zOffset 0;
 
+// converts the x, y, and z accelerations into cm / s^2
+
+    void convertFromRaw(float* xRawAcc, float* yRawAcc, float* zRawAcc, float* xAcc, float* yAcc, float* zRaw) {
+
+        *xAcc = *xRawAcc * 9.8;
+        *yAcc = *yRawAcc * 9.8;
+        *zAcc = *zRawAcc * 9.8;
+
+    }
+
     void updateDisplacement(float* xDisplacement, float* xAcc, float* xVel, float* yDisplacement, float* yAcc, float* yVel, float* zDisplacement, float* zAcc, float* zVel, float* timeBase) {
 
         *xDisplacement = *xDisplacement + (*xVel * *timeBase) + 0.5 * xAcc * (*timeBase * *timeBase);
         *yDisplacement = *yDisplacement + (*yVel * *timeBase) + 0.5 * yAcc * (*timeBase * *timeBase);
 
             // probably gonna have to account for the z acceleration.
-        *zDisplacement = *zDisplacement + (*zVel * *timeBase) + 0.5 * (zAcc - 9.8) * (*timeBase * *timeBase);
+        *zDisplacement = *zDisplacement + (*zVel * *timeBase) + 0.5 * (zAcc - 980) * (*timeBase * *timeBase);
     }
 
-    void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* Acc, float *xVel, float* timeBase){
+    void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* zAcc, float* zVel, float* timeBase){
 
         float xChange = (*xVel * *timeBase) + 0.5 * xAcc * (*timeBase * *timeBase);
         float yChange = (*yVel * *timeBase) + 0.5 * yAcc * (*timeBase * *timeBase);
-        float zChange = (*zVel * *timeBase) + 0.5 * (zAcc - 9.8) * (*timeBase * *timeBase);
+        float zChange = (*zVel * *timeBase) + 0.5 * (zAcc - 980) * (*timeBase * *timeBase);
+
 
         float distanceChange = sqrt((xChange * xChange) + (yChange * yChange)+ (zChange * zChange));
 
         *totalDistance = *totalDistance + distanceChange;
 
+    }
+
+    void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
+
+        *xAng = acos(*yAcc);
+        *yAng = acos(*xAcc);
+        *zAng = acos(*zAcc);
+
+    }
+
+
+    void AccelerometerTask(void *mData) {
+
+
+
+        measurementData* data = (measurementData*) mData;
+
+        if(*(data->SOCFlag)){
+
+            convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc);
+            updateDisplacement(data->xDisplacement, data->xAcc, data->xVel, data->yDisplacement, data->yAcc, data->yVel, data->zDisplacement, data->zAcc, data->zVel, data->timeBase)
+            updateDistance(data->totalDistance, data->xAcc, data->xVel, data->yAcc, data->yVel, data->zAcc, data->zVel, data->timeBase)
+            updateAngles(data->xAcc, data->yAcc, data->zAcc,
+
+        }
     }
 
 
