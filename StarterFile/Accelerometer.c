@@ -6,7 +6,7 @@
 #define xOffset 0;
 #define yOffset 0;
 #define zOffset 0;
-#define zeroPoint = 300;
+#define zeroPoint 300;
 
 // converts the x, y, and z accelerations into cm / s^2
 
@@ -66,5 +66,3 @@
 
         }
     }
-
-
