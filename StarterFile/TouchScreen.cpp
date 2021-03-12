@@ -66,6 +66,7 @@ bool forceAlarmL = false;
 
 bool batteryOnL = false; //Change this according to startup condition of contactor
 
+<<<<<<< HEAD
 //local holders of current value of accelerometer so we can check if we should update their values on the screen
 float xPos = -1.0;
 float yPos = -1.0;
@@ -74,6 +75,8 @@ float distance = -1.0;
 float xAng = -1.0;
 float yAng = -1.0;
 float zAng = -1.0;
+=======
+>>>>>>> 94e5f6321c4c59c30ebdb369a63e491f23bb98f9
 
 // When using the BREAKOUT BOARD only, use these 8 data lines to the LCD:
 // For the Arduino Uno, Duemilanove, Diecimila, etc.:
@@ -196,7 +199,7 @@ void displaySetup() {
 }
 
 
-void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* forceAlarm, volatile bool* alarmReset, bool* diffRate, int* counter){
+void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* forceAlarm, volatile bool* alarmReset){
   /****************
     * Function name: clicker
     * Function inputs: int displayState, bool if we have changed states, bool if the battery is currently on
@@ -210,6 +213,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
     *                       It also sets the touch for the alarm state and does the same touch as above accept on an acknowledge button
     * Author(s): Sam Quiring, Anders Hunt
     *****************/
+
    digitalWrite(13, HIGH);
    TSPoint p = ts.getPoint();
    digitalWrite(13, LOW);
@@ -261,7 +265,6 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
             } else if (p.x < BOXWIDTH*3) {
                 *displayState = 2;
                 *state = true;
-
             }
         } else if(p.y < BOXSIZE) {
             if (p.x < BOXWIDTH*3) {
@@ -290,7 +293,7 @@ void clicker(int* displayState, bool* state, bool* batteryOn, volatile bool* for
     }
 }
 
-void batteryScreen(bool* nScreen, bool* csState, bool* diffRate){
+void batteryScreen(bool* nScreen, bool* csState){
   /****************
     * Function name: batteryScreen
     * Function inputs: a bool that is true if theres a new screen and a bool of the state of the contactors
@@ -300,6 +303,8 @@ void batteryScreen(bool* nScreen, bool* csState, bool* diffRate){
     *                       then the contactor is closed and if it is false the contactor is open.
     * Author(s): Sam Quiring
     *****************/
+
+    
   if (*nScreen) {
     tft.fillRect(0,0,XMAX,YUPDATE,WHITE);
     tft.setCursor(0, 0);
@@ -325,7 +330,7 @@ void batteryScreen(bool* nScreen, bool* csState, bool* diffRate){
     }
 }
 
-void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool* HVIL, bool* nScreen, bool* diffRate){
+void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool* HVIL, bool* nScreen){
   /****************
     * Function name: measurementScreen
     * Function inputs: an int SOC, a float for the tempurature, a float for the voltage, a float for the current
@@ -335,6 +340,7 @@ void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool
     *                       Print out of the measurements according to their values.
     * Author(s): Sam Quiring
     *****************/
+    
   if(*nScreen){
     tft.fillRect(0,0,XMAX,YUPDATE,WHITE);
     unsigned long start = micros();
@@ -399,7 +405,7 @@ void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool
   }
 }
 
-void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, volatile bool* forceAlarm, bool* diffRate){
+void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, volatile bool* forceAlarm){
   /****************
     * Function name: AlarmScreen
     * Function inputs: an int that represents the HVILstate and int for the overcurrent state,
@@ -582,6 +588,7 @@ void touchScreenTask(void* mData){
           displaySetup();
           *(data->initialize) = false;
         }
+<<<<<<< HEAD
         if(*(data->touchState) == 0){
            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen, data->diffRate);
         } else if(*(data->touchState) == 1){
@@ -592,7 +599,20 @@ void touchScreenTask(void* mData){
           accelerometerScreen(data->xPosition,data->yPosition,data->zPosition,data->totalDistance,data->xAngle,data->yAngle,data->zAngle,data->nScreen,data->forceAlarm,data->diffRate);
         }
         clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset, data->diffRate, data->counter);
+=======
+
+          if(*(data->touchState) == 0){
+            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen);
+          } else if(*(data->touchState) == 1){
+            batteryScreen(data->nScreen, data->csState);
+          } else {
+            AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm);
+          }
+        
+        if (*(data->diffRate)) {
+          clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset);
+        } 
+>>>>>>> 94e5f6321c4c59c30ebdb369a63e491f23bb98f9
     }
     *(data->touchScreenFlag) = true;  //skips touchScreen for one clock cycle
-
 }
