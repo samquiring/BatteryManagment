@@ -24,18 +24,18 @@
 
     void updateDisplacement(float* xDisplacement, float* xAcc, float* xVel, float* yDisplacement, float* yAcc, float* yVel, float* zDisplacement, float* zAcc, float* zVel, float* timeBase) {
 
-        *xDisplacement = *xDisplacement + (*xVel * *timeBase) + 0.5 * xAcc * (*timeBase * *timeBase);
-        *yDisplacement = *yDisplacement + (*yVel * *timeBase) + 0.5 * yAcc * (*timeBase * *timeBase);
+        *xDisplacement = *xDisplacement + (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
+        *yDisplacement = *yDisplacement + (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
 
             // probably gonna have to account for the z acceleration.
-        *zDisplacement = *zDisplacement + (*zVel * *timeBase) + 0.5 * (zAcc - 980.0) * (*timeBase * *timeBase);
+        *zDisplacement = *zDisplacement + (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
     }
 
     void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* zAcc, float* zVel, float* timeBase){
 
-        float xChange = (*xVel * *timeBase) + 0.5 * xAcc * (*timeBase * *timeBase);
-        float yChange = (*yVel * *timeBase) + 0.5 * yAcc * (*timeBase * *timeBase);
-        float zChange = (*zVel * *timeBase) + 0.5 * (zAcc - 980.0) * (*timeBase * *timeBase);
+        float xChange = (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
+        float yChange = (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
+        float zChange = (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
 
 
         float distanceChange = sqrt((xChange * xChange) + (yChange * yChange) + (zChange * zChange));
@@ -53,15 +53,15 @@
     }
 
 
-    void AccelerometerTask(void *mData) {
+    void accelerometerTask(void *mData) {
 
-        measurementData* data = (measurementData*) mData;
+        accelerometerData* data = (accelerometerData*) mData;
 
-        if(*(data->SOCFlag)){
+        if(*(data->accelerometerFlag)){
 
             convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc);
-            updateDisplacement(data->xDisplacement, data->xAcc, data->xVel, data->yDisplacement, data->yAcc, data->yVel, data->zDisplacement, data->zAcc, data->zVel, data->timeBase)
-            updateDistance(data->totalDistance, data->xAcc, data->xVel, data->yAcc, data->yVel, data->zAcc, data->zVel, data->timeBase)
+            updateDisplacement(data->xDisplacement, data->xAcc, data->xVel, data->yDisplacement, data->yAcc, data->yVel, data->zDisplacement, data->zAcc, data->zVel, data->timeBase);
+            updateDistance(data->totalDistance, data->xAcc, data->xVel, data->yAcc, data->yVel, data->zAcc, data->zVel, data->timeBase);
             updateAngles(data->xAcc, data->yAcc, data->zAcc, data->xAng, data->yAng, data->zAng);
 
         }
