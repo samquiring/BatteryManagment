@@ -33,10 +33,12 @@ typedef struct AccelerometerTaskData{
     float* xAng;
     float* yAng;
     float* zAng;
-    
-}AccelerometerData;
 
-void AccelerometerTask (void*);
+    volatile bool* accelerometerFlag;
+    
+}accelerometerData;
+
+void accelerometerTask (void*);
 
 #endif
 
