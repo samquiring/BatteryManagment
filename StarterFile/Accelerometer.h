@@ -12,9 +12,9 @@ extern "C" {
 
 typedef struct AccelerometerTaskData{
 
-    float* xRawAcc;
-    float* yRawAcc;
-    float* zRawAcc;
+    int* xRawAcc;
+    int* yRawAcc;
+    int* zRawAcc;
 
     float* xAcc;
     float* yAcc;
