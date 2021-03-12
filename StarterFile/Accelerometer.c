@@ -3,14 +3,14 @@
 #include <stdbool.h>
 #include "Accelerometer.h"
 #include <Arduino.h>
-#define xOffset 0;
-#define yOffset 0;
-#define zOffset 0;
-#define zeroPoint 300;
+#define xOffset 0
+#define yOffset 0
+#define zOffset 0
+#define zeroPoint 300
 
 // converts the x, y, and z accelerations into cm / s^2
 
-    void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zRaw) {
+    void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zAcc) {
 
         float xGAcc = ((*xRawAcc - zeroPoint) / 160.0);
         float yGAcc = ((*yRawAcc - zeroPoint) / 160.0);

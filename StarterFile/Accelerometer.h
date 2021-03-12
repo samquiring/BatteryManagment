@@ -30,7 +30,10 @@ typedef struct AccelerometerTaskData{
 
     float* totalDistance;
     float* timeBase;
-
+    float* xAng;
+    float* yAng;
+    float* zAng;
+    
 }AccelerometerData;
 
 void AccelerometerTask (void*);
