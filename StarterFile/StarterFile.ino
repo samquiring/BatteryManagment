@@ -477,7 +477,7 @@ void loop() {
     }
     xOffset = xOffset / OffsetSample;
     yOffset = yOffset / OffsetSample;
-    zOffset = (zOffset / OffsetSample) + 165;
+    zOffset = (zOffset / OffsetSample) - 165;
     
     interrupts();
     while(1){
