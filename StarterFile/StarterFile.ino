@@ -395,7 +395,7 @@ void setup() {
   accelerometer.bigXBuffer = bigXBuffer;
   accelerometer.bigYBuffer = bigYBuffer;
   accelerometer.bigPtr = &bigPtr;
-  accelerometer.bigBufferSize = &bigBufferSize;
+  accelerometer.bigBufferSize = &bigbufferSize;
   
 
   //setting TCB up so it is connected
