@@ -24,6 +24,13 @@
 
     }
 
+    void updateVelocity(float* xAcc, float* yAcc, float* zAcc, float* xVel, float* yVel, float* zVel, float* timeBase) {
+       *xVel = *xVel + *xAcc * *timeBase;
+       *yVel = *yVel + *yAcc * *timeBase;
+       *zVel = *zVel + *zAcc * *timeBase;
+      
+    }
+
     void updateDisplacement(float* xDisplacement, float* xAcc, float* xVel, float* yDisplacement, float* yAcc, float* yVel, float* zDisplacement, float* zAcc, float* zVel, float* timeBase) {
 
 
@@ -59,20 +66,13 @@
         }
     }
 
-    void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin){
-
-      *xRaw = analogRead(*xPin);
-      *yRaw = analogRead(*yPin);
-      *zRaw = analogRead(*zPin);
-    }
-
 
     void accelerometerTask(void *mData) {
 
         accelerometerData* data = (accelerometerData*) mData;
 
         if(*(data->accelerometerFlag)){
-            getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin);
+
             convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc);
             updateDisplacement(data->xDisplacement, data->xAcc, data->xVel, data->yDisplacement, data->yAcc, data->yVel, data->zDisplacement, data->zAcc, data->zVel, data->timeBase);
             updateDistance(data->totalDistance, data->xAcc, data->xVel, data->yAcc, data->yVel, data->zAcc, data->zVel, data->timeBase);
