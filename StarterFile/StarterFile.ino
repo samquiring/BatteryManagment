@@ -122,6 +122,9 @@ float totalDistance;
 const byte xPin = A15;
 const byte yPin = A14;
 const byte zPin = A13;
+float xAng;
+float yAng;
+float zAng;
 
 //multiple uses global variables
 int counter = 1;
@@ -313,6 +316,9 @@ void setup() {
   accelerometer.zDisplacement = &zDisplacement;
   accelerometer.totalDistance = &totalDistance;
   accelerometer.timeBase = &timeBase;
+  accelerometer.xAng = &xAng;
+  accelerometer.yAng = &yAng;
+  accelerometer.zAng = &zAng;
   
 
   //setting TCB up so it is connected
