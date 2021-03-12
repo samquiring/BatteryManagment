@@ -122,9 +122,9 @@ float totalDistance;
 const byte xPin = A15;
 const byte yPin = A14;
 const byte zPin = A13;
-float xAng;
-float yAng;
-float zAng;
+float xAngle;
+float yAngle;
+float zAngle;
 
 //multiple uses global variables
 int counter = 1;
@@ -316,9 +316,9 @@ void setup() {
   accelerometer.zDisplacement = &zDisplacement;
   accelerometer.totalDistance = &totalDistance;
   accelerometer.timeBase = &timeBase;
-  accelerometer.xAng = &xAng;
-  accelerometer.yAng = &yAng;
-  accelerometer.zAng = &zAng;
+  accelerometer.xAng = &xAngle;
+  accelerometer.yAng = &yAngle;
+  accelerometer.zAng = &zAngle;
   
 
   //setting TCB up so it is connected
@@ -352,7 +352,7 @@ void setup() {
 
   accelerometerTCB.taskDataPtr = &accelerometer;
   accelerometerTCB.task = &accelerometerTask;
-  accelerometerTCB.named = ;
+  //accelerometerTCB.named = ;
 
   //creating the doubly linked list
   measurementTCB.prev = NULL;
@@ -369,8 +369,8 @@ void setup() {
   dataLoggingTCB.prev = &touchScreenTCB;
   remoteTerminalTCB.prev = &dataLoggingTCB;
   remoteTerminalTCB.next = NULL;
-  accelerometerTCB.prev = ;
-  accelerometerTCB.next = ;
+  //accelerometerTCB.prev = ;
+  //accelerometerTCB.next = ;
 
   //Initialize serial communication
     Serial.begin(9600);
