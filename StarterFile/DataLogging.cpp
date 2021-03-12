@@ -45,7 +45,7 @@ void dataLoggingTask(void* mData) {
                             If dataLoggingFlag is true runs all above, if false does not run any threads
     * Author(s): Sam Quiring
     *****************/
-  	dataLoggingData* data = (dataLoggingData*) mData;
+    dataLoggingData* data = (dataLoggingData*) mData;
     if(*(data->dataLoggingFlag)){
       updateMeasurement(data->temperatureMin,data->tempAddressMin,data->tempChangeMin,data->temperatureMax,data->tempAddressMax,data->tempChangeMax, data->resetEEPROM);
       updateMeasurement(data->currentMin,data->currentAddressMin,data->currentChangeMin,data->currentMax,data->currentAddressMax,data->currentChangeMax, data->resetEEPROM);
@@ -102,7 +102,7 @@ void dataLoggingTask(void* mData) {
                             If dataLoggingFlag is true runs all above, if false does not run any threads
     * Author(s): Sam Quiring
     *****************/
-  	dataLoggingData* data = (dataLoggingData*) mData;
+    dataLoggingData* data = (dataLoggingData*) mData;
     if(*(data->dataLoggingFlag)){
       updateMeasurement(data->temperatureMin,data->tempAddressMin,data->tempChangeMin,data->temperatureMax,data->tempAddressMax,data->tempChangeMax, data->resetEEPROM);
       updateMeasurement(data->currentMin,data->currentAddressMin,data->currentChangeMin,data->currentMax,data->currentAddressMax,data->currentChangeMax, data->resetEEPROM);
