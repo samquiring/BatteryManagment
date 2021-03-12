@@ -55,13 +55,28 @@
 
     void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
 
-        if ((*zAcc > 980.0 - movementErrorMargin) || (*zAcc < 980.0 + movementErrorMargin)) {
-        
-          *xAng = acos(*yAcc/980);
-          *yAng = acos(*xAcc/980);
-          *zAng = acos(*zAcc/980);
+  if (sqrt((*zAcc * *zAcc) + (*yAcc * *yAcc) + (*xAcc * *xAcc)) < 980.0 + movementErrorMargin) {
+
+          if (*zAng > 980.0) {
+            *zAng = 90.0;
+            *xAng = asin(*yAcc/980);
+            *yAng = asin(*xAcc/980);
+          } else if (*xAng > 980.0) {
+            *xAng = 90.0;
+            *yAng = asin(*xAcc/980);
+            *zAng = asin(*zAcc/980);
+          } else if (*yAng > 980.0) {
+            *yAng = 90.0;
+            *xAng = asin(*yAcc/980);
+            *zAng = asin(*zAcc/980);
+          } else {
+          *xAng = asin(*yAcc/980) * 360 / 6.28;
+          *yAng = asin(*xAcc/980) * 360 / 6.28;
+          *zAng = asin(*zAcc/980) * 360 / 6.28;
         }
+      }
     }
+    
 
     void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin, int* xOffset, int* yOffset, int* zOffset){
 
@@ -95,7 +110,7 @@
             updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
             updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
             updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);
-            updateAngles(data->xAccBuff, data->yAccBuff, data->zAccBuff, data->xAng, data->yAng, data->zAng);
+            updateAngles(data->xAcc, data->yAcc, data->zAcc, data->xAng, data->yAng, data->zAng);
             interrupts();
         }
         *(data->accelerometerFlag) = true;
