@@ -517,21 +517,21 @@ void accelerometerScreen(float* xPosition, float* yPosition, float* zPosition, f
     zAng = -1.0;
   }
 
-  if(*xPosition != xPos){
+  if(*xPosition < xPos-ERROR_MARGIN || *xPosition > xPos+ERROR_MARGIN){
     xPos = *xPosition;
     tft.fillRect(DATAOFFSET,LNSPACE*2,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
     tft.setCursor(DATAOFFSET,LNSPACE*2);
     tft.print(*xPosition);
     
   }
-  if(*yPosition != yPos){
+  if(*yPosition < yPos-ERROR_MARGIN || *yPosition > yPos+ERROR_MARGIN){
     yPos = *yPosition;
     tft.fillRect(DATAOFFSET,LNSPACE*3,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
     tft.setCursor(DATAOFFSET,LNSPACE*3);
     tft.print(*yPosition);
     
   }
-  if(*zPosition != zPos){
+  if(*zPosition < zPos-ERROR_MARGIN || *zPosition > zPos+ERROR_MARGIN){
     zPos = *zPosition;
     tft.fillRect(DATAOFFSET,LNSPACE*4,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
     tft.setCursor(DATAOFFSET,LNSPACE*4);
@@ -539,7 +539,7 @@ void accelerometerScreen(float* xPosition, float* yPosition, float* zPosition, f
     
   }
 
-  if(*totalDistance != distance){
+  if(*totalDistance < distance-ERROR_MARGIN || *totalDistance > distance+ERROR_MARGIN){
     distance = *totalDistance;
     tft.fillRect(DATAOFFSET,LNSPACE*5,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
     tft.setCursor(DATAOFFSET,LNSPACE*5);
@@ -547,21 +547,21 @@ void accelerometerScreen(float* xPosition, float* yPosition, float* zPosition, f
     
   }
   
-  if(*xAngle != xAng){
+  if(*xAngle < xAng-ERROR_MARGIN || *xAngle > xAng+ERROR_MARGIN){
     xAng = *xAngle;
     tft.fillRect(DATAOFFSET,LNSPACE*6,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
     tft.setCursor(DATAOFFSET,LNSPACE*6);
     tft.print(*xAngle);
     
   }
-  if(*yAngle != yAng){
+  if(*yAngle < yAng-ERROR_MARGIN || *yAngle > yAng+ERROR_MARGIN){
     yAng = *yAngle;
     tft.fillRect(DATAOFFSET,LNSPACE*7,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
     tft.setCursor(DATAOFFSET,LNSPACE*7);
     tft.print(*yAngle);
     
   }
-  if(*zAngle != zAng){
+  if(*zAngle < zAng-ERROR_MARGIN || *zAngle > zAng+ERROR_MARGIN){
     zAng = *zAngle;
     tft.fillRect(DATAOFFSET,LNSPACE*8,XMAX-DATAOFFSET,LNSPACE-5,WHITE);
     tft.setCursor(DATAOFFSET,LNSPACE*8);
