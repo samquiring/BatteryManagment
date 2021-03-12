@@ -24,7 +24,7 @@ TCB contactorTCB;
 TCB alarmTCB;
 TCB remoteTerminalTCB;
 TCB dataLoggingTCB;
-TCB AccelerometerTCB;
+TCB accelerometerTCB;
 
 
 

@@ -10,7 +10,7 @@ extern "C" {
 
 
 
-typedef struct AccelerometerTaskData{
+typedef struct accelerometerTaskData{
 
     int* xRawAcc;
     int* yRawAcc;
