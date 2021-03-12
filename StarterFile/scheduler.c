@@ -1,7 +1,7 @@
 #include "Measurement.h"
 #include "TaskControlBlock.h"
 #include <Arduino.h>
-#define NUM_TASKS 5
+#define NUM_TASKS 6
 
 void insert(TCB* curTask, TCB* taskArray[], int index){
   while(curTask->next != NULL){

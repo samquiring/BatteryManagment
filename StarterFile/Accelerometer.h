@@ -7,6 +7,7 @@ extern "C" {
 
 #include <stdlib.h>
 #include <stdbool.h>
+#include <Arduino.h>
 
 
 
@@ -33,6 +34,10 @@ typedef struct accelerometerTaskData{
     float* xAng;
     float* yAng;
     float* zAng;
+
+    const byte* xPin;
+    const byte* yPin;
+    const byte* zPin;
 
     volatile bool* accelerometerFlag;
     

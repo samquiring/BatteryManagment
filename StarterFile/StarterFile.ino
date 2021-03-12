@@ -106,25 +106,25 @@ int voltageAddressMax = addressChange*5;
 volatile bool dataLoggingFlag = true; //true = run task false = skip task
 
 // Accelerometer global variables
-int xRawAcc;
-int yRawAcc;
-int zRawAcc;
-float xAcc;
-float yAcc;
-float zAcc;
-float xVel;
-float yVel;
-float zVel;
-float xDisplacement;
-float yDisplacement;
-float zDisplacement;
-float totalDistance;
+int xRawAcc = 0.0;
+int yRawAcc = 0.0;
+int zRawAcc = 0.0;
+float xAcc = 0.0;
+float yAcc = 0.0;
+float zAcc = 0.0;
+float xVel = 0.0;
+float yVel = 0.0;
+float zVel = 0.0;
+float xDisplacement = 0.0;
+float yDisplacement = 0.0;
+float zDisplacement = 0.0;
+float totalDistance = 0.0;
 const byte xPin = A15;
 const byte yPin = A14;
 const byte zPin = A13;
-float xAngle;
-float yAngle;
-float zAngle;
+float xAngle = 0.0;
+float yAngle = 0.0;
+float zAngle = 0.0;
 
 //multiple uses global variables
 int counter = 1;
@@ -326,6 +326,9 @@ void setup() {
   accelerometer.xAng = &xAngle;
   accelerometer.yAng = &yAngle;
   accelerometer.zAng = &zAngle;
+  accelerometer.xPin = &xPin;
+  accelerometer.yPin = &yPin;
+  accelerometer.zPin = &zPin;
   
 
   //setting TCB up so it is connected
@@ -359,7 +362,7 @@ void setup() {
 
   accelerometerTCB.taskDataPtr = &accelerometer;
   accelerometerTCB.task = &accelerometerTask;
-  //accelerometerTCB.named = ;
+  accelerometerTCB.named = 8;
 
   //creating the doubly linked list
   measurementTCB.prev = NULL;
@@ -375,9 +378,9 @@ void setup() {
   dataLoggingTCB.next = &remoteTerminalTCB;
   dataLoggingTCB.prev = &touchScreenTCB;
   remoteTerminalTCB.prev = &dataLoggingTCB;
-  remoteTerminalTCB.next = NULL;
-  //accelerometerTCB.prev = ;
-  //accelerometerTCB.next = ;
+  remoteTerminalTCB.next = &accelerometerTCB;
+  accelerometerTCB.prev = &remoteTerminalTCB;
+  accelerometerTCB.next = NULL;
 
   //Initialize serial communication
     Serial.begin(9600);
@@ -385,7 +388,7 @@ void setup() {
     Serial1.setTimeout(1000);
 
 }
-
+unsigned long tester = 0;
 TCB* taskArray[] = {&touchScreenTCB,&remoteTerminalTCB,&dataLoggingTCB,&measurementTCB,&SOCTCB,&contactorTCB,&alarmTCB};
 
 void loop() {
@@ -399,10 +402,13 @@ void loop() {
     *****************/
     while(1){
       if(timeBaseFlag){
+           tester = millis();
            timeBaseFlag = false;
            scheduler(&measurementTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
+           Serial.println(xRawAcc);
+           
       }
     } 
 }
