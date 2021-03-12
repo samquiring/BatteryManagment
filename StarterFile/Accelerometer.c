@@ -55,27 +55,12 @@
 
     void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
 
-      if (sqrt((*zAcc * *zAcc) + (*yAcc * *yAcc) + (*xAcc * *xAcc)) < 980.0 + movementErrorMargin) {
-
-          if (*zAng > 980.0) {
-            *zAng = 90.0;
-            *xAng = asin(*yAcc/980) * 360 / 6.28;
-            *yAng = asin(*xAcc/980) * 360 / 6.28;
-          } else if (*xAng > 980.0) {
-            *xAng = 90.0;
-            *yAng = asin(*xAcc/980) * 360 / 6.28;
-            *zAng = asin(*zAcc/980) * 360 / 6.28;
-          } else if (*yAng > 980.0) {
-            *yAng = 90.0;
-            *xAng = asin(*yAcc/980) * 360 / 6.28;
-            *zAng = asin(*zAcc/980) * 360 / 6.28;
-          } else {
+        if ((*zAcc > 980.0 - movementErrorMargin) || (*zAcc < 980.0 + movementErrorMargin)) {
         
-          *xAng = asin(*yAcc/980) * 360 / 6.28;
-          *yAng = asin(*xAcc/980) * 360 / 6.28;
-          *zAng = asin(*zAcc/980) * 360 / 6.28;
+          *xAng = acos(*yAcc/980);
+          *yAng = acos(*xAcc/980);
+          *zAng = acos(*zAcc/980);
         }
-      }
     }
 
     void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin, int* xOffset, int* yOffset, int* zOffset){
@@ -85,9 +70,9 @@
       *zRaw = analogRead(*zPin) - *zOffset;
     }
     
-    void updateBuffer(float** Buffer, float* Raw, int* bufferPtr, float* denoiced, float* bufferFull, int* bufferSize){
-      *denoiced += ((*Raw) - *Buffer[*bufferPtr])/(*bufferSize);
-      *Buffer[*bufferPtr] = (*Raw);
+    void updateBuffer(float* Buffer, float* Raw, int* bufferPtr, float* denoiced, float* bufferFull, int* bufferSize){
+      *denoiced += ((*Raw) - Buffer[*bufferPtr])/(*bufferSize);
+      Buffer[*bufferPtr] = (*Raw);
       if(*bufferPtr != *bufferSize){
         *bufferPtr += 1;
       } else {
