@@ -43,6 +43,9 @@
 #define LNSPACE 20
 #define DATAOFFSET 150
 
+#define ERROR_MARGIN 0.1 //this is the amount of change before we update our accelerometer screen measurements
+                        //Used to improve performance as less screen updating means less delay
+
 
 TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 
@@ -66,7 +69,6 @@ bool forceAlarmL = false;
 
 bool batteryOnL = false; //Change this according to startup condition of contactor
 
-<<<<<<< HEAD
 //local holders of current value of accelerometer so we can check if we should update their values on the screen
 float xPos = -1.0;
 float yPos = -1.0;
@@ -75,8 +77,6 @@ float distance = -1.0;
 float xAng = -1.0;
 float yAng = -1.0;
 float zAng = -1.0;
-=======
->>>>>>> 94e5f6321c4c59c30ebdb369a63e491f23bb98f9
 
 // When using the BREAKOUT BOARD only, use these 8 data lines to the LCD:
 // For the Arduino Uno, Duemilanove, Diecimila, etc.:
@@ -588,7 +588,6 @@ void touchScreenTask(void* mData){
           displaySetup();
           *(data->initialize) = false;
         }
-<<<<<<< HEAD
         if(*(data->touchState) == 0){
            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen, data->diffRate);
         } else if(*(data->touchState) == 1){
@@ -599,7 +598,6 @@ void touchScreenTask(void* mData){
           accelerometerScreen(data->xPosition,data->yPosition,data->zPosition,data->totalDistance,data->xAngle,data->yAngle,data->zAngle,data->nScreen,data->forceAlarm,data->diffRate);
         }
         clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset, data->diffRate, data->counter);
-=======
 
           if(*(data->touchState) == 0){
             measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen);
@@ -612,7 +610,6 @@ void touchScreenTask(void* mData){
         if (*(data->diffRate)) {
           clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset);
         } 
->>>>>>> 94e5f6321c4c59c30ebdb369a63e491f23bb98f9
     }
     *(data->touchScreenFlag) = true;  //skips touchScreen for one clock cycle
 }
