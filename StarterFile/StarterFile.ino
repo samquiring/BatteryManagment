@@ -148,7 +148,10 @@ int zOffset = 0;
 //used to dynamically update the offsets if they are within a certain value settled
 float* bigXBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
 float* bigYBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
-int bigPtr = 0;
+int bigPtrX = 0;
+int bigPtrY = 0;
+float bigX = 0;
+float bigY = 0;
 int bigbufferSize = 20*BUFFER_SIZE;
 
 
@@ -394,7 +397,10 @@ void setup() {
   accelerometer.zOffset = &zOffset;
   accelerometer.bigXBuffer = bigXBuffer;
   accelerometer.bigYBuffer = bigYBuffer;
-  accelerometer.bigPtr = &bigPtr;
+  accelerometer.bigPtrX = &bigPtrX;
+  accelerometer.bigPtrY = &bigPtrY;
+  accelerometer.bigX = &bigX;
+  accelerometer.bigY = &bigY;
   accelerometer.bigBufferSize = &bigbufferSize;
   
 
