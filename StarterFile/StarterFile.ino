@@ -145,6 +145,14 @@ int xOffset = 0;
 int yOffset = 0;
 int zOffset = 0;
 
+//used to dynamically update the offsets if they are within a certain value settled
+float* bigXBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
+float* bigYBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
+int bigPtr = 0;
+int bigbufferSize = 20*BUFFER_SIZE;
+
+
+
 //multiple uses global variables
 int counter = 1;
 bool batteryOn = false; //true = ON false = OFF
@@ -191,6 +199,12 @@ void setup() {
     yBuffer[i] = 0;
     zBuffer[i] = 0;
   }
+
+  for(int i = 0; i < BUFFER_SIZE*20; i++){
+    bigXBuffer[i] = 0;
+    bigYBuffer[i] = 0;
+  }
+  
   for(int i = 0; i < OffsetSample; i++){
       xOffset += analogRead(xPin);
       delay(100);
@@ -305,9 +319,9 @@ void setup() {
   touch.yPosition = &yDisplacement;
   touch.zPosition = &zDisplacement;
   touch.totalDistance = &totalDistance;
-  touch.xAngle = &xAngle;
-  touch.yAngle = &yAngle;
-  touch.zAngle = &zAngle;
+  touch.xAngle = &xAcc;
+  touch.yAngle = &yAcc;
+  touch.zAngle = &zAcc;
   
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;
@@ -378,6 +392,10 @@ void setup() {
   accelerometer.xOffset = &xOffset;
   accelerometer.yOffset = &yOffset;
   accelerometer.zOffset = &zOffset;
+  accelerometer.bigXBuffer = bigXBuffer;
+  accelerometer.bigYBuffer = bigYBuffer;
+  accelerometer.bigPtr = &bigPtr;
+  accelerometer.bigBufferSize = &bigBufferSize;
   
 
   //setting TCB up so it is connected
