@@ -330,7 +330,7 @@ void batteryScreen(bool* nScreen, bool* csState){
     }
 }
 
-void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool* HVIL, bool* nScreen){
+void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool* HVIL, bool* nScreen, bool* diffRate){
   /****************
     * Function name: measurementScreen
     * Function inputs: an int SOC, a float for the tempurature, a float for the voltage, a float for the current
@@ -405,7 +405,7 @@ void measurementScreen(float* SOC, float* temp,float* HVVolt, float* HVCur, bool
   }
 }
 
-void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, volatile bool* forceAlarm){
+void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, bool* nScreen, volatile bool* forceAlarm, bool* diffRate){
   /****************
     * Function name: AlarmScreen
     * Function inputs: an int that represents the HVILstate and int for the overcurrent state,
