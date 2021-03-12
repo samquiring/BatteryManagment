@@ -16,6 +16,7 @@
 
 #define CHARSIZE 60 //size of the lines below
 #define addressChange 8 //the distance between addresses for our eeprom
+#define BUFFER_SIZE 10 //the amount of denoicing we want to do
 //Task Control Blocks
 TCB measurementTCB;         // Declare all TCBs
 TCB touchScreenTCB;
@@ -125,6 +126,19 @@ const byte zPin = A13;
 float xAngle = 0.0;
 float yAngle = 0.0;
 float zAngle = 0.0;
+float xAccBuff = 0.0;
+float yAccBuff = 0.0;
+float zAccBuff = 0.0;
+float* xBuffer = malloc(BUFFER_SIZE);
+float* yBuffer = malloc(BUFFER_SIZE);
+float* zBuffer = malloc(BUFFER_SIZE);
+int xPtr = 0;
+int yPtr = 0;
+int zPtr = 0;
+bool xBufferFull = false;
+bool yBufferFull = false;
+bool zBufferFull = false;
+int bufferSize = BUFFER_SIZE;
 
 //multiple uses global variables
 int counter = 1;
@@ -164,6 +178,9 @@ void setup() {
     * Author(s): Sam Quiring and Anders Hunt
     *****************/
 
+  memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
+  memset(yBuffer,0,sizeof(yBuffer));
+  memset(zBuffer,0,sizeof(zBuffer));
   //initializes timerOne flag
   Timer1.initialize(100E+3);        //set the timer period to 100ms
   Timer1.attachInterrupt(timerISR); //Attach the interrupt service routine (ISR)
@@ -329,6 +346,19 @@ void setup() {
   accelerometer.xPin = &xPin;
   accelerometer.yPin = &yPin;
   accelerometer.zPin = &zPin;
+  accelerometer.xAccBuff = &xAccBuff;
+  accelerometer.yAccBuff = &yAccBuff;
+  accelerometer.zAccBuff = &zAccBuff;
+  accelerometer.xBuffer = &xBuffer;
+  accelerometer.yBuffer = &yBuffer;
+  accelerometer.zBuffer = &zBuffer;
+  accelerometer.xPtr = &xPtr;
+  accelerometer.yPtr = &yPtr;
+  accelerometer.zPtr = &zPtr;
+  accelerometer.xBufferFull = &xBufferFull;
+  accelerometer.yBufferFull = &yBufferFull;
+  accelerometer.zBufferFull = &zBufferFull;
+  accelerometer.bufferSize = &bufferSize;
   
 
   //setting TCB up so it is connected

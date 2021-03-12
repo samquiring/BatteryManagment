@@ -9,6 +9,7 @@ extern "C" {
 #include <stdbool.h>
 #include <Arduino.h>
 
+#define BUFFER_SIZE 10
 
 
 typedef struct accelerometerTaskData{
@@ -20,6 +21,24 @@ typedef struct accelerometerTaskData{
     float* xAcc;
     float* yAcc;
     float* zAcc;
+
+    float* xAccBuff;
+    float* yAccBuff;
+    float* zAccBuff;
+
+    float** xBuffer;
+    float** yBuffer;
+    float** zBuffer;
+
+    int* xPtr;
+    int* yPtr;
+    int* zPtr;
+
+    bool* xBufferFull;
+    bool* yBufferFull;
+    bool* zBufferFull;
+
+    int* bufferSize;
 
     float* xVel;
     float* yVel;
