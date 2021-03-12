@@ -33,9 +33,9 @@ typedef struct TouchScreenTaskData{
     float* yPosition;
     float* zPosition;
     float* totalDistance;
-    float* xAngle;
-    float* yAngle;
-    float* zAngle;
+    int* xAngle;
+    int* yAngle;
+    int* zAngle;
 }touchScreenData;
 
 void touchScreenTask (void*);

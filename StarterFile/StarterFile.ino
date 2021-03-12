@@ -273,9 +273,9 @@ void setup() {
   touch.yPosition = &yDisplacement;
   touch.zPosition = &zDisplacement;
   touch.totalDistance = &totalDistance;
-  touch.xAngle = &xAngle;
-  touch.yAngle = &yAngle;
-  touch.zAngle = &zAngle;
+  touch.xAngle = &xRawAcc;
+  touch.yAngle = &yRawAcc;
+  touch.zAngle = &zRawAcc;
   
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;
@@ -407,7 +407,7 @@ void loop() {
            scheduler(&measurementTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
-           Serial.println(xRawAcc);
+           Serial.println(millis()-tester);
            
       }
     } 

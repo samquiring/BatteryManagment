@@ -486,7 +486,7 @@ void AlarmScreen(int* HVILState, int* OvercurrentState, int* HVOutOfRangeState, 
   }
 }
 
-void accelerometerScreen(float* xPosition, float* yPosition, float* zPosition, float* totalDistance, float* xAngle, float* yAngle, float* zAngle, bool* nScreen, volatile bool* forceAlarm, bool* diffRate){
+void accelerometerScreen(float* xPosition, float* yPosition, float* zPosition, float* totalDistance, int* xAngle, int* yAngle, int* zAngle, bool* nScreen, volatile bool* forceAlarm, bool* diffRate){
   if(*nScreen){
     tft.fillRect(0,0,XMAX,YUPDATE,WHITE);
     unsigned long start = micros();
