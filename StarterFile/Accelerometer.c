@@ -59,21 +59,21 @@
 
           if (*zAng > 980.0) {
             *zAng = 90.0;
-            *xAng = asin(*yAcc/980);
-            *yAng = asin(*xAcc/980);
+            *xAng = asin(*yAcc/980) * 360 / 6.28;
+            *yAng = asin(*xAcc/980) * 360 / 6.28;
           } else if (*xAng > 980.0) {
             *xAng = 90.0;
-            *yAng = asin(*xAcc/980);
-            *zAng = asin(*zAcc/980);
+            *yAng = asin(*xAcc/980) * 360 / 6.28;
+            *zAng = asin(*zAcc/980) * 360 / 6.28;
           } else if (*yAng > 980.0) {
             *yAng = 90.0;
-            *xAng = asin(*yAcc/980);
-            *zAng = asin(*zAcc/980);
+            *xAng = asin(*yAcc/980) * 360 / 6.28;
+            *zAng = asin(*zAcc/980) * 360 / 6.28;
           } else {
         
-          *xAng = asin(*yAcc/980);
-          *yAng = asin(*xAcc/980);
-          *zAng = asin(*zAcc/980);
+          *xAng = asin(*yAcc/980) * 360 / 6.28;
+          *yAng = asin(*xAcc/980) * 360 / 6.28;
+          *zAng = asin(*zAcc/980) * 360 / 6.28;
         }
       }
     }
