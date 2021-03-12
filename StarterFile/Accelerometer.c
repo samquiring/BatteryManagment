@@ -27,7 +27,7 @@
     void updateDisplacement(float* xDisplacement, float* xAcc, float* xVel, float* yDisplacement, float* yAcc, float* yVel, float* zDisplacement, float* zAcc, float* zVel, float* timeBase) {
 
 
-        if ((*zAcc > 980.0 - movementErrorMargin) && (*zAcc < 980.0 - movementErrorMargin)) {
+        if ((*zAcc < 980.0 - movementErrorMargin) || (*zAcc > 980.0 + movementErrorMargin)) {
             *xDisplacement = *xDisplacement + (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
             *yDisplacement = *yDisplacement + (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
             *zDisplacement = *zDisplacement + (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
@@ -36,7 +36,7 @@
 
     void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* zAcc, float* zVel, float* timeBase){
 
-        if ((*zAcc > 980.0 - movementErrorMargin) && (*zAcc < 980.0 - movementErrorMargin)) {
+        if ((*zAcc < 980.0 - movementErrorMargin) || (*zAcc > 980.0 + movementErrorMargin)) {
             float xChange = (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
             float yChange = (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
             float zChange = (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
@@ -51,11 +51,12 @@
 
     void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
 
-
-        *xAng = acos(*yAcc);
-        *yAng = acos(*xAcc);
-        *zAng = acos(*zAcc);
-
+        if ((*zAcc > 980.0 - movementErrorMargin) || (*zAcc < 980.0 + movementErrorMargin)) {
+        
+          *xAng = acos(*yAcc);
+          *yAng = acos(*xAcc);
+          *zAng = acos(*zAcc);
+        }
     }
 
     void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin){
