@@ -54,28 +54,28 @@
     }
 
     void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
- 
-          if (*zAcc > 980.0) {
+      if (((sqrt((*zAcc * *zAcc) + (*yAcc * *yAcc) + (*xAcc * *xAcc))) < 980 + 250)) {
+          if (*zAcc >= 980.0) {
             *zAng = 90.0;
             *xAng = asin(*yAcc/980);
             *yAng = asin(*xAcc/980);
-          } else if (*xAcc > 980.0) {
+          } else if (*xAcc >= 980.0) {
             *xAng = 90.0;
             *yAng = asin(*xAcc/980);
             *zAng = asin(*zAcc/980);
-          } else if (*yAcc > 980.0) {
+          } else if (*yAcc >= 980.0) {
             *yAng = 90.0;
             *xAng = asin(*yAcc/980);
             *zAng = asin(*zAcc/980);
-          } else if (*zAcc < -980.0) {
+          } else if (*zAcc <= -980.0) {
             *zAng = -90.0;
             *xAng = asin(*yAcc/980);
             *yAng = asin(*xAcc/980);          
-          } else if (*yAcc < -980.0) {
+          } else if (*yAcc <= -980.0) {
             *yAng = -90.0;
             *xAng = asin(*yAcc/980);
             *zAng = asin(*xAcc/980);          
-          } else if (*xAcc < -980.0) {
+          } else if (*xAcc <= -980.0) {
             *xAng = -90.0;
             *zAng = asin(*yAcc/980);
             *yAng = asin(*xAcc/980);          
@@ -84,7 +84,7 @@
           *yAng = asin(*xAcc/980) * 360 / 6.28;
           *zAng = asin(*zAcc/980) * 360 / 6.28;
         }
-    
+      }
     }  
 
     void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin, int* xOffset, int* yOffset, int* zOffset){
@@ -119,8 +119,8 @@
             updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
             updateBuffer(data->bigXBuffer, data->xAcc, data->bigPtrX, data->bigX, data->xBufferFull, data->bigBufferSize);
             updateBuffer(data->bigYBuffer, data->yAcc, data->bigPtrY, data->bigY, data->yBufferFull, data->bigBufferSize);
-            updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
-            updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);
+            //updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
+            //updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);
             updateAngles(data->xAcc, data->yAcc, data->zAcc, data->xAng, data->yAng, data->zAng);
             interrupts();
         }
