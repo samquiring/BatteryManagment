@@ -322,9 +322,9 @@ void setup() {
   touch.yPosition = &yDisplacement;
   touch.zPosition = &zDisplacement;
   touch.totalDistance = &totalDistance;
-  touch.xAngle = &xAcc;
-  touch.yAngle = &yAcc;
-  touch.zAngle = &zAcc;
+  touch.xAngle = &xAngle;
+  touch.yAngle = &yAngle;
+  touch.zAngle = &zAngle;
   
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;

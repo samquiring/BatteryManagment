@@ -12,7 +12,7 @@
     void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zAcc) {
 
         float xGAcc = ((*xRawAcc - zeroPoint) / 160.0);
-        float yGAcc = ((*yRawAcc - zeroPoint) / 160.0);
+        float yGAcc = ((*yRawAcc - zeroPoint) / 87.0);
         float zGAcc = ((*zRawAcc - zeroPoint) / 160.0);
 
         *xAcc = xGAcc * 980.0;
@@ -54,29 +54,38 @@
     }
 
     void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
-
-  if (sqrt((*zAcc * *zAcc) + (*yAcc * *yAcc) + (*xAcc * *xAcc)) < 980.0 + movementErrorMargin) {
-
-          if (*zAng > 980.0) {
+ 
+          if (*zAcc > 980.0) {
             *zAng = 90.0;
             *xAng = asin(*yAcc/980);
             *yAng = asin(*xAcc/980);
-          } else if (*xAng > 980.0) {
+          } else if (*xAcc > 980.0) {
             *xAng = 90.0;
             *yAng = asin(*xAcc/980);
             *zAng = asin(*zAcc/980);
-          } else if (*yAng > 980.0) {
+          } else if (*yAcc > 980.0) {
             *yAng = 90.0;
             *xAng = asin(*yAcc/980);
             *zAng = asin(*zAcc/980);
+          } else if (*zAcc < -980.0) {
+            *zAng = -90.0;
+            *xAng = asin(*yAcc/980);
+            *yAng = asin(*xAcc/980);          
+          } else if (*yAcc < -980.0) {
+            *yAng = -90.0;
+            *xAng = asin(*yAcc/980);
+            *zAng = asin(*xAcc/980);          
+          } else if (*xAcc < -980.0) {
+            *xAng = -90.0;
+            *zAng = asin(*yAcc/980);
+            *yAng = asin(*xAcc/980);          
           } else {
           *xAng = asin(*yAcc/980) * 360 / 6.28;
           *yAng = asin(*xAcc/980) * 360 / 6.28;
           *zAng = asin(*zAcc/980) * 360 / 6.28;
         }
-      }
-    }
     
+    }  
 
     void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin, int* xOffset, int* yOffset, int* zOffset){
 
