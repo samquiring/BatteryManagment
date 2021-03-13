@@ -18,6 +18,7 @@
 #define addressChange 8 //the distance between addresses for our eeprom
 #define BUFFER_SIZE 10 //the amount of denoicing we want to do
 #define OffsetSample 20
+#define gravity 175
 //Task Control Blocks
 TCB measurementTCB;         // Declare all TCBs
 TCB touchScreenTCB;
@@ -382,9 +383,9 @@ void setup() {
   accelerometer.xAccBuff = &xAccBuff;
   accelerometer.yAccBuff = &yAccBuff;
   accelerometer.zAccBuff = &zAccBuff;
-  accelerometer.xBuffer = xBuffer;
-  accelerometer.yBuffer = yBuffer;
-  accelerometer.zBuffer = zBuffer;
+  accelerometer.xBuffer = &xBuffer;
+  accelerometer.yBuffer = &yBuffer;
+  accelerometer.zBuffer = &zBuffer;
   accelerometer.xPtr = &xPtr;
   accelerometer.yPtr = &yPtr;
   accelerometer.zPtr = &zPtr;
@@ -395,8 +396,8 @@ void setup() {
   accelerometer.xOffset = &xOffset;
   accelerometer.yOffset = &yOffset;
   accelerometer.zOffset = &zOffset;
-  accelerometer.bigXBuffer = bigXBuffer;
-  accelerometer.bigYBuffer = bigYBuffer;
+  accelerometer.bigXBuffer = &bigXBuffer;
+  accelerometer.bigYBuffer = &bigYBuffer;
   accelerometer.bigPtrX = &bigPtrX;
   accelerometer.bigPtrY = &bigPtrY;
   accelerometer.bigX = &bigX;
@@ -484,7 +485,7 @@ void loop() {
     }
     xOffset = xOffset / OffsetSample;
     yOffset = yOffset / OffsetSample;
-    zOffset = (zOffset / OffsetSample) - 165;
+    zOffset = (zOffset / OffsetSample) - gravity;
     
     interrupts();
     while(1){
@@ -493,12 +494,15 @@ void loop() {
            scheduler(&measurementTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
-           Serial.print("X buffer: ");
+           Serial.print("Y buffered: ");
+           Serial.println(yAccBuff);
+           Serial.print("Y buffered big: ");
+           Serial.println(bigY);
+           Serial.print("X buffered: ");
            Serial.println(xAccBuff);
-           Serial.print("X unbuffered: ");
-           Serial.println(xAcc);
-           Serial.print("X buffer subtracting");
-           Serial.println(xBuffer[xPtr]);
+           Serial.print("X buffered big: ");
+           Serial.println(bigX);
+           
       }
     } 
 }
