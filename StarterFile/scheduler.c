@@ -2,6 +2,9 @@
 #include "TaskControlBlock.h"
 #include <Arduino.h>
 #define NUM_TASKS 6
+#define hz_10 10 //the amount of cycles to skip to reach this frequency
+#define hz_1 100 //the amount of cycles to skip to reach this frequency
+
 
 void insert(TCB* curTask, TCB* taskArray[], int index){
   while(curTask->next != NULL){
@@ -45,19 +48,35 @@ long scheduler(TCB* curTask, TCB* taskArray[], int* counter){
     * Author(s): Sam Quiring
     *****************/
     unsigned long holderTime = 0;
-    if(*counter % 10 == 1){
-      //Delete(curTask, taskArray, 0);
+    if(*counter % hz_10 == 1){
+      Delete(curTask, taskArray,3);
+      Delete(curTask, taskArray,4);
+      if(*counter != 0){
+        insert(curTask, taskArray,5);
+        insert(curTask, taskArray,6);
+      }
+    }
+    if(*counter % hz_1 == 1){
+      Delete(curTask, taskArray, 0);
       Delete(curTask, taskArray, 1);
-      if(*counter % 50 == 1){
+      if(*counter % hz_1*5 == 1){
         Delete(curTask, taskArray, 2);
       }
     }
 
-    if(*counter % 10 == 0){
-      if(*counter % 50 == 0){
+    if(*counter % hz_10 == 0){
+      Delete(curTask, taskArray,5);
+      Delete(curTask, taskArray,6);
+      if(*counter != 0){
+        insert(curTask, taskArray,3);
+        insert(curTask, taskArray,4);
+      }
+    }
+    if(*counter % hz_1 == 0 && counter != 0){
+      if(*counter % hz_1*5 == 0){
           insert(curTask, taskArray,2);
         }
-    //insert(curTask, taskArray,0);
+      insert(curTask, taskArray,0);
       insert(curTask, taskArray,1);
       }
      holderTime = millis();

@@ -16,7 +16,7 @@
 
 #define CHARSIZE 60 //size of the lines below
 #define addressChange 8 //the distance between addresses for our eeprom
-#define BUFFER_SIZE 8 //the amount of denoicing we want to do
+#define BUFFER_SIZE 10 //the amount of denoicing we want to do
 #define OffsetSample 20
 #define gravity 175
 //Task Control Blocks
@@ -146,6 +146,7 @@ int bufferSize = BUFFER_SIZE;
 int xOffset = 0;
 int yOffset = 0;
 int zOffset = 0;
+long timeTook = 10;
 
 
 //used to dynamically update the offsets if they are within a certain value settled
@@ -167,6 +168,8 @@ volatile bool timeBaseFlag = false;
 volatile bool alarmReset = false; //this is the check to turn all alarm flags off 
 volatile bool resetEEPROM = false;
 float timeBase = 0.1;
+
+long timer = 10;
 
 int AddressToFloat(int address){
   /****************
@@ -217,7 +220,7 @@ void setup() {
   }
 
   //initializes timerOne flag
-  Timer1.initialize(100E+3);        //set the timer period to 100ms
+  Timer1.initialize(10E+3);        //set the timer period to 100ms
   Timer1.attachInterrupt(timerISR); //Attach the interrupt service routine (ISR)
   Timer1.start();                   //Start the timer
      
@@ -442,8 +445,8 @@ void setup() {
   accelerometerTCB.named = 8;
 
   //creating the doubly linked list
-  measurementTCB.prev = NULL;
-  measurementTCB.next = &accelerometerTCB;
+  measurementTCB.prev = &accelerometerTCB;
+  measurementTCB.next = &SOCTCB;
   SOCTCB.prev = &accelerometerTCB;
   SOCTCB.next = &contactorTCB;
   contactorTCB.prev = &SOCTCB;
@@ -457,8 +460,8 @@ void setup() {
   remoteTerminalTCB.prev = &dataLoggingTCB;
   remoteTerminalTCB.next = NULL;
   
-  accelerometerTCB.prev = &measurementTCB;
-  accelerometerTCB.next = &SOCTCB;
+  accelerometerTCB.prev = NULL;
+  accelerometerTCB.next = &measurementTCB;
 
   //Initialize serial communication
     Serial.begin(9600);
@@ -493,19 +496,26 @@ void loop() {
     interrupts();
     while(1){
       if(timeBaseFlag){
+           timer = millis(); //takes note of timing 
            timeBaseFlag = false;
-           scheduler(&measurementTCB,taskArray, &counter);
+           scheduler(&accelerometerTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
-           //Serial.print("Y buffered: ");
-           //Serial.println(yAccBuff);
+           timeTook = millis() - timer;
+           if(timeTook < 10)
+            timeTook = 10;
+           Serial.println(timeTook);
+           
+           /*
+           Serial.print("Y buffered big: ");
+           Serial.println(bigY);
            Serial.print("Y buffered: ");
            Serial.println(yAccBuff);
            Serial.print("X buffered: ");
            Serial.println(xAccBuff);
            //Serial.print("X buffered big: ");
            //Serial.println(bigX);
-           
+           */    
       }
     } 
 }

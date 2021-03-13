@@ -188,7 +188,7 @@ float prevZAcc = 0.0;
             updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
             updateBuffer(data->bigXBuffer, data->xAcc, data->bigPtrX, data->bigX, data->bigBufferFull, data->bigBufferSize);
             updateBuffer(data->bigYBuffer, data->yAcc, data->bigPtrY, data->bigY, data->yBufferFull, data->bigBufferSize);
-            //filterT(data->xAccBuff, data->yAccBuff, data->zAccBuff);
+            filterT(data->xAccBuff, data->yAccBuff, data->zAccBuff);
             updateVelocity(data->xAccBuff, data->yAccBuff, data->zAccBuff, data->xVel, data->yVel, data->zVel, data->timeBase, data->bigBufferFull);
             //updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
             updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);
