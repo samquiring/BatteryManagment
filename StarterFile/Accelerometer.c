@@ -8,7 +8,8 @@
 #define gEquivalent
 #define gravity 175.0
 #define yGravity 100.0
-#define offsetError 7.0
+#define offsetError 5.0
+#define lowFiltered 5.0
 
 float tempX = 0;
 float tempY = 0;
@@ -37,23 +38,23 @@ float prevZAcc = 0.0;
     }
 
     void filterT(float* xAcc, float* yAcc, float* zAcc) {
-      if(abs(*xAcc) < 30.0) {
+      if(abs(*xAcc) < lowFiltered) {
         *xAcc = 0.0;
-      } else if (abs(*xAcc - prevXAcc) < 30.0) {
+      } else if (abs(*xAcc - prevXAcc) < lowFiltered) {
         *xAcc = prevXAcc;
       } else {
         prevXAcc = *xAcc;
       }    
-      if(abs(*yAcc) < 30.0) {
+      if(abs(*yAcc) < lowFiltered) {
         *yAcc = 0.0;
-      } else if (abs(*yAcc - prevYAcc) < 30.0) {
+      } else if (abs(*yAcc - prevYAcc) < lowFiltered) {
         *yAcc = prevYAcc;
       } else {
         prevYAcc = *yAcc;
       }   
-      if(abs(*zAcc) < 30.0) {
+      if(abs(*zAcc) < lowFiltered) {
         *zAcc = 0.0;
-      } else if (abs(*zAcc - prevZAcc) < 30.0) {
+      } else if (abs(*zAcc - prevZAcc) < lowFiltered) {
         *zAcc = prevZAcc;
       } else {
         prevZAcc = *zAcc;
@@ -145,7 +146,11 @@ float prevZAcc = 0.0;
     void updateBuffer(float** Buffer, float* Raw, int* bufferPtr, float* denoiced, bool* bufferFull, int* bufferSize){
       
       float holder = *(*Buffer+*bufferPtr);
-      *denoiced += (((*Raw) - holder)/(*bufferSize));
+      if(*denoiced != 0){
+        *denoiced += (((*Raw) - holder)/(*bufferSize));
+      } else {
+        *denoiced += (*Raw);
+      }
       *(*Buffer+*bufferPtr) = (*Raw);
       if(*bufferPtr != *bufferSize-1){
         *bufferPtr += 1;
@@ -177,13 +182,13 @@ float prevZAcc = 0.0;
         if(*(data->accelerometerFlag)){
             getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin, data->xOffset, data->yOffset, data->zOffset);
             convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc);
-            filterT(data->xAcc, data->yAcc, data->zAcc);
             updateOffset(data->bigX, data->bigY, data->xAccBuff, data->yAccBuff, data->zAccBuff);
             updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
             updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
             updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
             updateBuffer(data->bigXBuffer, data->xAcc, data->bigPtrX, data->bigX, data->bigBufferFull, data->bigBufferSize);
             updateBuffer(data->bigYBuffer, data->yAcc, data->bigPtrY, data->bigY, data->yBufferFull, data->bigBufferSize);
+            //filterT(data->xAccBuff, data->yAccBuff, data->zAccBuff);
             updateVelocity(data->xAccBuff, data->yAccBuff, data->zAccBuff, data->xVel, data->yVel, data->zVel, data->timeBase, data->bigBufferFull);
             //updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
             updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);

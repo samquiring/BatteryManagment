@@ -16,7 +16,7 @@
 
 #define CHARSIZE 60 //size of the lines below
 #define addressChange 8 //the distance between addresses for our eeprom
-#define BUFFER_SIZE 5 //the amount of denoicing we want to do
+#define BUFFER_SIZE 8 //the amount of denoicing we want to do
 #define OffsetSample 20
 #define gravity 175
 //Task Control Blocks
@@ -499,8 +499,8 @@ void loop() {
            counter++;
            //Serial.print("Y buffered: ");
            //Serial.println(yAccBuff);
-           //Serial.print("Y buffered big: ");
-           //Serial.println(bigY);
+           Serial.print("Y buffered: ");
+           Serial.println(yAccBuff);
            Serial.print("X buffered: ");
            Serial.println(xAccBuff);
            //Serial.print("X buffered big: ");
