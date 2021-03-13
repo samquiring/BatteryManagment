@@ -439,8 +439,8 @@ void setup() {
 
   //creating the doubly linked list
   measurementTCB.prev = NULL;
-  measurementTCB.next = &SOCTCB;
-  SOCTCB.prev = &measurementTCB;
+  measurementTCB.next = &accelerometerTCB;
+  SOCTCB.prev = &accelerometerTCB;
   SOCTCB.next = &contactorTCB;
   contactorTCB.prev = &SOCTCB;
   contactorTCB.next = &alarmTCB;
@@ -451,9 +451,10 @@ void setup() {
   dataLoggingTCB.next = &remoteTerminalTCB;
   dataLoggingTCB.prev = &touchScreenTCB;
   remoteTerminalTCB.prev = &dataLoggingTCB;
-  remoteTerminalTCB.next = &accelerometerTCB;
-  accelerometerTCB.prev = &remoteTerminalTCB;
-  accelerometerTCB.next = NULL;
+  remoteTerminalTCB.next = NULL;
+  
+  accelerometerTCB.prev = &measurementTCB;
+  accelerometerTCB.next = &SOCTCB;
 
   //Initialize serial communication
     Serial.begin(9600);

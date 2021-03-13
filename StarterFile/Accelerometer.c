@@ -7,6 +7,9 @@
 #define movementErrorMargin 100
 #define gEquivalent
 
+float tempX = 0;
+float tempY = 0;
+float tempZ = 0;
 // converts the x, y, and z accelerations into cm / s^2
 
     void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zAcc) {
@@ -54,37 +57,33 @@
     }
 
     void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
-      if (((sqrt((*zAcc * *zAcc) + (*yAcc * *yAcc) + (*xAcc * *xAcc))) < 980 + 250)) {
-          if (*zAcc >= 980.0) {
-            *zAng = 90.0;
-            *xAng = asin(*yAcc/980);
-            *yAng = asin(*xAcc/980);
-          } else if (*xAcc >= 980.0) {
-            *xAng = 90.0;
-            *yAng = asin(*xAcc/980);
-            *zAng = asin(*zAcc/980);
-          } else if (*yAcc >= 980.0) {
-            *yAng = 90.0;
-            *xAng = asin(*yAcc/980);
-            *zAng = asin(*zAcc/980);
-          } else if (*zAcc <= -980.0) {
-            *zAng = -90.0;
-            *xAng = asin(*yAcc/980);
-            *yAng = asin(*xAcc/980);          
-          } else if (*yAcc <= -980.0) {
-            *yAng = -90.0;
-            *xAng = asin(*yAcc/980);
-            *zAng = asin(*xAcc/980);          
-          } else if (*xAcc <= -980.0) {
-            *xAng = -90.0;
-            *zAng = asin(*yAcc/980);
-            *yAng = asin(*xAcc/980);          
-          } else {
-          *xAng = asin(*yAcc/980) * 360 / 6.28;
-          *yAng = asin(*xAcc/980) * 360 / 6.28;
-          *zAng = asin(*zAcc/980) * 360 / 6.28;
-        }
+      
+      if(*xAcc > 980.0){
+        tempX = 980.0;
+      } else if(*xAcc < -980.0){
+        tempX = -980.0;
+      } else {
+        tempX = *xAcc;
       }
+
+      if(*yAcc > 980.0){
+        tempY = 980.0;
+      } else if(*yAcc < -980.0){
+        tempY = -980.0;
+      } else {
+        tempY = *yAcc;
+      }
+
+      if(*zAcc > 980.0){
+        tempZ = 980.0;
+      } else if(*zAcc < -980.0){
+        tempZ = -980.0;
+      } else {
+        tempZ = *zAcc;
+      }
+      *xAng = acos(tempX/980.0) * 360.0 / 6.28;
+      *yAng = acos(tempY/980.0) * 360.0 / 6.28;
+      *zAng = acos(tempZ/980.0) * 360.0 / 6.28;
     }  
 
     void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin, int* xOffset, int* yOffset, int* zOffset){
@@ -111,18 +110,16 @@
         accelerometerData* data = (accelerometerData*) mData;
 
         if(*(data->accelerometerFlag)){
-            noInterrupts();
             getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin, data->xOffset, data->yOffset, data->zOffset);
             convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc);
-            updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
-            updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
-            updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
-            updateBuffer(data->bigXBuffer, data->xAcc, data->bigPtrX, data->bigX, data->xBufferFull, data->bigBufferSize);
-            updateBuffer(data->bigYBuffer, data->yAcc, data->bigPtrY, data->bigY, data->yBufferFull, data->bigBufferSize);
+            //updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
+            //updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
+            //updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
+            //updateBuffer(data->bigXBuffer, data->xAcc, data->bigPtrX, data->bigX, data->xBufferFull, data->bigBufferSize);
+            //updateBuffer(data->bigYBuffer, data->yAcc, data->bigPtrY, data->bigY, data->yBufferFull, data->bigBufferSize);
             //updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
             //updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);
             updateAngles(data->xAcc, data->yAcc, data->zAcc, data->xAng, data->yAng, data->zAng);
-            interrupts();
         }
         *(data->accelerometerFlag) = true;
     }
