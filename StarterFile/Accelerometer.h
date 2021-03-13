@@ -44,6 +44,7 @@ typedef struct accelerometerTaskData{
     bool* xBufferFull;
     bool* yBufferFull;
     bool* zBufferFull;
+    bool* bigBufferFull;
 
     int* bufferSize;
     int* bigBufferSize;

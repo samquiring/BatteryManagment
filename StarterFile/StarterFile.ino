@@ -16,7 +16,7 @@
 
 #define CHARSIZE 60 //size of the lines below
 #define addressChange 8 //the distance between addresses for our eeprom
-#define BUFFER_SIZE 10 //the amount of denoicing we want to do
+#define BUFFER_SIZE 5 //the amount of denoicing we want to do
 #define OffsetSample 20
 #define gravity 175
 //Task Control Blocks
@@ -141,10 +141,12 @@ int zPtr = 0;
 bool xBufferFull = false;
 bool yBufferFull = false;
 bool zBufferFull = false;
+bool bigBufferFull = false;
 int bufferSize = BUFFER_SIZE;
 int xOffset = 0;
 int yOffset = 0;
 int zOffset = 0;
+
 
 //used to dynamically update the offsets if they are within a certain value settled
 float* bigXBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
@@ -164,7 +166,7 @@ const byte batteryPin = 40;
 volatile bool timeBaseFlag = false;
 volatile bool alarmReset = false; //this is the check to turn all alarm flags off 
 volatile bool resetEEPROM = false;
-float timeBase = (100E+3);
+float timeBase = 0.1;
 
 int AddressToFloat(int address){
   /****************
@@ -403,6 +405,7 @@ void setup() {
   accelerometer.bigX = &bigX;
   accelerometer.bigY = &bigY;
   accelerometer.bigBufferSize = &bigbufferSize;
+  accelerometer.bigBufferFull = &bigBufferFull;
   
 
   //setting TCB up so it is connected
@@ -494,14 +497,14 @@ void loop() {
            scheduler(&measurementTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
-           Serial.print("Y buffered: ");
-           Serial.println(yAccBuff);
-           Serial.print("Y buffered big: ");
-           Serial.println(bigY);
+           //Serial.print("Y buffered: ");
+           //Serial.println(yAccBuff);
+           //Serial.print("Y buffered big: ");
+           //Serial.println(bigY);
            Serial.print("X buffered: ");
            Serial.println(xAccBuff);
-           Serial.print("X buffered big: ");
-           Serial.println(bigX);
+           //Serial.print("X buffered big: ");
+           //Serial.println(bigX);
            
       }
     } 
