@@ -23,9 +23,12 @@ float prevXAcc = 0.0;
 float prevYAcc = 0.0;
 float prevZAcc = 0.0;
 
+bool stationary = true;
+
+
 // converts the x, y, and z accelerations into cm / s^2
 
-    void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zAcc) {
+    void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zAcc, float** xBuffer) {
 
         float xGAcc = ((*xRawAcc - zeroPoint) / gravity);
         float yGAcc = ((*yRawAcc - zeroPoint) / yGravity);
@@ -34,6 +37,14 @@ float prevZAcc = 0.0;
         *xAcc = xGAcc * 980.0;
         *yAcc = yGAcc * 980.0;
         *zAcc = zGAcc * 980.0;
+        stationary = true;
+        for (int i = 0; i < 50; i++) {
+          float x = *xBuffer[i];
+          if (abs(x) > 5.0) {
+            stationary = true;
+          }
+          
+        }
 
     }
 
@@ -63,6 +74,8 @@ float prevZAcc = 0.0;
 
     void updateVelocity(float* xAcc, float* yAcc, float* zAcc, float* xVel, float* yVel, float* zVel, float* timeBase, bool* bigBufferFull) {
       if(*bigBufferFull){
+        
+        
         *xVel = *xVel + *xAcc * *timeBase;
         *yVel = *yVel + *yAcc * *timeBase;
         *zVel = *zVel + *zAcc * *timeBase;
@@ -181,7 +194,7 @@ float prevZAcc = 0.0;
 
         if(*(data->accelerometerFlag)){
             getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin, data->xOffset, data->yOffset, data->zOffset);
-            convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc);
+            convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc, data->xBuffer);
             updateOffset(data->bigX, data->bigY, data->xAccBuff, data->yAccBuff, data->zAccBuff);
             updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
             updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
