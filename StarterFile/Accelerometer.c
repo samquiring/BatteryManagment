@@ -28,20 +28,18 @@ bool stationary = true;
 
 // converts the x, y, and z accelerations into cm / s^2
 
-    void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zAcc, float** xBuffer) {
+    void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zAcc, float** xBuffer, float** yBuffer, int* bufferSize) {
 
-        float xGAcc = ((*xRawAcc - zeroPoint) / gravity);
-        float yGAcc = ((*yRawAcc - zeroPoint) / yGravity);
-        float zGAcc = ((*zRawAcc - zeroPoint) / gravity);
+         *xAcc = *xRawAcc * 980.0 / gravity;
+         *yAcc = *yRawAcc * 980.0 / yGravity;
+         *zAcc = *zRawAcc * 980.0 / gravity;
 
-        *xAcc = xGAcc * 980.0;
-        *yAcc = yGAcc * 980.0;
-        *zAcc = zGAcc * 980.0;
         stationary = true;
-        for (int i = 0; i < 50; i++) {
-          float x = *xBuffer[i];
+        for (int i = 0; i < *bufferSize; i++) {
+          float x = *(*xBuffer + i);
+          float y = *(*yBuffer + i);
           if (abs(x) > 5.0) {
-            stationary = true;
+            stationary = false;
           }
           
         }
@@ -159,11 +157,7 @@ bool stationary = true;
     void updateBuffer(float** Buffer, float* Raw, int* bufferPtr, float* denoiced, bool* bufferFull, int* bufferSize){
       
       float holder = *(*Buffer+*bufferPtr);
-      if(*denoiced != 0){
         *denoiced += (((*Raw) - holder)/(*bufferSize));
-      } else {
-        *denoiced += (*Raw);
-      }
       *(*Buffer+*bufferPtr) = (*Raw);
       if(*bufferPtr != *bufferSize-1){
         *bufferPtr += 1;
@@ -194,7 +188,7 @@ bool stationary = true;
 
         if(*(data->accelerometerFlag)){
             getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin, data->xOffset, data->yOffset, data->zOffset);
-            convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc, data->xBuffer);
+            convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc, data->xBuffer, data->yBuffer, data->bufferSize);
             updateOffset(data->bigX, data->bigY, data->xAccBuff, data->yAccBuff, data->zAccBuff);
             updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
             updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
