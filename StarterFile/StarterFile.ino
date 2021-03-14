@@ -506,16 +506,16 @@ void loop() {
             timeTook = 10;
            Serial.println(timeTook);
            
-           /*
-           Serial.print("Y buffered big: ");
-           Serial.println(bigY);
-           Serial.print("Y buffered: ");
-           Serial.println(yAccBuff);
-           Serial.print("X buffered: ");
+           
+          // Serial.print("Y buffered big: ");
+          // Serial.print(bigY);
+           Serial.print(" X unbuffered: ");
+           Serial.print(xAcc);
+           Serial.print(" X buffered: ");
            Serial.println(xAccBuff);
            //Serial.print("X buffered big: ");
            //Serial.println(bigX);
-           */    
+               
       }
     } 
 }

@@ -38,7 +38,7 @@ bool stationary = true;
         for (int i = (*bufferSize-10); i < *bufferSize; i++) {
           float x = *(*xBuffer + i);
           float y = *(*yBuffer + i);
-          if (abs(x) > 5.0) {
+          if (abs(x) > offsetError && abs(y) > offsetError) {
             stationary = false;
           }
           
@@ -78,14 +78,9 @@ bool stationary = true;
         *yVel = *yVel + *yAcc * *timeBase;
         *zVel = *zVel + *zAcc * *timeBase;
       }
-      if(*xAcc == 0){
+      if(stationary){
         *xVel = 0;
-      }
-      if(*yAcc == 0){
         *yVel = 0;
-      }
-
-      if(*zAcc == 0){
         *zVel = 0;
       }
       
@@ -189,13 +184,13 @@ bool stationary = true;
         if(*(data->accelerometerFlag)){
             getPinData(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xPin, data->yPin, data->zPin, data->xOffset, data->yOffset, data->zOffset);
             convertFromRaw(data->xRawAcc, data->yRawAcc, data->zRawAcc, data->xAcc, data->yAcc, data->zAcc, data->xBuffer, data->yBuffer, data->bufferSize);
-            updateOffset(data->bigX, data->bigY, data->xAccBuff, data->yAccBuff, data->zAccBuff);
+            //updateOffset(data->bigX, data->bigY, data->xAccBuff, data->yAccBuff, data->zAccBuff);
             updateBuffer(data->xBuffer, data->xAcc, data->xPtr, data->xAccBuff, data->xBufferFull, data->bufferSize);
             updateBuffer(data->yBuffer, data->yAcc, data->yPtr, data->yAccBuff, data->yBufferFull, data->bufferSize);
             updateBuffer(data->zBuffer, data->zAcc, data->zPtr, data->zAccBuff, data->zBufferFull, data->bufferSize);
             updateBuffer(data->bigXBuffer, data->xAcc, data->bigPtrX, data->bigX, data->bigBufferFull, data->bigBufferSize);
             updateBuffer(data->bigYBuffer, data->yAcc, data->bigPtrY, data->bigY, data->yBufferFull, data->bigBufferSize);
-            filterT(data->xAccBuff, data->yAccBuff, data->zAccBuff);
+            //filterT(data->xAccBuff, data->yAccBuff, data->zAccBuff);
             updateVelocity(data->xAccBuff, data->yAccBuff, data->zAccBuff, data->xVel, data->yVel, data->zVel, data->timeBase, data->bigBufferFull);
             //updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
             updateDistance(data->totalDistance, data->xAccBuff, data->xVel, data->yAccBuff, data->yVel, data->zAccBuff, data->zVel, data->timeBase);
