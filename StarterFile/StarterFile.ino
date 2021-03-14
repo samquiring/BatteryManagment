@@ -129,12 +129,12 @@ const byte zPin = A13;
 float xAngle = 0.0;
 float yAngle = 0.0;
 float zAngle = 0.0;
-float xAccBuff = 0.0;
-float yAccBuff = 0.0;
-float zAccBuff = 0.0;
-float* xBuffer = (float*)calloc(BUFFER_SIZE,sizeof(float));
-float* yBuffer = (float*)calloc(BUFFER_SIZE,sizeof(float));
-float* zBuffer = (float*)calloc(BUFFER_SIZE,sizeof(float));
+int xAccBuff = 0;
+int yAccBuff = 0;
+int zAccBuff = 0;
+int* xBuffer = (int*)calloc(BUFFER_SIZE,sizeof(int));
+int* yBuffer = (int*)calloc(BUFFER_SIZE,sizeof(int));
+int* zBuffer = (int*)calloc(BUFFER_SIZE,sizeof(int));
 int xPtr = 0;
 int yPtr = 0;
 int zPtr = 0;
@@ -492,7 +492,7 @@ void loop() {
     delay(100);
     }
     xOffset = xOffset / OffsetSample;
-    yOffset = yOffset / OffsetSample;
+    yOffset = (yOffset / OffsetSample) - 3;
     zOffset = (zOffset / OffsetSample) - gravity;
     
     interrupts();
@@ -509,8 +509,8 @@ void loop() {
            //Serial.println(timeTook);
            
            
-          // Serial.print("Y buffered big: ");
-          // Serial.print(bigY);
+           Serial.println(timeTook);
+
            Serial.print(" Y unbuffered: ");
            Serial.print(yAcc);
            Serial.print(" Y buffered: ");

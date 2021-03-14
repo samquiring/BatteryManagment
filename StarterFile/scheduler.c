@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #define NUM_TASKS 6
 #define hz_10 10 //the amount of cycles to skip to reach this frequency
-#define hz_1 100 //the amount of cycles to skip to reach this frequency
+#define hz_1 50 //the amount of cycles to skip to reach this frequency
 
 
 void insert(TCB* curTask, TCB* taskArray[], int index){
