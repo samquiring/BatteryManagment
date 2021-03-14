@@ -35,7 +35,7 @@ bool stationary = true;
          *zAcc = *zRawAcc * 980.0 / gravity;
 
         stationary = true;
-        for (int i = 0; i < *bufferSize; i++) {
+        for (int i = (*bufferSize-10); i < *bufferSize; i++) {
           float x = *(*xBuffer + i);
           float y = *(*yBuffer + i);
           if (abs(x) > 5.0) {
