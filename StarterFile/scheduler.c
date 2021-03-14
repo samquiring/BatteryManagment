@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #define NUM_TASKS 6
 #define hz_10 10 //the amount of cycles to skip to reach this frequency
-#define hz_1 50 //the amount of cycles to skip to reach this frequency
+#define hz_1 100 //the amount of cycles to skip to reach this frequency
 
 
 void insert(TCB* curTask, TCB* taskArray[], int index){
@@ -48,6 +48,7 @@ long scheduler(TCB* curTask, TCB* taskArray[], int* counter){
     * Author(s): Sam Quiring
     *****************/
     unsigned long holderTime = 0;
+    holderTime = millis();
     if(*counter % hz_10 == 1){
       Delete(curTask, taskArray,3);
       Delete(curTask, taskArray,4);
@@ -79,7 +80,6 @@ long scheduler(TCB* curTask, TCB* taskArray[], int* counter){
       insert(curTask, taskArray,0);
       insert(curTask, taskArray,1);
       }
-     holderTime = millis();
     while(curTask){
       curTask->task((curTask->taskDataPtr));
       curTask = curTask->next;

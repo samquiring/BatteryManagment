@@ -588,16 +588,20 @@ void touchScreenTask(void* mData){
           displaySetup();
           *(data->initialize) = false;
         }
+         accelerometerScreen(data->xPosition,data->yPosition,data->zPosition,data->totalDistance,data->xAngle,data->yAngle,data->zAngle,data->nScreen,data->forceAlarm,data->diffRate);
+         *(data->nScreen) = false;
+         /*
         if(*(data->touchState) == 0){
            measurementScreen(data->SOCreading, data->temperature,data->hvVoltage, data->hvCurrent, data->HVIL, data->nScreen, data->diffRate);
         } else if(*(data->touchState) == 1){
             batteryScreen(data->nScreen, data->csState, data->diffRate);
         } else if(*(data->touchState) == 2){
-          AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm, data->diffRate);
+         AlarmScreen(data->HVILState, data->OvercurrentState, data->HVOutOfRangeState, data->nScreen, data->forceAlarm, data->diffRate);
         } else {
           accelerometerScreen(data->xPosition,data->yPosition,data->zPosition,data->totalDistance,data->xAngle,data->yAngle,data->zAngle,data->nScreen,data->forceAlarm,data->diffRate);
         }
         clicker(data->touchState, data->nScreen, data->batteryOn, data->forceAlarm, data->alarmReset);
+        */
 
        
         

@@ -7,7 +7,7 @@
 #define movementErrorMargin 100
 #define gEquivalent
 #define gravity 175.0
-#define yGravity 100.0
+#define yGravity 87.0
 #define offsetError 10.0
 #define lowFiltered 5.0
 
@@ -29,14 +29,14 @@ float prevZAcc = 0.0;
     void convertFromRaw(int* xRawAcc, int* yRawAcc, int* zRawAcc, float* xAcc, float* yAcc, float* zAcc, int** xBuffer, int** yBuffer, int* bufferSize, bool* stationary) {
 
          *xAcc = *xRawAcc * 98.0 / gravity;
-         *yAcc = *yRawAcc * 98.0 / gravity;
+         *yAcc = *yRawAcc * 98.0 / yGravity;
          *zAcc = *zRawAcc * 98.0 / gravity;
 
         *stationary = true;
-        for (int i = (*bufferSize-10); i < *bufferSize; i++) {
+        for (int i = (*bufferSize-5); i < *bufferSize; i++) {
           int x = *(*xBuffer + i);
           int y = *(*yBuffer + i);
-          if (abs(x) > 3 || abs(y) > 3) {
+          if (abs(x) > 4 || abs(y) > 4) {
             *stationary = false;
           }
           
@@ -98,8 +98,12 @@ float prevZAcc = 0.0;
     void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* zAcc, float* zVel, float* timeBase){
 
         if ((*zAcc > 980.0 - movementErrorMargin) || (*zAcc < 980.0 + movementErrorMargin)) {
-            float xChange = (*xVel * *timeBase);
-            float yChange = (*yVel * *timeBase);
+            float xChange = 0.4 * (*xAcc * *timeBase * *timeBase);
+            float yChange = 0.4 * (*yAcc * *timeBase * *timeBase);
+            if(*xVel == 0){
+              xChange = 0;
+              yChange = 0;
+            }
             //float zChange = (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
 
 

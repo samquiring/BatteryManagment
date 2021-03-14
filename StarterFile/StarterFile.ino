@@ -81,7 +81,7 @@ volatile bool SOCFlag = true;
 
 //touchscreen global variables
 bool initialize = true; 
-int touchState = 0; //0 = measurement, 1 = battery, 2 = Alarm | Battery screen is seperate
+int touchState = 3; //0 = measurement, 1 = battery, 2 = Alarm | Battery screen is seperate
 bool thingsChanged = true;
 bool updateStates = true;
 volatile bool touchScreenFlag = true;
@@ -329,9 +329,9 @@ void setup() {
   touch.yPosition = &yDisplacement;
   touch.zPosition = &zDisplacement;
   touch.totalDistance = &totalDistance;
-  touch.xAngle = &xAngle;
-  touch.yAngle = &yAngle;
-  touch.zAngle = &zAngle;
+  touch.xAngle = &xAcc;
+  touch.yAngle = &yAcc;
+  touch.zAngle = &zAcc;
   
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;
@@ -493,37 +493,50 @@ void loop() {
     }
     xOffset = xOffset / OffsetSample;
     yOffset = (yOffset / OffsetSample) - 3;
-    zOffset = (zOffset / OffsetSample) - gravity;
+    zOffset = (zOffset / OffsetSample) - gravity - 2;
     
     interrupts();
+    int count = 0;
     while(1){
       if(timeBaseFlag){
            timer = millis(); //takes note of timing 
            timeBaseFlag = false;
-           scheduler(&accelerometerTCB,taskArray, &counter);
+           timeTook = scheduler(&accelerometerTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
-           timeTook = millis() - timer;
-           if(timeTook < 10)
+           //timeTook = millis() - timer;
+           if(timeTook < 10){
             timeTook = 10;
-           //Serial.println(timeTook);
-           
-           
-           Serial.println(timeTook);
+            count++;
+           } else{
+            Serial.println(count);
+            count = 0;
+           }
 
-           Serial.print(" Y unbuffered: ");
-           Serial.print(yAcc);
-           Serial.print(" Y buffered: ");
-           Serial.println(yAccBuff);
+           Serial.println(timeTook);
+           
+           
+           //Serial.println(timeTook);
+            /*
+           Serial.print(" Z unbuffered: ");
+           Serial.print(zAcc);
+           Serial.print(" Z buffered: ");
+           Serial.println(zRawAcc);
+           
            Serial.print(" X unbuffered: ");
            Serial.print(xAcc);
            Serial.print(" X buffered: ");
            Serial.println(xAccBuff);
+           Serial.print(" y unbuffered: ");
+           Serial.print(yAcc);
+           Serial.print(" y buffered: ");
+           Serial.println(yAccBuff);
+           /*
            Serial.print(" total distance: ");
            Serial.println(totalDistance);
            //Serial.print("X buffered big: ");
            //Serial.println(bigX);
-               
+               */
       }
     } 
 }
