@@ -70,6 +70,8 @@ typedef struct accelerometerTaskData{
     const byte* yPin;
     const byte* zPin;
 
+    bool* stationary;
+
     volatile bool* accelerometerFlag;
     
 }accelerometerData;
