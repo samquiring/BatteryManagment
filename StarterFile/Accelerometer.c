@@ -6,7 +6,7 @@
 #define zeroPoint 0
 #define movementErrorMargin 100
 #define gEquivalent
-#define gravity 175.0
+#define gravity 165.0
 #define yGravity 87.0
 #define offsetError 10.0
 #define lowFiltered 5.0
