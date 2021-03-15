@@ -73,6 +73,8 @@ typedef struct accelerometerTaskData{
     bool* stationary;
 
     volatile bool* accelerometerFlag;
+
+    int* counter;
     
 }accelerometerData;
 

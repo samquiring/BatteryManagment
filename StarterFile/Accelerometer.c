@@ -71,13 +71,13 @@ float prevZAcc = 0.0;
       }     
     }
 
-    void updateVelocity(float* xAcc, float* yAcc, float* zAcc, float* xVel, float* yVel, float* zVel, float* timeBase, bool* bigBufferFull, bool* stationary) {
+    void updateVelocity(float* xAcc, float* yAcc, float* zAcc, float* xVel, float* yVel, float* zVel, float* timeBase, bool* bigBufferFull, bool* stationary, int* counter) {
       //if(*bigBufferFull){  
         *xVel = *xVel + *xAcc * *timeBase;
         *yVel = *yVel + *yAcc * *timeBase;
         *zVel = *zVel + (*zAcc - 980.0) * *timeBase;
      // }
-      if(*stationary || (*zAcc < 980.0 - movementErrorMargin) || (*zAcc > 980.0 + movementErrorMargin)){
+      if(*stationary || (*zAcc < 980.0 - movementErrorMargin) || (*zAcc > 980.0 + movementErrorMargin) || *counter < 500){
         *xVel = 0;
         *yVel = 0;
         *zVel = 0;
@@ -190,7 +190,7 @@ float prevZAcc = 0.0;
            //updateBuffer(data->bigXBuffer, data->xAcc, data->bigPtrX, data->bigX, data->bigBufferFull, data->bigBufferSize);
             //updateBuffer(data->bigYBuffer, data->yAcc, data->bigPtrY, data->bigY, data->yBufferFull, data->bigBufferSize);
             //filterT(data->xAccBuff, data->yAccBuff, data->zAccBuff);
-            updateVelocity(data->xAcc, data->yAcc, data->zAcc, data->xVel, data->yVel, data->zVel, data->timeBase, data->bigBufferFull, data->stationary);
+            updateVelocity(data->xAcc, data->yAcc, data->zAcc, data->xVel, data->yVel, data->zVel, data->timeBase, data->bigBufferFull, data->stationary, data->counter);
             updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
             updateDistance(data->totalDistance, data->xAcc, data->xVel, data->yAcc, data->yVel, data->zAcc, data->zVel, data->timeBase);
             updateAngles(data->xAcc, data->yAcc, data->zAcc, data->xAng, data->yAng, data->zAng);

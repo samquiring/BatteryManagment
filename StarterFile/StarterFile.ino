@@ -398,6 +398,7 @@ void setup() {
   accelerometer.bigBufferSize = &bigbufferSize;
   accelerometer.bigBufferFull = &bigBufferFull;
   accelerometer.stationary = &stationary;
+  accelerometer.counter = &counter;
   
 
   //setting TCB up so it is connected
