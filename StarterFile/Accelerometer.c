@@ -10,6 +10,7 @@
 #define yGravity 87.0
 #define offsetError 10.0
 #define lowFiltered 5.0
+#define timebase 0.1
 
 float tempX = 0;
 float tempY = 0;
@@ -22,6 +23,8 @@ float zOffsetAcc = 0.0;
 float prevXAcc = 0.0;
 float prevYAcc = 0.0;
 float prevZAcc = 0.0;
+
+
 
 
 // converts the x, y, and z accelerations into cm / s^2
@@ -93,8 +96,8 @@ float prevZAcc = 0.0;
     void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* zAcc, float* zVel, float* timeBase){
 
         if ((*zAcc > 980.0 - movementErrorMargin) || (*zAcc < 980.0 + movementErrorMargin)) {
-            float xChange = 10.0 * 0.65 * (*xAcc * *timeBase * *timeBase);
-            float yChange = 10.0 * 0.65 * (*yAcc * *timeBase * *timeBase);
+            float xChange = 0.70 * (*xAcc * timebase * timebase);
+            float yChange = 0.70 * (*yAcc * timebase * timebase);
             if(*xVel == 0){
               xChange = 0;
               yChange = 0;
