@@ -18,7 +18,7 @@
 #define addressChange 8 //the distance between addresses for our eeprom
 #define BUFFER_SIZE 10 //the amount of denoicing we want to do
 #define OffsetSample 20
-#define gravity 175
+#define gravity 166
 //Task Control Blocks
 TCB measurementTCB;         // Declare all TCBs
 TCB touchScreenTCB;
@@ -478,7 +478,7 @@ void loop() {
       yOffset += analogRead(yPin);
     delay(100);
     }
-    xOffset = xOffset / OffsetSample;
+    xOffset = xOffset / OffsetSample - 1;
     yOffset = (yOffset / OffsetSample) - 3;
     zOffset = (zOffset / OffsetSample) - gravity - 2;
     
@@ -499,8 +499,13 @@ void loop() {
             Serial.println(count);
             count = 0;
            }
-
-           timeBase = timeTook/1000; //makes sure we always have the proper time base even when timing violations aren't met
+          Serial.print("X"); 
+          Serial.println(analogRead(xPin) - xOffset);
+          Serial.print("y"); 
+          Serial.println(analogRead(yPin) - yOffset);
+          Serial.print("Z"); 
+          Serial.println(analogRead(zPin) - zOffset);
+          // timeBase = timeTook/1000; //makes sure we always have the proper time base even when timing violations aren't met
            
            
            //Serial.println(timeTook);
