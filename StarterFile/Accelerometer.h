@@ -32,8 +32,8 @@ typedef struct accelerometerTaskData{
     int** yBuffer;
     int** zBuffer;
 
-    float** bigXBuffer;
-    float** bigYBuffer;
+    int** bigXBuffer;
+    int** bigYBuffer;
 
     int* xPtr;
     int* yPtr;
@@ -49,8 +49,8 @@ typedef struct accelerometerTaskData{
     int* bufferSize;
     int* bigBufferSize;
 
-    float* bigX;
-    float* bigY;
+    int* bigX;
+    int* bigY;
 
     float* xVel;
     float* yVel;

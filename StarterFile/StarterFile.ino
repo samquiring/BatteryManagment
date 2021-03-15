@@ -151,12 +151,12 @@ bool stationary = true;
 
 
 //used to dynamically update the offsets if they are within a certain value settled
-float* bigXBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
-float* bigYBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
+int* bigXBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
+int* bigYBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
 int bigPtrX = 0;
 int bigPtrY = 0;
-float bigX = 0;
-float bigY = 0;
+int bigX = 0;
+int bigY = 0;
 int bigbufferSize = 20*BUFFER_SIZE;
 
 
@@ -491,7 +491,7 @@ void loop() {
            timeTook = scheduler(&accelerometerTCB,taskArray, &counter);
            digitalWrite(batteryPin,!contactorState);
            counter++;
-           //timeTook = millis() - timer;
+           timeTook = millis() - timer;
            if(timeTook < 10){
             timeTook = 10;
             count++;
