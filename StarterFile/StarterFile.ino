@@ -201,9 +201,6 @@ void setup() {
     * Author(s): Sam Quiring and Anders Hunt
     *****************/
 
-  //memset(xBuffer,0,sizeof(xBuffer));  //sets the buffer to initially contain only zeros
-  //memset(yBuffer,0,sizeof(yBuffer));
-  //memset(zBuffer,0,sizeof(zBuffer));
   for(int i = 0; i < BUFFER_SIZE; i++){
     xBuffer[i] = 0;
     yBuffer[i] = 0;
@@ -243,17 +240,7 @@ void setup() {
   EEPROM.get(currentAddressMin,currentMin);
   EEPROM.get(currentAddressMax,currentMax);
 
-  //temperatureMin = AddressToFloat(tempAddressMin);
-  //temperatureMax = AddressToFloat(tempAddressMax);
-  //voltageMin = AddressToFloat(voltageAddressMin);
-  //voltageMax = AddressToFloat(voltageAddressMax);
- //currentMin = AddressToFloat(currentAddressMin);
-  //currentMax = AddressToFloat(currentAddressMax);
-  
-  
-  
-
-  //attachInterrupt(digitalPinToInterrupt(hvilPin), alarmISR, RISING);  //creates an interrupt whenever hvilPin is high
+  attachInterrupt(digitalPinToInterrupt(hvilPin), alarmISR, RISING);  //creates an interrupt whenever hvilPin is high
   
   //setting all variables up so they are used in functions
   measure.hvilStatus = &HVIL;
@@ -329,9 +316,9 @@ void setup() {
   touch.yPosition = &yDisplacement;
   touch.zPosition = &zDisplacement;
   touch.totalDistance = &totalDistance;
-  touch.xAngle = &xAcc;
-  touch.yAngle = &yAcc;
-  touch.zAngle = &zAcc;
+  touch.xAngle = &xAngle;
+  touch.yAngle = &yAngle;
+  touch.zAngle = &zAngle;
   
   remoteTerminal.remoteTerminalFlag = &remoteTerminalFlag;
   remoteTerminal.runStartFunct = &runStartFunc;
