@@ -6,7 +6,7 @@
 #define zeroPoint 0
 #define movementErrorMargin 100
 #define gEquivalent
-#define gravity 165.0
+#define gravity 166.0
 #define yGravity 87.0
 #define offsetError 10.0
 #define lowFiltered 5.0
@@ -72,9 +72,9 @@ float prevZAcc = 0.0;
       //if(*bigBufferFull){  
         *xVel = *xVel + *xAcc * *timeBase;
         *yVel = *yVel + *yAcc * *timeBase;
-        *zVel = *zVel + *zAcc * *timeBase;
+        *zVel = *zVel + (*zAcc - 980.0) * *timeBase;
      // }
-      if(*stationary){
+      if(*stationary || (*zAcc < 980.0 - movementErrorMargin) || (*zAcc > 980.0 + movementErrorMargin)){
         *xVel = 0;
         *yVel = 0;
         *zVel = 0;
@@ -86,15 +86,15 @@ float prevZAcc = 0.0;
         if ((*zAcc < 980.0 - movementErrorMargin) || (*zAcc > 980.0 + movementErrorMargin)) {
             *xDisplacement = *xDisplacement + (*xVel * *timeBase);
             *yDisplacement = *yDisplacement + (*yVel * *timeBase);
-            *zDisplacement = *zDisplacement + (*zVel * *timeBase);
+            *zDisplacement =  *zDisplacement + (*zVel * *timeBase);
         }
     }
 
     void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* zAcc, float* zVel, float* timeBase){
 
         if ((*zAcc > 980.0 - movementErrorMargin) || (*zAcc < 980.0 + movementErrorMargin)) {
-            float xChange = 0.4 * (*xAcc * *timeBase * *timeBase);
-            float yChange = 0.4 * (*yAcc * *timeBase * *timeBase);
+            float xChange = 0.65 * (*xAcc * *timeBase * *timeBase);
+            float yChange = 0.65 * (*yAcc * *timeBase * *timeBase);
             if(*xVel == 0){
               xChange = 0;
               yChange = 0;
@@ -132,7 +132,11 @@ float prevZAcc = 0.0;
       *xAng = acos(tempX/980.0) * 360.0 / 6.28;
       *yAng = acos(tempY/980.0) * 360.0 / 6.28;
       *zAng = acos(tempZ/980.0) * 360.0 / 6.28;
-    }  
+
+      if (*yAng < 20.0) {
+        *yAng = *yAng - 10.0;
+      }
+   }  
 
     void getPinData(int* xRaw, int* yRaw, int* zRaw, const byte* xPin, const byte* yPin, const byte* zPin, int* xOffset, int* yOffset, int* zOffset){
 
