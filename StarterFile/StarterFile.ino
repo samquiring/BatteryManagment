@@ -500,7 +500,7 @@ void loop() {
             count = 0;
            }
 
-           Serial.println(timeTook);
+           timeBase = timeTook/1000; //makes sure we always have the proper time base even when timing violations aren't met
            
            
            //Serial.println(timeTook);
