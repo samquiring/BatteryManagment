@@ -151,8 +151,8 @@ bool stationary = true;
 
 
 //used to dynamically update the offsets if they are within a certain value settled
-int* bigXBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
-int* bigYBuffer = (float*)calloc(BUFFER_SIZE*20,sizeof(float));
+int* bigXBuffer = (int*)calloc(BUFFER_SIZE*20,sizeof(int));
+int* bigYBuffer = (int*)calloc(BUFFER_SIZE*20,sizeof(int));
 int bigPtrX = 0;
 int bigPtrY = 0;
 int bigX = 0;
