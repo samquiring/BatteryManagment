@@ -505,7 +505,7 @@ void loop() {
           Serial.println(analogRead(yPin) - yOffset);
           Serial.print("Z"); 
           Serial.println(analogRead(zPin) - zOffset);
-          // timeBase = timeTook/1000; //makes sure we always have the proper time base even when timing violations aren't met
+          timeBase = (float)timeTook / 1000.0; //makes sure we always have the proper time base even when timing violations aren't met
            
            
            //Serial.println(timeTook);

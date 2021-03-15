@@ -93,8 +93,8 @@ float prevZAcc = 0.0;
     void updateDistance(float* totalDistance, float* xAcc, float* xVel, float* yAcc, float* yVel, float* zAcc, float* zVel, float* timeBase){
 
         if ((*zAcc > 980.0 - movementErrorMargin) || (*zAcc < 980.0 + movementErrorMargin)) {
-            float xChange = 0.65 * (*xAcc * *timeBase * *timeBase);
-            float yChange = 0.65 * (*yAcc * *timeBase * *timeBase);
+            float xChange = 10.0 * 0.65 * (*xAcc * *timeBase * *timeBase);
+            float yChange = 10.0 * 0.65 * (*yAcc * *timeBase * *timeBase);
             if(*xVel == 0){
               xChange = 0;
               yChange = 0;
