@@ -69,29 +69,24 @@ float prevZAcc = 0.0;
     }
 
     void updateVelocity(float* xAcc, float* yAcc, float* zAcc, float* xVel, float* yVel, float* zVel, float* timeBase, bool* bigBufferFull, bool* stationary) {
-      //if(*bigBufferFull){
-        
-        
+      //if(*bigBufferFull){  
         *xVel = *xVel + *xAcc * *timeBase;
         *yVel = *yVel + *yAcc * *timeBase;
         *zVel = *zVel + *zAcc * *timeBase;
-      //}
+     // }
       if(*stationary){
         *xVel = 0;
         *yVel = 0;
         *zVel = 0;
-      }
-      
-      
+      }  
     }
 
     void updateDisplacement(float* xDisplacement, float* xAcc, float* xVel, float* yDisplacement, float* yAcc, float* yVel, float* zDisplacement, float* zAcc, float* zVel, float* timeBase) {
 
-
         if ((*zAcc < 980.0 - movementErrorMargin) || (*zAcc > 980.0 + movementErrorMargin)) {
-            *xDisplacement = *xDisplacement + (*xVel * *timeBase) + 0.5 * *xAcc * (*timeBase * *timeBase);
-            *yDisplacement = *yDisplacement + (*yVel * *timeBase) + 0.5 * *yAcc * (*timeBase * *timeBase);
-            *zDisplacement = *zDisplacement + (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
+            *xDisplacement = *xDisplacement + (*xVel * *timeBase);
+            *yDisplacement = *yDisplacement + (*yVel * *timeBase);
+            *zDisplacement = *zDisplacement + (*zVel * *timeBase);
         }
     }
 
@@ -104,14 +99,9 @@ float prevZAcc = 0.0;
               xChange = 0;
               yChange = 0;
             }
-            //float zChange = (*zVel * *timeBase) + 0.5 * (*zAcc - 980.0) * (*timeBase * *timeBase);
-
-
             float distanceChange = sqrt((xChange * xChange) + (yChange * yChange));
-
             *totalDistance = *totalDistance + distanceChange;
         }
-
     }
 
     void updateAngles (float* xAcc, float* yAcc, float* zAcc, float* xAng, float* yAng, float* zAng) {
@@ -194,7 +184,7 @@ float prevZAcc = 0.0;
             //updateBuffer(data->bigYBuffer, data->yAcc, data->bigPtrY, data->bigY, data->yBufferFull, data->bigBufferSize);
             //filterT(data->xAccBuff, data->yAccBuff, data->zAccBuff);
             updateVelocity(data->xAcc, data->yAcc, data->zAcc, data->xVel, data->yVel, data->zVel, data->timeBase, data->bigBufferFull, data->stationary);
-            //updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
+            updateDisplacement(data->xDisplacement, data->xAccBuff, data->xVel, data->yDisplacement, data->yAccBuff, data->yVel, data->zDisplacement, data->zAccBuff, data->zVel, data->timeBase);
             updateDistance(data->totalDistance, data->xAcc, data->xVel, data->yAcc, data->yVel, data->zAcc, data->zVel, data->timeBase);
             updateAngles(data->xAcc, data->yAcc, data->zAcc, data->xAng, data->yAng, data->zAng);
         }
